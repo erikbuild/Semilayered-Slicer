@@ -9616,7 +9616,7 @@ std::vector<size_t> Plater::priv::load_files(const std::vector<fs::path>& input_
                         //
                         // OrcaSlicer has never published a 0.x release (it starts at 1.x), so a major of 0 in that tag
                         // can only mean this fork wrote the file, and it must not be migrated. Releases that write the
-                        // SemilayeredSlicer tag record the OrcaSlicer version they are based on there instead, which is
+                        // UnlayeredSlicer tag record the OrcaSlicer version they are based on there instead, which is
                         // past every migration below (see unlayered_3mf_version).
                         const bool written_by_this_fork = (file_version.maj() == 0);
                         Semver old_version(1, 5, 9);

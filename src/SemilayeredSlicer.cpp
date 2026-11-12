@@ -1801,7 +1801,7 @@ int CLI::run(int argc, char **argv)
                         flush_and_exit(CLI_FILE_VERSION_NOT_SUPPORTED);
                     }
                     // UNLAYERED_MOD: a 0.x file version is an Semilayered Slicer release from before the
-                    // SemilayeredSlicer tag (see unlayered_3mf_version), not an OrcaSlicer older than 1.5.9, so
+                    // UnlayeredSlicer tag (see unlayered_3mf_version), not an OrcaSlicer older than 1.5.9, so
                     // OrcaSlicer's migrations of old files skip it, as Plater::priv::load_files does.
                     const bool orca_era_migrations = !(unlayered_file_version && file_version.maj() == 0);
                     Semver old_version(1, 5, 9), old_version2(1, 5, 9), old_version3(2, 0, 0), old_version4(2, 2, 0);
