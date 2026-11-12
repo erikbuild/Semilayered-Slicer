@@ -1,0 +1,31 @@
+# Checks that upstream's own tree fails, for the source drop this tree was generated from.
+# A release is blocked only by a failure that is not listed here.
+#
+# One failure per line, three fields separated by tabs: kind, job, item.
+#   job    the job failed as a whole; item is its failed step ("-" for none)
+#   test   one unit test failed; item is the test's name as ctest prints it
+#   slice  the slice check failed for one printer; item is "vendor / printer"
+#
+# Unlayered Slicer 0.1.10, from baseline run 43108415857 on the unmodified tree (2026-11-11).
+
+# The test build that CI adds to the Flatpak job does not link (pango symbols), so no bundle is made.
+job	Flatpak (aarch64, ubuntu-24.04-arm)	Run flatpak/flatpak-github-actions/flatpak-builder@master
+job	Flatpak (x86_64, ubuntu-24.04)	Run flatpak/flatpak-github-actions/flatpak-builder@master
+
+# The check that reports the unit-test results; it fails whenever a test below does.
+job	Test Results	-
+
+# Two tests fail on every platform the baseline ran them on; the third fails on Linux only.
+test	Linux x86_64 / Unit Tests	release_targets_platform: other platforms only is not an update here
+test	Linux x86_64 / Unit Tests	Nonplanar layers: hold back holds the safe part of a wall joined to a rim beside the top's highest point
+test	Linux x86_64 / Unit Tests	Each cube's raft is its support, centered below it
+test	Linux aarch64 / Unit Tests	release_targets_platform: other platforms only is not an update here
+test	Linux aarch64 / Unit Tests	Nonplanar layers: hold back holds the safe part of a wall joined to a rim beside the top's highest point
+test	Linux aarch64 / Unit Tests	Each cube's raft is its support, centered below it
+test	macOS arm64 / Unit Tests	Nonplanar layers: hold back holds the safe part of a wall joined to a rim beside the top's highest point
+test	macOS arm64 / Unit Tests	Each cube's raft is its support, centered below it
+
+# Unlayered's own printer profiles slice without a filament change, which the slice check requires.
+slice	Slice check (Linux aarch64)	Unlayered / Unlayered 5 Axis Printer 0.4 nozzle
+slice	Slice check (Linux aarch64)	Unlayered / Unlayered 5 Axis Printer 0.6 nozzle
+slice	Slice check (Linux aarch64)	Unlayered / Unlayered 5 Axis Printer 0.8 nozzle

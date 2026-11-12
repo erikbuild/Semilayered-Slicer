@@ -1,0 +1,12 @@
+Slice check (Linux aarch64)	UNKNOWN STEP	﻿2026-11-12T00:18:53.2230354Z Current runner version: '2.338.2'
+Slice check (Linux aarch64)	UNKNOWN STEP	2026-11-12T00:18:53.2264577Z ##[group]Runner Image Provisioner
+Slice check (Linux aarch64)	UNKNOWN STEP	2026-11-12T00:19:04.0087484Z ##[endgroup]
+Slice check (Linux aarch64)	UNKNOWN STEP	2026-11-12T00:19:04.9322528Z Slicing 1191 printer preset(s)...
+Slice check (Linux aarch64)	UNKNOWN STEP	2026-11-12T00:21:29.6850879Z [error] [Unlayered / Unlayered 5 Axis Printer 0.4 nozzle] Printer "Unlayered 5 Axis Printer 0.4 nozzle" sliced but the filament change never fired (no CP TOOLCHANGE START)
+Slice check (Linux aarch64)	UNKNOWN STEP	2026-11-12T00:21:29.7831636Z [error] [Unlayered / Unlayered 5 Axis Printer 0.6 nozzle] Printer "Unlayered 5 Axis Printer 0.6 nozzle" sliced but the filament change never fired (no CP TOOLCHANGE START)
+Slice check (Linux aarch64)	UNKNOWN STEP	2026-11-12T00:21:29.8773610Z [error] [Unlayered / Unlayered 5 Axis Printer 0.8 nozzle] Printer "Unlayered 5 Axis Printer 0.8 nozzle" sliced but the filament change never fired (no CP TOOLCHANGE START)
+Slice check (Linux aarch64)	UNKNOWN STEP	2026-11-12T00:21:53.1500374Z Sliced 1191 printer preset(s), 10 more process preset(s), 124 more filament preset(s) and 1 printer(s) by object
+Slice check (Linux aarch64)	UNKNOWN STEP	2026-11-12T00:21:53.1501229Z 3 of 1326 slice(s) failed
+Slice check (Linux aarch64)	UNKNOWN STEP	2026-11-12T00:21:53.1501571Z Validation failed
+Slice check (Linux aarch64)	UNKNOWN STEP	2026-11-12T00:21:53.5545411Z ##[error]Process completed with exit code 1.
+Slice check (Linux aarch64)	UNKNOWN STEP	2026-11-12T00:21:53.5726168Z Post job cleanup.

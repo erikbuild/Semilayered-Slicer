@@ -1,0 +1,18 @@
+Linux x86_64 / Unit Tests	UNKNOWN STEP	﻿2026-11-12T00:18:50.8460083Z Current runner version: '2.338.2'
+Linux x86_64 / Unit Tests	UNKNOWN STEP	2026-11-12T00:18:50.8486109Z ##[group]Runner Image Provisioner
+Linux x86_64 / Unit Tests	UNKNOWN STEP	2026-11-12T00:18:50.8486948Z Hosted Compute Agent
+Linux x86_64 / Unit Tests	UNKNOWN STEP	2026-11-12T00:20:58.8678261Z 2509/3307 Test #2513: release_targets_platform: other platforms only is not an update here .......................................................***Failed    0.08 sec
+Linux x86_64 / Unit Tests	UNKNOWN STEP	2026-11-12T00:20:58.8776163Z 2510/3307 Test #2511: The status stream reports a printer's status over TLS ......................................................................   Passed    0.15 sec
+Linux x86_64 / Unit Tests	UNKNOWN STEP	2026-11-12T00:26:34.8150848Z 99% tests passed, 3 tests failed out of 3307
+Linux x86_64 / Unit Tests	UNKNOWN STEP	2026-11-12T00:26:34.8181148Z 
+Linux x86_64 / Unit Tests	UNKNOWN STEP	2026-11-12T00:26:34.8181541Z Label Time Summary:
+Linux x86_64 / Unit Tests	UNKNOWN STEP	2026-11-12T00:26:34.8438836Z 	3279 - The wipe tower's flow tags keep a decimal point in a comma-decimal locale (Skipped)
+Linux x86_64 / Unit Tests	UNKNOWN STEP	2026-11-12T00:26:34.8439451Z 
+Linux x86_64 / Unit Tests	UNKNOWN STEP	2026-11-12T00:26:34.8439609Z The following tests FAILED:
+Linux x86_64 / Unit Tests	UNKNOWN STEP	2026-11-12T00:26:34.8440371Z 	2513 - release_targets_platform: other platforms only is not an update here (Failed) AppUpdater
+Linux x86_64 / Unit Tests	UNKNOWN STEP	2026-11-12T00:26:34.8441722Z 	3032 - Nonplanar layers: hold back holds the safe part of a wall joined to a rim beside the top's highest point (Failed) NonplanarTop
+Linux x86_64 / Unit Tests	UNKNOWN STEP	2026-11-12T00:26:34.8443135Z 	3134 - Each cube's raft is its support, centered below it (Failed) GCodeProcessor
+Linux x86_64 / Unit Tests	UNKNOWN STEP	2026-11-12T00:26:34.8715582Z Errors while running CTest
+Linux x86_64 / Unit Tests	UNKNOWN STEP	2026-11-12T00:26:34.8786365Z ##[error]Process completed with exit code 8.
+Linux x86_64 / Unit Tests	UNKNOWN STEP	2026-11-12T00:26:34.8859894Z ##[group]Run actions/upload-artifact@v7
+Linux x86_64 / Unit Tests	UNKNOWN STEP	2026-11-12T00:26:34.8860212Z with:
