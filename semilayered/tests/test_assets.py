@@ -156,6 +156,14 @@ class CommandTest(unittest.TestCase):
     def test_tag_prints_the_tag_for_a_build(self):
         self.assertEqual(self.run_main("tag", "--build", "12"), (0, "semilayered-0.1.10-b12\n", ""))
 
+    def test_title_prints_the_title_for_a_build(self):
+        self.assertEqual(self.run_main("title", "--build", "12"), (0, "Semilayered Slicer 0.1.10 (build 12)\n", ""))
+
+    def test_artifacts_lists_the_artifacts_a_release_is_made_from(self):
+        code, out, _ = self.run_main("artifacts")
+        self.assertEqual(code, 0)
+        self.assertEqual(out.splitlines(), [artifact for artifact, _ in EXPECTED_FOR_0_1_10])
+
     def test_collect_reports_a_missing_artifact_and_exits_1(self):
         artifacts = downloaded_artifacts(self.root)
         (artifacts / "Semilayered_Slicer_Mac_universal_V0.1.10" / "Semilayered_Slicer_Mac_universal_V0.1.10.dmg").unlink()

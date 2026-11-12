@@ -1,5 +1,5 @@
 # ABOUTME: Command line for the release tooling, run from the checkout a release is made from.
-# ABOUTME: Usage: python3 -m semilayered.release gate|collect|notes|tag ...   (each takes --help)
+# ABOUTME: Usage: python3 -m semilayered.release gate|artifacts|collect|notes|tag|title ...   (each takes --help)
 from __future__ import annotations
 
 import argparse
@@ -28,9 +28,11 @@ def main(arguments: Optional[List[str]] = None, root: Optional[Path] = None, run
     collect.add_argument("--artifacts", type=Path, required=True, help="directory holding one directory per artifact")
     collect.add_argument("--out", type=Path, required=True, help="empty or new directory to put the release's files in")
 
+    commands.add_parser("artifacts", help="print the name of each artifact a release is made from")
     notes = commands.add_parser("notes", help="print the release notes for a build")
     tag = commands.add_parser("tag", help="print the release tag for a build")
-    for command in (notes, tag):
+    title = commands.add_parser("title", help="print the release title for a build")
+    for command in (notes, tag, title):
         command.add_argument("--build", type=int, required=True, help='the run number of the "Build all" run')
     for command in (gate, notes):
         command.add_argument("--known", type=Path, default=failures.KNOWN_FAILURES_FILE, help="the known-failure list")
@@ -42,8 +44,13 @@ def main(arguments: Optional[List[str]] = None, root: Optional[Path] = None, run
     if options.command == "collect":
         return _collect(options, root)
     version = assets.upstream_version(root)
-    if options.command == "tag":
+    if options.command == "artifacts":
+        for artifact, _published in assets.expected_assets(version):
+            print(artifact)
+    elif options.command == "tag":
         print(assets.release_tag(version, options.build))
+    elif options.command == "title":
+        print(assets.release_title(version, options.build))
     else:
         known = failures.load_known(options.known)
         print(release_notes(version, options.build, recorded_upstream_commit(root), known), end="")
