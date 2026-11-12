@@ -12,8 +12,10 @@ from typing import Tuple
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 
-# What the application logs each time it asks the update service for the latest version.
-UPDATE_CHECK_TEXT = b"updater: checking "
+# What the application logs each time it asks the update service for the latest version. The
+# closing NUL makes it the whole compiled string, so the longer "updater: checking the ..."
+# of another log line does not count.
+UPDATE_CHECK_TEXT = b"updater: checking \x00"
 # What Semilayered Slicer logs instead, where that request used to be made.
 UPDATE_CHECK_OFF_TEXT = b"updater: update checks are off in this build"
 
@@ -46,7 +48,7 @@ def no_update_check(app: Path) -> Tuple[bool, str]:
     code = executable(app).read_bytes()
     checks, replaced = code.count(UPDATE_CHECK_TEXT), code.count(UPDATE_CHECK_OFF_TEXT)
     if checks:
-        return False, f"the executable still contains the update check ({UPDATE_CHECK_TEXT.decode()!r} found {checks} times)"
+        return False, f"the executable still contains the update check (its log text is there {checks} times)"
     if not replaced:
         return False, f"the executable has no update check, but not its replacement either ({UPDATE_CHECK_OFF_TEXT.decode()!r} not found)"
     return True, "the executable contains no update check"
@@ -82,7 +84,8 @@ def main() -> int:
     if len(sys.argv) != 2 or not (Path(sys.argv[1]) / "Contents" / "Info.plist").is_file():
         print("usage: python3 semilayered/tests/e2e/behaviour_checks.py <path to the .app>", file=sys.stderr)
         return 2
-    app = Path(sys.argv[1])
+    # Absolute, because the app is run from a temporary directory.
+    app = Path(sys.argv[1]).resolve()
     passed = True
     for check in (no_update_check, generator_name):
         ok, detail = check(app)
