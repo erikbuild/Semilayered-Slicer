@@ -391,7 +391,7 @@ void AutoUpdater::on_startup()
             }
         }
     }
-    cleanup_stale_download_dirs();
+    // The update downloads in the temporary folder belong to Unlayered's own slicer, so they are left alone.
 
     // Stealth mode keeps only the anonymous update check. The sign-in is re-validated lazily instead,
     // by the download itself, which forgets a token the site refuses.
@@ -686,6 +686,8 @@ bool AutoUpdater::handle_new_version(const std::string &version, const std::stri
 
 void AutoUpdater::start_download()
 {
+    // Semilayered Slicer downloads no update.
+    return;
     if (m_state == State::Downloading)
         return;
     m_state            = State::Downloading;
@@ -764,6 +766,8 @@ void AutoUpdater::on_download_finished(bool ok, const fs::path &installer, const
 void AutoUpdater::reuse_download(const std::string &version, const fs::path &installer, const std::string &sha256,
                                  bool interrupted)
 {
+    // Semilayered Slicer installs no update, including one that Unlayered's own slicer downloaded in an earlier session.
+    return;
     m_install_dir = self_updatable_install_dir();
     if (!m_install_dir) {
         cleanup_download_dir(installer); // the update check decides what this copy can do
