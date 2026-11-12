@@ -2,7 +2,7 @@
 
 ## Why it exists
 
-Unlayered Slicer hosts web applications either as top-level tabs or as a persistent **side panel**
+Semilayered Slicer hosts web applications either as top-level tabs or as a persistent **side panel**
 beside those tabs. Each is a browser control pointed at a URL the user configures, the same way the
 Device tab embeds a printer's own web interface. A side panel keeps a page and the plate it works on
 visible together. A hosted page needs a few things only the slicer can do: open the file it

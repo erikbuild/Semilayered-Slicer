@@ -902,7 +902,7 @@ TEST_CASE("A saved project records the OrcaSlicer version it is based on and thi
     std::string xml;
     REQUIRE(read_cad_recipe_entry(file.string(), xml, "3D/3dmodel.model"));
     CHECK(count_occurrences(xml, version_tag("OrcaSlicer", ORCA_BASE_VERSION)) == 1);
-    CHECK(count_occurrences(xml, version_tag("UnlayeredSlicer", UNLAYERED_VERSION)) == 1);
+    CHECK(count_occurrences(xml, version_tag("SemilayeredSlicer", UNLAYERED_VERSION)) == 1);
 
     // OrcaSlicer's version line is what the importer reports as the file version, so OrcaSlicer's
     // migrations judge the file as one of its own; the fork's release is read apart from it.
@@ -919,12 +919,12 @@ TEST_CASE("A saved project records the OrcaSlicer version it is based on and thi
 TEST_CASE("A re-saved project carries each slicer version tag once, with this build's versions", "[3mf][Regression]")
 {
     // A project from a release that wrote its own version into the OrcaSlicer tag and had no
-    // UnlayeredSlicer tag. Both tags reach the re-save through the loaded model's metadata.
+    // SemilayeredSlicer tag. Both tags reach the re-save through the loaded model's metadata.
     ScopedTemporaryFile old_file(".3mf");
     store_cube_project(old_file.string());
     REQUIRE(replace_in_3mf_entry(old_file.string(), "3dmodel.model", version_tag("OrcaSlicer", ORCA_BASE_VERSION),
                                  version_tag("OrcaSlicer", "0.1.2")));
-    REQUIRE(replace_in_3mf_entry(old_file.string(), "3dmodel.model", version_tag("UnlayeredSlicer", UNLAYERED_VERSION), ""));
+    REQUIRE(replace_in_3mf_entry(old_file.string(), "3dmodel.model", version_tag("SemilayeredSlicer", UNLAYERED_VERSION), ""));
 
     ScopedTemporaryDir backup_dir("unlayered_version_resave");
     Model              model;
@@ -935,12 +935,12 @@ TEST_CASE("A re-saved project carries each slicer version tag once, with this bu
     std::string xml;
     REQUIRE(read_cad_recipe_entry(new_file.string(), xml, "3D/3dmodel.model"));
     CHECK(count_occurrences(xml, "<metadata name=\"OrcaSlicer\">") == 1);
-    CHECK(count_occurrences(xml, "<metadata name=\"UnlayeredSlicer\">") == 1);
+    CHECK(count_occurrences(xml, "<metadata name=\"SemilayeredSlicer\">") == 1);
     CHECK(count_occurrences(xml, version_tag("OrcaSlicer", ORCA_BASE_VERSION)) == 1);
-    CHECK(count_occurrences(xml, version_tag("UnlayeredSlicer", UNLAYERED_VERSION)) == 1);
+    CHECK(count_occurrences(xml, version_tag("SemilayeredSlicer", UNLAYERED_VERSION)) == 1);
 }
 
-TEST_CASE("A 0.x OrcaSlicer tag without an UnlayeredSlicer tag reads as an older release of this fork", "[3mf]")
+TEST_CASE("A 0.x OrcaSlicer tag without an SemilayeredSlicer tag reads as an older release of this fork", "[3mf]")
 {
     struct Case
     {
@@ -955,7 +955,7 @@ TEST_CASE("A 0.x OrcaSlicer tag without an UnlayeredSlicer tag reads as an older
     store_cube_project(file.string());
     REQUIRE(replace_in_3mf_entry(file.string(), "3dmodel.model", version_tag("OrcaSlicer", ORCA_BASE_VERSION),
                                  version_tag("OrcaSlicer", c.orca_tag)));
-    REQUIRE(replace_in_3mf_entry(file.string(), "3dmodel.model", version_tag("UnlayeredSlicer", UNLAYERED_VERSION), ""));
+    REQUIRE(replace_in_3mf_entry(file.string(), "3dmodel.model", version_tag("SemilayeredSlicer", UNLAYERED_VERSION), ""));
 
     ScopedTemporaryDir backup_dir("unlayered_version_legacy");
     Model              model;

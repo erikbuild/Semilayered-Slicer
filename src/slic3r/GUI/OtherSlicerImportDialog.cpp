@@ -162,7 +162,7 @@ public:
                 top->Add(line, 0, wxLEFT | wxRIGHT, FromDIP(28));
             }
         auto *body = new wxStaticText(this, wxID_ANY,
-                                      _L("Your printers, filaments and presets are copied into Unlayered Slicer. Nothing in the other "
+                                      _L("Your printers, filaments and presets are copied into Semilayered Slicer. Nothing in the other "
                                          "apps is changed. You can also do this later from File > Import."));
         body->Wrap(wrap);
         top->Add(body, 0, wxALL, FromDIP(16));
@@ -395,7 +395,7 @@ OtherSlicersImportResult import_other_slicers(wxWindow *parent, const std::vecto
             history.add(s.app, s.kind, s.name, s.detail);
             break;
         case OtherSlicers::Skipped::Why::MissingParent:
-            r.skipped.Add(wxString::Format(_L("%s (based on \"%s\", which neither %s nor Unlayered Slicer has)"), name, from_u8(s.detail),
+            r.skipped.Add(wxString::Format(_L("%s (based on \"%s\", which neither %s nor Semilayered Slicer has)"), name, from_u8(s.detail),
                                            app_label(s.app)));
             break;
         case OtherSlicers::Skipped::Why::Duplicate: r.skipped.Add(wxString::Format(_L("%s (no free name for it)"), name)); break;
@@ -403,7 +403,7 @@ OtherSlicersImportResult import_other_slicers(wxWindow *parent, const std::vecto
             if (!s.detail.empty())
                 r.skipped.Add(wxString::Format(_L("%s (made for %s printers, and none of them is selected)"), name, from_u8(s.detail)));
             else
-                r.skipped.Add(wxString::Format(_L("%s (not available in Unlayered Slicer yet)"), name));
+                r.skipped.Add(wxString::Format(_L("%s (not available in Semilayered Slicer yet)"), name));
             break;
         case OtherSlicers::Skipped::Why::NoPrinter:
             r.skipped.Add(s.detail.empty() ?

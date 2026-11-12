@@ -122,7 +122,7 @@ constexpr const char* CONFIG_ORCA_AUTH_URL  = "orca_auth_url";
 constexpr const char* CONFIG_ORCA_CLOUD_URL = "orca_cloud_url";
 constexpr const char* CONFIG_ORCA_PUB_KEY   = "orca_pub_key";
 
-constexpr const char* SECRET_STORE_SERVICE = "UnlayeredSlicer/Auth";
+constexpr const char* SECRET_STORE_SERVICE = "SemilayeredSlicer/Auth";
 constexpr const char* SECRET_STORE_USER    = "orca_refresh_token";
 constexpr std::chrono::seconds TOKEN_REFRESH_SKEW{900}; // 15 minutes
 

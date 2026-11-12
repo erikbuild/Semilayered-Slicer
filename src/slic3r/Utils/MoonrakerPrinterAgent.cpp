@@ -1221,7 +1221,7 @@ int MoonrakerPrinterAgent::handle_request(const std::string& dev_id, const std::
 
         const std::string cmd = command.get<std::string>();
 
-        // Handle gcode_line command - this is how G-code commands are sent from Unlayered Slicer
+        // Handle gcode_line command - this is how G-code commands are sent from Semilayered Slicer
         if (cmd == "gcode_line") {
             if (!json["print"].contains("param") || !json["print"]["param"].is_string()) {
                 BOOST_LOG_TRIVIAL(error) << "MoonrakerPrinterAgent: gcode_line missing param value, full json: " << json_str;
@@ -1807,7 +1807,7 @@ void MoonrakerPrinterAgent::run_status_stream(std::string dev_id, std::string ba
                 }
             });
             ws.set_option(websocket::stream_base::decorator([&](websocket::request_type& req) {
-                req.set(http::field::user_agent, "UnlayeredSlicer");
+                req.set(http::field::user_agent, "SemilayeredSlicer");
                 if (!api_key.empty()) {
                     req.set("X-Api-Key", api_key);
                 }
@@ -1826,10 +1826,10 @@ void MoonrakerPrinterAgent::run_status_stream(std::string dev_id, std::string ba
             nlohmann::json identify;
             identify["jsonrpc"]               = "2.0";
             identify["method"]                = "server.connection.identify";
-            identify["params"]["client_name"] = "UnlayeredSlicer";
+            identify["params"]["client_name"] = "SemilayeredSlicer";
             identify["params"]["version"]     = MoonrakerPrinterAgent_VERSION;
             identify["params"]["type"]        = "agent";
-            identify["params"]["url"]         = "https://github.com/Unlayered3D/Unlayered-Slicer";
+            identify["params"]["url"]         = "https://github.com/erikbuild/Semilayered-Slicer";
             identify["id"]                    = 0;
             const std::string identify_payload = identify.dump();
             if (const auto ec = run([&](auto&& handler) { ws.async_write(net::buffer(identify_payload), handler); })) {

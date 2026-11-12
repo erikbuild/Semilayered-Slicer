@@ -50,13 +50,13 @@ RUN apt-get update && apt-get install  -y \
 ENV LC_ALL=en_US.utf8
 RUN locale-gen $LC_ALL
 
-# Set this so that Unlayered Slicer doesn't complain about
+# Set this so that Semilayered Slicer doesn't complain about
 # the CA cert path on every startup
 ENV SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
 
-COPY ./ UnlayeredSlicer
+COPY ./ SemilayeredSlicer
 
-WORKDIR UnlayeredSlicer
+WORKDIR SemilayeredSlicer
 
 # These can run together, but we run them separate for podman caching
 # Update System dependencies
@@ -72,7 +72,7 @@ RUN ./build_linux.sh -sr
 ENV container podman
 RUN ./build_linux.sh -ir
 
-# It's easier to run Unlayered Slicer as the same username,
+# It's easier to run Semilayered Slicer as the same username,
 # UID and GID as your workstation.  Since we bind mount
 # your home directory into the container, it's handy
 # to keep permissions the same.  Just in case, defaults
@@ -93,4 +93,4 @@ RUN if [[ "$UID" != "0" ]]; then \
     fi
 # Using an entrypoint instead of CMD because the binary
 # accepts several command line arguments.
-ENTRYPOINT ["/UnlayeredSlicer/build/package/bin/unlayered-slicer"]
+ENTRYPOINT ["/SemilayeredSlicer/build/package/bin/semilayered-slicer"]

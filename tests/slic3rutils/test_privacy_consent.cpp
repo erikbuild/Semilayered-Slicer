@@ -510,7 +510,7 @@ TEST_CASE("Diagnostics allowlist: events, properties and values", "[Privacy]")
 
     // Values
     CHECK(safe_string("0.1.6"));
-    CHECK(safe_string("UnlayeredSlicer.dll+0x1a2b3c"));
+    CHECK(safe_string("SemilayeredSlicer.dll+0x1a2b3c"));
     CHECK(safe_string("thumbnails=96x96/PNG"));
     CHECK_FALSE(safe_string("C:/Users/jane"));
     CHECK_FALSE(safe_string("\\\\server\\share"));
@@ -530,8 +530,8 @@ TEST_CASE("Diagnostics allowlist: events, properties and values", "[Privacy]")
     CHECK_FALSE(allowed_count_key("project:bracket"));
 
     // A crash location with its caller chain survives (it used to be dropped for being over 120).
-    const std::string chain = "UnlayeredSlicer.dll+0x4862937>UnlayeredSlicer.dll+0x3ec547c>UnlayeredSlicer.dll+0x3f8e3cc"
-                              ">UnlayeredSlicer.dll+0x189b228>wxmsw32u_core_vc.dll+0x12345>USER32.dll+0x1a2b3";
+    const std::string chain = "SemilayeredSlicer.dll+0x4862937>SemilayeredSlicer.dll+0x3ec547c>SemilayeredSlicer.dll+0x3f8e3cc"
+                              ">SemilayeredSlicer.dll+0x189b228>wxmsw32u_core_vc.dll+0x12345>USER32.dll+0x1a2b3";
     REQUIRE(chain.size() > 120);
     REQUIRE(chain.size() <= 190);
     REQUIRE(filter("crash", {{"version", "0.1.7"}, {"exception", "0xC0000005"}, {"at", chain}}, json(), props, counts));

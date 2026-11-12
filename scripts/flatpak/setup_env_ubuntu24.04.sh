@@ -7,10 +7,10 @@ flatpak install flathub org.gnome.Platform//50 org.gnome.Sdk//50 org.freedesktop
 
 
 ##
-# in the Unlayered Slicer folder, run the following command to build it
+# in the Semilayered Slicer folder, run the following command to build it
 
 # # First time build
-# ./scripts/flatpak/make_deps_tar.sh && flatpak-builder --state-dir=.flatpak-builder --keep-build-dirs --user --force-clean build-dir scripts/flatpak/com.unlayered3d.UnlayeredSlicer.yml
+# ./scripts/flatpak/make_deps_tar.sh && flatpak-builder --state-dir=.flatpak-builder --keep-build-dirs --user --force-clean build-dir scripts/flatpak/io.github.erikbuild.SemilayeredSlicer.yml
 
-# # Subsequent builds (only rebuilding Unlayered Slicer; run make_deps_tar.sh first if deps/ changed)
-# flatpak-builder --state-dir=.flatpak-builder --keep-build-dirs --user build-dir scripts/flatpak/com.unlayered3d.UnlayeredSlicer.yml --build-only=UnlayeredSlicer
+# # Subsequent builds (only rebuilding Semilayered Slicer; run make_deps_tar.sh first if deps/ changed)
+# flatpak-builder --state-dir=.flatpak-builder --keep-build-dirs --user build-dir scripts/flatpak/io.github.erikbuild.SemilayeredSlicer.yml --build-only=SemilayeredSlicer

@@ -1,6 +1,6 @@
 # Account provider protocol
 
-Unlayered Slicer can sign in to an **account provider**: a web service that identifies the person
+Semilayered Slicer can sign in to an **account provider**: a web service that identifies the person
 using the slicer and gives out short-lived tokens to services they use. This document specifies
 every request the slicer makes to a provider, so that anyone can run their own.
 
@@ -28,7 +28,7 @@ The default is written only when the key is absent. A value the user sets is nev
 
 - verifies the TLS certificate (`https` is required, except `http` on a loopback host for
   development);
-- sends `User-Agent: UnlayeredSlicer/<version>` and `Accept: application/json`;
+- sends `User-Agent: SemilayeredSlicer/<version>` and `Accept: application/json`;
 - has a 10 s connect timeout and a 30 s total timeout;
 - accepts a response body of at most 64 KiB;
 - sends JSON bodies with `Content-Type: application/json`. A request with no logical body sends
@@ -78,7 +78,7 @@ provider.
 ### `POST <root>/api/slicer/device/collect`
 
 ```json
-{ "id": "h_8f2c…", "secret": "s_41d9…", "label": "Unlayered Slicer 0.2.0 on WORKSHOP-PC" }
+{ "id": "h_8f2c…", "secret": "s_41d9…", "label": "Semilayered Slicer 0.2.0 on WORKSHOP-PC" }
 ```
 
 `label` is for the provider's list of signed-in devices. Answers:
@@ -162,7 +162,7 @@ This signs an embedded web page in as the person, without a second password prom
 `Authorization: Bearer <device token>`.
 
 ```json
-{ "next": "/library?host=unlayered-slicer" }
+{ "next": "/library?host=semilayered-slicer" }
 ```
 
 ```json

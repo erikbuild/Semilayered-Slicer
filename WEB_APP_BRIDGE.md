@@ -1,6 +1,6 @@
 # Web-app bridge, protocol v1
 
-Unlayered Slicer can host a web application, either as a top-level tab or as a side panel next to
+Semilayered Slicer can host a web application, either as a top-level tab or as a side panel next to
 every tab, and let that application use a defined set of slicer actions. This document is the
 complete specification of that interface. How it fits with the slicer's other documented
 interfaces (the slicing service and the account provider) is summarised in
@@ -22,7 +22,7 @@ start from it.
 
 This matters enough to state plainly, because it constrains the design of everything below.
 
-Unlayered Slicer is licensed under the **GNU Affero General Public License, version 3**. A web
+Semilayered Slicer is licensed under the **GNU Affero General Public License, version 3**. A web
 application that talks to it across this interface is a **separate program**: it runs in its own
 process (usually on its own machine), it is written in whatever language its author likes, it is
 licensed however its author likes, and it exchanges nothing with the slicer but serialized JSON
@@ -43,7 +43,7 @@ Two consequences follow, and the interface is shaped by them:
   default addresses for some slots, but only where no value is stored yet, and a blank address
   turns a slot off (§7).
 
-If you host a web application that runs Unlayered Slicer **on your server** to produce output for
+If you host a web application that runs Semilayered Slicer **on your server** to produce output for
 remote users, note that AGPL-3.0 §13 asks you to offer those users the Corresponding Source of the
 slicer. `slicer.getInfo` returns `app.sourceUrl` precisely so your page can render that offer
 without hard-coding it. That obligation covers the slicer, not your application.
@@ -158,8 +158,8 @@ No parameters. Never fails on a trusted origin.
 ```json
 {
   "api":      { "version": 1, "envelope": "slicer-rpc/1" },
-  "app":      { "name": "Unlayered Slicer", "version": "0.0.3-dev", "coreVersion": "02.06.00.51",
-                "sourceUrl": "https://github.com/Unlayered3D/Unlayered-Slicer", "license": "AGPL-3.0" },
+  "app":      { "name": "Semilayered Slicer", "version": "0.0.3-dev", "coreVersion": "02.06.00.51",
+                "sourceUrl": "https://github.com/erikbuild/Semilayered-Slicer", "license": "AGPL-3.0" },
   "platform": { "os": "windows", "locale": "en", "darkMode": true },
   "capabilities": ["slicer.getInfo", "slicer.openProjectFromUrl", "slicer.selectPreset", "slicer.openProject"],
   "limits":   { "maxDownloadBytes": 268435456,
@@ -282,7 +282,7 @@ Opens a file already on the user's disk. Present in `capabilities` **only** when
 loopback, or when the user has enabled *Allow the web application to open local files*.
 
 ```json
-{ "path": "C:\\Users\\me\\AppData\\Roaming\\Unlayered Slicer\\cache\\webapp\\bracket.3mf" }
+{ "path": "C:\\Users\\me\\AppData\\Roaming\\Semilayered Slicer\\cache\\webapp\\bracket.3mf" }
 ```
 
 The path is canonicalised and then checked: it must be a regular file, of an accepted type, within
@@ -1353,7 +1353,7 @@ directions a page gives match the build in front of the person: `label` is the s
 `path` the menus, Preferences tab and section leading to it, both translated into the slicer's
 language exactly as the slicer shows them. `path` is platform-specific: on Windows and Linux it
 starts at the top bar's drop-down (`["Menu", "Preferences", "Developer", "Local web apps"]`); on
-macOS at the application menu (`["Unlayered Slicer", "Settings…", "Developer", "Local web apps"]`,
+macOS at the application menu (`["Semilayered Slicer", "Settings…", "Developer", "Local web apps"]`,
 or `"Preferences"` before macOS 13). It is `null` when this build has no such switch for this tab;
 then say printer control is unavailable here rather than pointing at a setting. Build directions
 from these fields; never hard-code them.

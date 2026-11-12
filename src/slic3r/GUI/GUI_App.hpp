@@ -168,9 +168,9 @@ enum ConfigMenuIDs {
     ConfigMenuCnt,
 };
 
-enum UnlayeredSlicerMenuIDs {
-  UnlayeredSlicerMenuAbout,
-  UnlayeredSlicerMenuPreferences,
+enum SemilayeredSlicerMenuIDs {
+  SemilayeredSlicerMenuAbout,
+  SemilayeredSlicerMenuPreferences,
 };
 
 enum CameraMenuIDs {
@@ -475,7 +475,7 @@ public:
     int  input_idle_ms() const;
     // The Preferences "Default page" choice, stored as its index: 0 Home, 1 Prepare.
     bool starts_on_prepare() const;
-    std::string logo_name() const { return is_editor() ? "UnlayeredSlicer" : "UnlayeredSlicer-gcodeviewer"; }
+    std::string logo_name() const { return is_editor() ? "SemilayeredSlicer" : "SemilayeredSlicer-gcodeviewer"; }
 
     bool is_closing() const { return m_is_closing.load(std::memory_order_acquire); }
     // The setup wizard is open (run_wizard). Usage diagnostics hold every send meanwhile.

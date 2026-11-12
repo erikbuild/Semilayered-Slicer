@@ -1,16 +1,16 @@
 name: 🐞 Bug Report
-description: Something behaves incorrectly while Unlayered Slicer keeps running
+description: Something behaves incorrectly while Semilayered Slicer keeps running
 labels: ["bug"]
 body:
   - type: markdown
     attributes:
       value: |
-        **Thank you for using Unlayered Slicer and wanting to report a bug.**
+        **Thank you for using Semilayered Slicer and wanting to report a bug.**
         
         Please note that this is not the place to make feature requests or ask for help.
-        For this, please use the [Feature request](https://github.com/Unlayered3D/Unlayered-Slicer/issues/new?assignees=&labels=&projects=&template=feature_request.yml) issue type or you can discuss your idea on our [Discord server](https://discord.gg/P4VE9UY9gJ) with others.
+        For this, please use the [Feature request](https://github.com/erikbuild/Semilayered-Slicer/issues/new?assignees=&labels=&projects=&template=feature_request.yml) issue type or you can discuss your idea on our [Discord server](https://discord.gg/P4VE9UY9gJ) with others.
         
-        If Unlayered Slicer closes on its own, freezes or stops responding, please use the [Crash report](https://github.com/Unlayered3D/Unlayered-Slicer/issues/new?assignees=&labels=&projects=&template=crash_report.yml) form instead. It asks for the logs a crash needs.
+        If Semilayered Slicer closes on its own, freezes or stops responding, please use the [Crash report](https://github.com/erikbuild/Semilayered-Slicer/issues/new?assignees=&labels=&projects=&template=crash_report.yml) form instead. It asks for the logs a crash needs.
         
         Before filing, please check if the issue already exists (either open or closed) by using the search bar on the issues page. If it does, comment there. Even if it's closed, we can reopen it based on your comment.
   - type: checkboxes
@@ -18,7 +18,7 @@ body:
       label: Is this issue reproducible in the latest nightly build?
       description: >
         Please verify this issue still happens in the latest nightly build first. It may already be fixed there:
-        [Nightly builds](https://github.com/Unlayered3D/Unlayered-Slicer/releases/tag/nightly-builds).
+        [Nightly builds](https://github.com/erikbuild/Semilayered-Slicer/releases/tag/nightly-builds).
       options:
         - label: I have checked the latest nightly build and the issue is still reproducible
           required: true
@@ -32,8 +32,8 @@ body:
   - type: input
     id: version
     attributes:
-      label: Unlayered Slicer Version
-      description: Which version of Unlayered Slicer are you running? You can see the full version in `Help` -> `About Unlayered Slicer`.
+      label: Semilayered Slicer Version
+      description: Which version of Semilayered Slicer are you running? You can see the full version in `Help` -> `About Semilayered Slicer`.
       placeholder: e.g. 2.5.0
     validations:
       required: true
@@ -119,10 +119,10 @@ body:
 
         * The **project file** used when the problem happened, zipped. Export it just before or after the problem occurs. Even if you did nothing and there is no object on the plate, export it, since we need the configuration it carries. `File` -> `Save project as...`
         * The **log folder**, zipped. `Help` -> `Show Configuration Folder` opens it, or find it at:
-          * Windows: `%APPDATA%\Unlayered Slicer\log`, usually `C:\Users\<you>\AppData\Roaming\Unlayered Slicer\log`
-          * macOS: `$HOME/Library/Application Support/Unlayered Slicer/log`
-          * Linux: `$HOME/.config/Unlayered Slicer/log`
-          * Flatpak: `$HOME/.var/app/com.unlayered3d.UnlayeredSlicer/config/Unlayered Slicer/log`
+          * Windows: `%APPDATA%\Semilayered Slicer\log`, usually `C:\Users\<you>\AppData\Roaming\Semilayered Slicer\log`
+          * macOS: `$HOME/Library/Application Support/Semilayered Slicer/log`
+          * Linux: `$HOME/.config/Semilayered Slicer/log`
+          * Flatpak: `$HOME/.var/app/io.github.erikbuild.SemilayeredSlicer/config/Semilayered Slicer/log`
           * If the zip comes out over 25 MB, attach the newest logs from that folder on their own instead.
       placeholder: |
         Zipped project file

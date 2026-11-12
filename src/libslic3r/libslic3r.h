@@ -8,11 +8,11 @@
 #include <initializer_list>
 #include <limits>
 #include <utility>
-#define SLIC3R_APP_FULL_NAME "Unlayered Slicer"
-#define SLIC3R_APP_CATALOG   "UnlayeredSlicer" // gettext domain: <lang>/UnlayeredSlicer.mo
-#define GCODEVIEWER_APP_NAME "Unlayered Slicer G-code Viewer"
-#define GCODEVIEWER_APP_KEY  "UnlayeredSlicerGcodeViewer"
-#define GCODEVIEWER_BUILD_ID std::string("Unlayered Slicer G-code Viewer-") + std::string(SLIC3R_VERSION) + std::string("-RC")
+#define SLIC3R_APP_FULL_NAME "Semilayered Slicer"
+#define SLIC3R_APP_CATALOG   "SemilayeredSlicer" // gettext domain: <lang>/SemilayeredSlicer.mo
+#define GCODEVIEWER_APP_NAME "Semilayered Slicer G-code Viewer"
+#define GCODEVIEWER_APP_KEY  "SemilayeredSlicerGcodeViewer"
+#define GCODEVIEWER_BUILD_ID std::string("Semilayered Slicer G-code Viewer-") + std::string(SLIC3R_VERSION) + std::string("-RC")
 
 // this needs to be included early for MSVC (listing it in Build.PL is not enough)
 #include <memory>

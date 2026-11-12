@@ -1,5 +1,5 @@
 This directory is licensed under the MIT licence, NOT the AGPL-3.0 that covers the rest of this
-repository. It is a reference client for the Unlayered Slicer Web App Bridge (see
+repository. It is a reference client for the Semilayered Slicer Web App Bridge (see
 WEB_APP_BRIDGE.md at the repository root), published under permissive terms specifically so that
 it can be copied into a web application under any licence, including a proprietary one.
 

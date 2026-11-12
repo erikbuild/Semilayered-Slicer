@@ -93,10 +93,10 @@ jobs:
                      --status completed --limit 10 --json databaseId --jq '.[].databaseId')
             for run in $runs; do
               if gh run download "$run" --repo "$GITHUB_REPOSITORY" --dir validator-download \
-                   --pattern 'Unlayered_Slicer_profile_validator_Linux_ubuntu_*' 2>/dev/null; then
+                   --pattern 'Semilayered_Slicer_profile_validator_Linux_ubuntu_*' 2>/dev/null; then
                 echo "Using the profile validator from Build all run $run on $branch"
-                find validator-download -type f -name UnlayeredSlicer_profile_validator -exec mv {} . \;
-                chmod +x ./UnlayeredSlicer_profile_validator
+                find validator-download -type f -name SemilayeredSlicer_profile_validator -exec mv {} . \;
+                chmod +x ./SemilayeredSlicer_profile_validator
                 exit 0
               fi
             done
@@ -110,7 +110,7 @@ jobs:
         continue-on-error: true
         run: |
           set +e
-          ./UnlayeredSlicer_profile_validator -p ${{ github.workspace }}/resources/profiles -l 2 2>&1 | tee ${{ runner.temp }}/validate_system.log
+          ./SemilayeredSlicer_profile_validator -p ${{ github.workspace }}/resources/profiles -l 2 2>&1 | tee ${{ runner.temp }}/validate_system.log
           exit ${PIPESTATUS[0]}
       # The validator above is the nightly build of main, so it cannot slice profiles that use
       # settings a PR adds to the engine: it reports their placeholders as undefined. A PR that
@@ -135,7 +135,7 @@ jobs:
         continue-on-error: true
         run: |
           set +e
-          ./UnlayeredSlicer_profile_validator -p ${{ github.workspace }}/resources/profiles -s -l 2 2>&1 | tee ${{ runner.temp }}/validate_slice.log
+          ./SemilayeredSlicer_profile_validator -p ${{ github.workspace }}/resources/profiles -s -l 2 2>&1 | tee ${{ runner.temp }}/validate_slice.log
           exit ${PIPESTATUS[0]}
       # All vendors' filament_id collisions were fixed, so the duplicate-filament-subtype
       # check runs tree-wide.
@@ -144,7 +144,7 @@ jobs:
         continue-on-error: true
         run: |
           set +e
-          ./UnlayeredSlicer_profile_validator -p ${{ github.workspace }}/resources/profiles -l 2 -f 2>&1 | tee ${{ runner.temp }}/validate_filament_subtypes.log
+          ./SemilayeredSlicer_profile_validator -p ${{ github.workspace }}/resources/profiles -l 2 -f 2>&1 | tee ${{ runner.temp }}/validate_filament_subtypes.log
           exit ${PIPESTATUS[0]}
 
       - name: validate custom presets
@@ -218,7 +218,7 @@ jobs:
             unzip -q "${fixture_zip}" -d "${profile_tree}"
 
             set +e
-            ./UnlayeredSlicer_profile_validator -p "${profile_tree}" -l 2 > "${log_path}" 2>&1
+            ./SemilayeredSlicer_profile_validator -p "${profile_tree}" -l 2 > "${log_path}" 2>&1
             result=$?
             set -e
 

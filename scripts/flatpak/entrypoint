@@ -42,4 +42,4 @@ repair_locale() {
 }
 repair_locale
 
-exec /app/bin/unlayered-slicer "$@"
+exec /app/bin/semilayered-slicer "$@"

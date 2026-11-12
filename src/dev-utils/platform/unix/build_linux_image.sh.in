@@ -198,7 +198,7 @@ echo -n "[9/9] Generating Linux app..."
     cp -fl "${ORIGINAL_BINARY_LOCATION}" "$BIN_DIR/@SLIC3R_APP_CMD@"
 
     # Bundle the embedded Python runtime (interpreter + stdlib) that CMake staged
-    # next to the binary. Unlayered Slicer resolves PYTHONHOME at <resources_dir>/../lib/python,
+    # next to the binary. Semilayered Slicer resolves PYTHONHOME at <resources_dir>/../lib/python,
     # which is $APPDIR/lib/python (resources_dir is $APPDIR/resources). Staging it here,
     # before the dependency-closure pass below, lets that pass also bundle the extension
     # modules' shared libraries; libpython itself is found via rpath ($ORIGIN entries set
@@ -411,8 +411,8 @@ cat << EOF >@SLIC3R_APP_CMD@
 DIR=\$(dirname "\$(readlink -f "\$0")")
 export APPDIR="\${APPDIR:-\$DIR}"
 
-# FIXME: Unlayered Slicer segfault workarounds
-# 1) Unlayered Slicer will segfault on systems where locale info is not as expected (i.e. Holo-ISO arch-based distro)
+# FIXME: Semilayered Slicer segfault workarounds
+# 1) Semilayered Slicer will segfault on systems where locale info is not as expected (i.e. Holo-ISO arch-based distro)
 export LC_ALL=C
 
 if [ "\$XDG_SESSION_TYPE" = "wayland" ] && [ "\$ZINK_DISABLE_OVERRIDE" != "1" ]; then

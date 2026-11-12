@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to Unlayered Slicer are listed here, newest first.
+All notable changes to Semilayered Slicer are listed here, newest first.
 
 ## 0.1.10 — 2026-11-04
 
@@ -153,7 +153,7 @@ All notable changes to Unlayered Slicer are listed here, newest first.
 
 ### Added
 
-- **Import your settings from other slicers.** Unlayered Slicer finds OrcaSlicer, PrusaSlicer,
+- **Import your settings from other slicers.** Semilayered Slicer finds OrcaSlicer, PrusaSlicer,
   Bambu Studio, Creality Print (6 and 7), SuperSlicer, ElegooSlicer, Anycubic Slicer Next,
   Snapmaker Orca, QIDI Studio, Flash Studio, PhrozenOrca and FLSUN Slicer on your computer and
   brings over the printers and filaments you picked from their built-in lists, and your own
@@ -163,7 +163,7 @@ All notable changes to Unlayered Slicer are listed here, newest first.
   Settings from Other Slicers**, or a one-time question on the first launch after updating (Import /
   Not now / Don't ask again). On a fresh install the printer, process and filament you last used
   there are selected too; an existing selection is never changed. Your presets keep their values,
-  and stay linked to the matching Unlayered Slicer profile where there is one; PrusaSlicer-style
+  and stay linked to the matching Semilayered Slicer profile where there is one; PrusaSlicer-style
   settings are translated to their names here. Nothing in the other apps is changed and nothing
   here is overwritten: a name that is already taken gets " (OrcaSlicer)" or similar added, and
   importing again only adds what is new. Printer network addresses come along; API keys, user
@@ -377,7 +377,7 @@ Changes since **0.1.2** (2026-10-10).
 
 ### New
 
-- **Anonymous usage diagnostics.** Unlayered Slicer now tells us which features are used, how
+- **Anonymous usage diagnostics.** Semilayered Slicer now tells us which features are used, how
   slicing went (including errors), when it crashes, and basic system details (operating system,
   processor cores, memory, language), with a random id that is not linked to you or your account.
   Models, G-code, file and object names, and the names of your own presets are never sent. It is on
@@ -405,7 +405,7 @@ Changes since **0.1.2** (2026-10-10).
 
 ### Fixed
 
-- **macOS: "Unlayered Slicer quit unexpectedly" on every quit** while the Bambu Lab network plug-in
+- **macOS: "Semilayered Slicer quit unexpectedly" on every quit** while the Bambu Lab network plug-in
   was installed. The plug-in is now unloaded before the app exits.
 - **Linux: embedded web tabs (such as Universe) could open blank.**
 - **Building from source on macOS and Linux** works again, including the universal (Intel and Apple

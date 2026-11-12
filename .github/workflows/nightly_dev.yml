@@ -16,7 +16,7 @@ permissions:
 jobs:
   nightly:
     name: Build main if it changed
-    if: github.repository_owner == 'Unlayered3D' && github.repository != 'Unlayered3D/Unlayered-Slicer'
+    if: github.repository_owner == 'Unlayered3D' && github.repository != 'erikbuild/Semilayered-Slicer'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:

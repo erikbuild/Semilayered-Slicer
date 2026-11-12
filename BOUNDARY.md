@@ -1,12 +1,12 @@
 # Boundary: what the slicer talks to, and how
 
-Unlayered Slicer is an AGPL-3.0 program. It works with other software only over three documented
+Semilayered Slicer is an AGPL-3.0 program. It works with other software only over three documented
 network interfaces. Each interface is product-neutral and specified in this repository, and each
 has a reference implementation under the MIT licence. Anyone can put their own program on the
 other side of any of them. This page is a summary for engineers and reviewers.
 
 ```
-                         Unlayered Slicer (AGPL-3.0, this repository)
+                         Semilayered Slicer (AGPL-3.0, this repository)
    +-------------------------------------------------------------------------------+
    |  web-app tab / side panel /     Slice dropdown:          Help > Sign in        |
    |  model-library tab              "slice with service"                           |
@@ -60,7 +60,7 @@ printer firmware images an installer may carry (see [README.md](README.md)).
 ## Corresponding source (AGPL-3.0 §13)
 
 The complete corresponding source of each release is this public repository,
-<https://github.com/Unlayered3D/Unlayered-Slicer>, with one tag per release that matches the
+<https://github.com/erikbuild/Semilayered-Slicer>, with one tag per release that matches the
 installer built from it. The slicer offers the same address to every hosted page as
 `slicer.getInfo` → `app.sourceUrl`, so a page whose server runs the slicer for remote users can show
 the offer without hard-coding it.

@@ -198,7 +198,7 @@ bool runs_installed()
     return boost::filesystem::exists(exe.parent_path() / "Uninstall.exe", ec);
 #elif defined(__APPLE__)
     // Inside an .app, but not one in a build or source tree: a Mac build makes .app bundles too
-    // (build/<arch>/src/Release/UnlayeredSlicer.app, build/universal/..., the slic3rutils_tests
+    // (build/<arch>/src/Release/SemilayeredSlicer.app, build/universal/..., the slic3rutils_tests
     // test host), and those sit below a CMakeCache.txt or CMakeLists.txt, which no customer's
     // copy does.
     bool in_bundle = false;
@@ -704,13 +704,13 @@ void append_str(char *&p, char *end, const char *s)
         *p++ = *s++;
 }
 
-// "UnlayeredSlicer.arm64+0x2f1a3c>+0x2e1b00>+0x1c2d44": the faulting instruction, then the return
+// "SemilayeredSlicer.arm64+0x2f1a3c>+0x2e1b00>+0x1c2d44": the faulting instruction, then the return
 // addresses of up to five of the slicer's own frames below it, as offsets into the executable (the
 // same ">" chain the Windows filter writes). The faulting instruction comes from the signal's saved
 // context: backtrace() from inside the handler would start at the handler and skip it.
 // "ext.<arch>" first when the fault itself is outside it (a system library, Python): abort() is one.
 // Symbolicate an offset with
-//   atos -arch arm64 -o UnlayeredSlicer.app/Contents/MacOS/UnlayeredSlicer -l 0x100000000 <0x100000000 + offset>
+//   atos -arch arm64 -o SemilayeredSlicer.app/Contents/MacOS/SemilayeredSlicer -l 0x100000000 <0x100000000 + offset>
 // using the very build that crashed (the version and arch are in the event).
 void crash_location(const ucontext_t *uc, char *out, size_t size)
 {
@@ -731,9 +731,9 @@ void crash_location(const ucontext_t *uc, char *out, size_t size)
     char *p = out, *end = out + size - 1;
     if (in_main_image(pc)) {
 #if defined(__arm64__)
-        append_str(p, end, "UnlayeredSlicer.arm64+");
+        append_str(p, end, "SemilayeredSlicer.arm64+");
 #else
-        append_str(p, end, "UnlayeredSlicer.x86_64+");
+        append_str(p, end, "SemilayeredSlicer.x86_64+");
 #endif
         append_hex(p, end, pc - g_main_begin);
     } else {

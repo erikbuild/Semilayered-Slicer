@@ -3173,7 +3173,7 @@ bool NotificationManager::push_notification_data(std::unique_ptr<NotificationMan
 {
 	// Unlayered 0.1.8: from a worker thread (a print-host upload the slicing thread queues, the
 	// preset-bundle sync) this list and the canvas's render timer were touched off the main thread,
-	// racing render() and wx's timer map (0.1.4 crash "UnlayeredSlicer.dll+0x4862937" =
+	// racing render() and wx's timer map (0.1.4 crash "SemilayeredSlicer.dll+0x4862937" =
 	// wxMSWTimerImpl::Stop). Push it from the main thread instead.
 	if (!wxIsMainThread()) {
 		auto holder = std::make_shared<std::unique_ptr<PopNotification>>(std::move(notification));

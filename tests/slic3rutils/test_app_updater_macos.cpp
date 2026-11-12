@@ -54,31 +54,31 @@ TEST_CASE("asset selection takes the disk image and nothing else", "[AppUpdaterM
 {
     SECTION("a universal image is accepted whatever this architecture is") {
         const std::vector<AppUpdateAsset> assets{
-            {"Unlayered_Slicer_Mac_universal_0.1.2.dmg", "https://example.invalid/a.dmg", "", 0}};
+            {"Semilayered_Slicer_Mac_universal_0.1.2.dmg", "https://example.invalid/a.dmg", "", 0}};
         const auto picked = select_platform_asset(assets);
         REQUIRE(picked.has_value());
-        CHECK(picked->name == "Unlayered_Slicer_Mac_universal_0.1.2.dmg");
+        CHECK(picked->name == "Semilayered_Slicer_Mac_universal_0.1.2.dmg");
     }
 
     SECTION("the things published beside the installer are skipped") {
         const std::vector<AppUpdateAsset> assets{
-            {"Unlayered_Slicer_profile_validator_Mac_universal.dmg", "https://example.invalid/v.dmg", "", 0},
-            {"Unlayered_Slicer_Mac_universal_0.1.2.dmg", "https://example.invalid/a.dmg", "", 0}};
+            {"Semilayered_Slicer_profile_validator_Mac_universal.dmg", "https://example.invalid/v.dmg", "", 0},
+            {"Semilayered_Slicer_Mac_universal_0.1.2.dmg", "https://example.invalid/a.dmg", "", 0}};
         const auto picked = select_platform_asset(assets);
         REQUIRE(picked.has_value());
-        CHECK(picked->name == "Unlayered_Slicer_Mac_universal_0.1.2.dmg");
+        CHECK(picked->name == "Semilayered_Slicer_Mac_universal_0.1.2.dmg");
     }
 
     SECTION("a Windows installer is never selected here") {
         const std::vector<AppUpdateAsset> assets{
-            {"Unlayered_Slicer_Windows_0.1.2.exe", "https://example.invalid/a.exe", "", 0}};
+            {"Semilayered_Slicer_Windows_0.1.2.exe", "https://example.invalid/a.exe", "", 0}};
         CHECK_FALSE(select_platform_asset(assets).has_value());
     }
 
     SECTION("an image naming only the other architecture is refused") {
         const std::string other = std::string(updater_arch()) == "arm64" ? "x86_64" : "arm64";
         const std::vector<AppUpdateAsset> assets{
-            {"Unlayered_Slicer_Mac_" + other + "_0.1.2.dmg", "https://example.invalid/a.dmg", "", 0}};
+            {"Semilayered_Slicer_Mac_" + other + "_0.1.2.dmg", "https://example.invalid/a.dmg", "", 0}};
         CHECK_FALSE(select_platform_asset(assets).has_value());
     }
 
@@ -127,7 +127,7 @@ TEST_CASE("launch_silent_update refuses a target that is not an app bundle", "[A
 TEST_CASE("the generated update script is correct and correctly quoted", "[AppUpdaterMac]")
 {
     const fs::path dir = make_temp_dir();          // contains a space
-    const fs::path app = make_fake_bundle(dir, "Unlayered Slicer.app"); // and so does this
+    const fs::path app = make_fake_bundle(dir, "Semilayered Slicer.app"); // and so does this
     const fs::path dl  = dir / "download dir";
     fs::create_directories(dl);
     const fs::path dmg = dl / "update.dmg";

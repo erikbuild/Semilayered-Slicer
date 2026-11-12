@@ -418,7 +418,7 @@ std::string BBLNetworkPlugin::get_libpath_in_current_directory(const std::string
 
     // The length comes from the name itself: a hardcoded count went stale with the rename, so the
     // match never fired and a plug-in placed beside the exe was silently ignored.
-    static const std::string exe_name = "unlayered-slicer.exe";
+    static const std::string exe_name = "semilayered-slicer.exe";
     std::size_t found = file_name_string.rfind(exe_name);
     if (found != std::string::npos && found == file_name_string.size() - exe_name.size()) {
         lib_path = library_name + ".dll";

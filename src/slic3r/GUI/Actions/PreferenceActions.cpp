@@ -451,7 +451,7 @@ InvokeResult run_check_updates(InvokeContext& ctx)
 {
     ConfirmRequest req;
     req.title        = "Check for Updates";
-    req.message      = "Check the Unlayered update site for a newer version of the slicer now?";
+    req.message      = "Open the Semilayered Slicer releases page to look for a newer version?";
     req.accept_label = "Check";
     req.destructive  = false;
     if (!ctx.confirm(req))

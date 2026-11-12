@@ -598,7 +598,7 @@ Function BambuPluginPage
     Abort
   ${EndIf}
 
-  ${NSD_CreateLabel} 0 0 100% 72u "Sending prints to Bambu Lab printers over your network needs Bambu Lab's network plug-in.$\r$\n$\r$\nThe plug-in is closed-source software from Bambu Lab. If you tick the box below, Unlayered Slicer downloads it from Bambu Lab's servers the first time it starts.$\r$\n$\r$\nYou can turn it on or off later in Preferences > Online."
+  ${NSD_CreateLabel} 0 0 100% 72u "Sending prints to Bambu Lab printers over your network needs Bambu Lab's network plug-in.$\r$\n$\r$\nThe plug-in is closed-source software from Bambu Lab. If you tick the box below, Semilayered Slicer downloads it from Bambu Lab's servers the first time it starts.$\r$\n$\r$\nYou can turn it on or off later in Preferences > Online."
   Pop $0
 
   ${NSD_CreateCheckbox} 0 80u 100% 12u "Install the Bambu Lab network plug-in"
@@ -635,8 +635,8 @@ FunctionEnd
 
 Function ShowProgressWhenUpdating
   ${If} $UPDATE_MODE == "1"
-    SendMessage $HWNDPARENT ${WM_SETTEXT} 0 "STR:Updating Unlayered Slicer"
-    !insertmacro MUI_HEADER_TEXT "Updating Unlayered Slicer" "Installing version ${VERSION}. Unlayered Slicer opens again by itself when this is done."
+    SendMessage $HWNDPARENT ${WM_SETTEXT} 0 "STR:Updating Semilayered Slicer"
+    !insertmacro MUI_HEADER_TEXT "Updating Semilayered Slicer" "Installing version ${VERSION}. Semilayered Slicer opens again by itself when this is done."
     ; Stopping half-way would leave no working copy at all.
     GetDlgItem $0 $HWNDPARENT 2
     EnableWindow $0 0
@@ -655,7 +655,7 @@ FunctionEnd
 Function ShowUpdateBanner
   ; $R0: the line under the title.
   Banner::destroy
-  Banner::show /NOUNLOAD /set 76 "Updating Unlayered Slicer" "$R0"
+  Banner::show /NOUNLOAD /set 76 "Updating Semilayered Slicer" "$R0"
 FunctionEnd
 
 ;--------------------------------
@@ -902,7 +902,7 @@ SectionEnd
 ; /RELAUNCH (the person closed the app and the update installed on the way out) nothing starts.
 Function .onInstSuccess
   ${If} $RELAUNCH == "1"
-    Exec '"$INSTDIR\unlayered-slicer.exe"'
+    Exec '"$INSTDIR\semilayered-slicer.exe"'
   ${EndIf}
 FunctionEnd
 
@@ -1095,7 +1095,7 @@ Function .onInit
     ; See ShowProgressWhenUpdating: an update is shown, not silent, and closes itself.
     SetSilent normal
     SetAutoClose true
-    StrCpy $R0 "Waiting for Unlayered Slicer to close..."
+    StrCpy $R0 "Waiting for Semilayered Slicer to close..."
     Call ShowUpdateBanner
   ${EndIf}
 
@@ -1117,7 +1117,7 @@ Function .onInit
   ${If} $UPDATE_MODE == "1"
     ; Recreate the desktop shortcut only if the person still has one; an update must not put back
     ; a shortcut they deleted.
-    IfFileExists "$DESKTOP\UnlayeredSlicer.lnk" 0 +2
+    IfFileExists "$DESKTOP\SemilayeredSlicer.lnk" 0 +2
       StrCpy $DESKTOP_LINK_EXISTED "1"
     ; The slicer only self-updates a per-user install, so there is no per-machine copy to migrate
     ; from here, and a UAC prompt from an invisible installer would be inexplicable.

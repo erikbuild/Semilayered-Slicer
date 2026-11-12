@@ -1,5 +1,5 @@
 name: 💥 Crash Report
-description: Unlayered Slicer closes on its own, freezes or stops responding
+description: Semilayered Slicer closes on its own, freezes or stops responding
 labels: ["crash"]
 body:
   - type: markdown
@@ -7,8 +7,8 @@ body:
       value: |
         **Thank you for taking the time to report a crash.**
 
-        Use this form when Unlayered Slicer closes on its own, freezes, or stops responding.
-        If the application stays open and only produces a wrong result, please use the [Bug report](https://github.com/Unlayered3D/Unlayered-Slicer/issues/new?assignees=&labels=&projects=&template=bug_report.yml) form instead.
+        Use this form when Semilayered Slicer closes on its own, freezes, or stops responding.
+        If the application stays open and only produces a wrong result, please use the [Bug report](https://github.com/erikbuild/Semilayered-Slicer/issues/new?assignees=&labels=&projects=&template=bug_report.yml) form instead.
         A printer whose toolhead collides with the print is also a bug report rather than a crash, since the application itself did not stop.
 
         Before filing, please check if the issue already exists (either open or closed) by using the search bar on the issues page. If it does, comment there. Even if it's closed, we can reopen it based on your comment.
@@ -17,7 +17,7 @@ body:
       label: Is this crash reproducible in the latest nightly build?
       description: >
         Please verify this crash still happens in the latest nightly build first. It may already be fixed there:
-        [Nightly builds](https://github.com/Unlayered3D/Unlayered-Slicer/releases/tag/nightly-builds).
+        [Nightly builds](https://github.com/erikbuild/Semilayered-Slicer/releases/tag/nightly-builds).
       options:
         - label: I have checked the latest nightly build and the crash is still reproducible
           required: true
@@ -31,8 +31,8 @@ body:
   - type: input
     id: version
     attributes:
-      label: Unlayered Slicer Version
-      description: Which version of Unlayered Slicer are you running? You can see the full version in `Help` -> `About Unlayered Slicer`.
+      label: Semilayered Slicer Version
+      description: Which version of Semilayered Slicer are you running? You can see the full version in `Help` -> `About Semilayered Slicer`.
       placeholder: e.g. 2.5.0
     validations:
       required: true
@@ -76,7 +76,7 @@ body:
     id: crash_moment
     attributes:
       label: When does the crash happen?
-      description: Pick the point where Unlayered Slicer stops working.
+      description: Pick the point where Semilayered Slicer stops working.
       options:
         - Not sure
         - On startup, before the main window appears
@@ -109,8 +109,8 @@ body:
     attributes:
       label: Does it still crash with a fresh configuration?
       description: >
-        Close Unlayered Slicer and rename your configuration folder (`%APPDATA%\Unlayered Slicer` on Windows,
-        `$HOME/Library/Application Support/Unlayered Slicer` on macOS, `$HOME/.config/Unlayered Slicer` on Linux),
+        Close Semilayered Slicer and rename your configuration folder (`%APPDATA%\Semilayered Slicer` on Windows,
+        `$HOME/Library/Application Support/Semilayered Slicer` on macOS, `$HOME/.config/Semilayered Slicer` on Linux),
         then start it again. Renaming keeps your settings, so you can put the folder back afterwards.
       options:
         - I have not tried this
@@ -127,7 +127,7 @@ body:
         1. Go to '...'
         2. Click on '...'
         3. Scroll down to '...'
-        4. Unlayered Slicer closes
+        4. Semilayered Slicer closes
     validations:
       required: true
   - type: textarea
@@ -152,14 +152,14 @@ body:
 
         * The **project file** used when the crash happened, zipped. Export it just before or after the crash, even if the plate is empty, since we need the configuration it carries. `File` -> `Save project as...`
         * The whole **log folder**, zipped rather than single files picked out of it. `Help` -> `Show Configuration Folder` opens it, or find it at:
-          * Windows: `%APPDATA%\Unlayered Slicer\log`, usually `C:\Users\<you>\AppData\Roaming\Unlayered Slicer\log`
-          * macOS: `$HOME/Library/Application Support/Unlayered Slicer/log`
-          * Linux: `$HOME/.config/Unlayered Slicer/log`
-          * Flatpak: `$HOME/.var/app/com.unlayered3d.UnlayeredSlicer/config/Unlayered Slicer/log`
+          * Windows: `%APPDATA%\Semilayered Slicer\log`, usually `C:\Users\<you>\AppData\Roaming\Semilayered Slicer\log`
+          * macOS: `$HOME/Library/Application Support/Semilayered Slicer/log`
+          * Linux: `$HOME/.config/Semilayered Slicer/log`
+          * Flatpak: `$HOME/.var/app/io.github.erikbuild.SemilayeredSlicer/config/Semilayered Slicer/log`
           * On Windows the crash itself is written to a separate `crash_*.log` in there, and that is the file we need most. If the zip comes out over 25 MB GitHub will refuse it, so attach the newest log and any `crash_*.log` on their own instead.
-        * The **operating system crash report**, on macOS and Linux, where Unlayered Slicer cannot write its own crash log. It is often the only record of where it died:
-          * macOS: Console.app -> Crash Reports, or `$HOME/Library/Logs/DiagnosticReports/`. The file starts with `UnlayeredSlicer` and ends in `.ips`. Zip it before attaching, GitHub does not accept `.ips` files.
-          * Linux: run `unlayered-slicer` from a terminal (Flatpak: `flatpak run com.unlayered3d.UnlayeredSlicer`) and paste everything it prints when it dies. On systemd systems `coredumpctl info unlayered-slicer` gives a backtrace.
+        * The **operating system crash report**, on macOS and Linux, where Semilayered Slicer cannot write its own crash log. It is often the only record of where it died:
+          * macOS: Console.app -> Crash Reports, or `$HOME/Library/Logs/DiagnosticReports/`. The file starts with `SemilayeredSlicer` and ends in `.ips`. Zip it before attaching, GitHub does not accept `.ips` files.
+          * Linux: run `semilayered-slicer` from a terminal (Flatpak: `flatpak run io.github.erikbuild.SemilayeredSlicer`) and paste everything it prints when it dies. On systemd systems `coredumpctl info semilayered-slicer` gives a backtrace.
       placeholder: |
         Zipped project file
         Zipped log folder

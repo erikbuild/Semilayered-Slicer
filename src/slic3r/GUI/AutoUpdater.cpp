@@ -287,7 +287,7 @@ public:
 
         auto *text = new wxStaticText(
             this, wxID_ANY,
-            wxString::Format(_L("Sign in with your Unlayered account. %s then keeps itself up to date and offers "
+            wxString::Format(_L("Sign in with your Unlayered account. %s then offers "
                                 "configuration updates for your printers."),
                              SLIC3R_APP_FULL_NAME));
         text->Wrap(FromDIP(420));
@@ -580,7 +580,7 @@ void AutoUpdater::sign_out()
 {
     const auto p = m_account->profile();
     MessageDialog confirm(m_app.mainframe,
-                          wxString::Format(_L("Sign out of Unlayered (%s)?\n\n%s will stop updating itself until you "
+                          wxString::Format(_L("Sign out of Unlayered (%s)?\n\n%s will stop offering configuration updates for your printers until you "
                                               "sign in again."),
                                            wxString::FromUTF8(p ? p->email : std::string()), SLIC3R_APP_FULL_NAME),
                           _L("Sign Out"), wxYES_NO | wxNO_DEFAULT | wxICON_QUESTION);

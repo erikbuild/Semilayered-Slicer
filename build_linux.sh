@@ -21,10 +21,10 @@ function usage() {
     echo "   -F: rebuild the cached Docker/Podman runner image from scratch when used with -g"
     echo "   -g: run the requested build steps inside a Docker/Podman Ubuntu 24.04 container similar to the GitHub Actions Linux runner"
     echo "   -h: prints this help text"
-    echo "   -i: build the Unlayered Slicer AppImage (optional)"
+    echo "   -i: build the Semilayered Slicer AppImage (optional)"
     echo "   -p: disable precompiled headers (on by default): more ccache hits after header changes, slower misses"
     echo "   -r: skip RAM and disk checks (low RAM compiling)"
-    echo "   -s: build the Unlayered Slicer (optional)"
+    echo "   -s: build the Semilayered Slicer (optional)"
     echo "   -t: build tests (optional), requires -s flag"
     echo "   -u: install system dependencies (asks for sudo password; build prerequisite)"
     echo "   -l: use Clang instead of GCC (default: GCC)"
@@ -173,14 +173,14 @@ function check_available_memory_and_disk() {
     MIN_DISK_KB=$((10 * 1024 * 1024))
 
     if [[ ${FREE_MEM_GB} -le ${MIN_MEM_GB} ]]; then
-        echo -e "\nERROR: Unlayered Slicer Builder requires at least ${MIN_MEM_GB}G of 'available' mem (system has only ${FREE_MEM_GB}G available)"
+        echo -e "\nERROR: Semilayered Slicer Builder requires at least ${MIN_MEM_GB}G of 'available' mem (system has only ${FREE_MEM_GB}G available)"
         echo && free --human && echo
         echo "Invoke with -r to skip RAM and disk checks."
         exit 2
     fi
 
     if [[ ${FREE_DISK_KB} -le ${MIN_DISK_KB} ]]; then
-        echo -e "\nERROR: Unlayered Slicer Builder requires at least $(echo "${MIN_DISK_KB}" | awk '{ printf "%.1fG\n", $1/1024/1024; }') (system has only $(echo "${FREE_DISK_KB}" | awk '{ printf "%.1fG\n", $1/1024/1024; }') disk free)"
+        echo -e "\nERROR: Semilayered Slicer Builder requires at least $(echo "${MIN_DISK_KB}" | awk '{ printf "%.1fG\n", $1/1024/1024; }') (system has only $(echo "${FREE_DISK_KB}" | awk '{ printf "%.1fG\n", $1/1024/1024; }') disk free)"
         echo && df --human-readable . && echo
         echo "Invoke with -r to skip ram and disk checks."
         exit 1
@@ -244,7 +244,7 @@ function get_docker_runner_image() {
     recipe_hash=$(find "${SCRIPT_PATH}/build_linux.sh" "${SCRIPT_PATH}/scripts/linux.d" -type f -print0 | sort -z | xargs -0 cat | sha256sum | cut -c1-12)
     sanitized_base_image=$(echo "${base_image}" | tr '/:@' '---' | tr -cs 'A-Za-z0-9_.-' '-')
     sanitized_cmake_version=$(echo "${docker_cmake_version:-system}" | tr -cs 'A-Za-z0-9_.-' '-')
-    echo "unlayered-slicer-linux-builder:${sanitized_base_image}-cmake-${sanitized_cmake_version}-${recipe_hash}"
+    echo "semilayered-slicer-linux-builder:${sanitized_base_image}-cmake-${sanitized_cmake_version}-${recipe_hash}"
 }
 
 function docker_runner_dockerfile() {
@@ -259,10 +259,10 @@ SHELL ["/bin/bash", "-c"]
 
 RUN apt-get update && apt-get install -y sudo ca-certificates curl tar
 
-COPY build_linux.sh /tmp/unlayered-slicer/build_linux.sh
-COPY scripts/linux.d /tmp/unlayered-slicer/scripts/linux.d
+COPY build_linux.sh /tmp/semilayered-slicer/build_linux.sh
+COPY scripts/linux.d /tmp/semilayered-slicer/scripts/linux.d
 
-WORKDIR /tmp/unlayered-slicer
+WORKDIR /tmp/semilayered-slicer
 
 RUN chmod +x ./build_linux.sh
 RUN ./build_linux.sh -ur
@@ -283,7 +283,7 @@ RUN if [[ -n "${CMAKE_VERSION}" ]] ; then \
             echo "Skipping GitHub Actions CMake install for unsupported architecture $(uname -m)." ; \
         fi ; \
     fi
-RUN rm -rf /var/lib/apt/lists/* /tmp/unlayered-slicer
+RUN rm -rf /var/lib/apt/lists/* /tmp/semilayered-slicer
 EOF
 }
 
@@ -359,7 +359,7 @@ function run_in_docker() {
     host_uid=$(id -u)
     host_gid=$(id -g)
     host_user="${USER:-orca}"
-    container_workspace="/__w/Unlayered-Slicer/Unlayered-Slicer"
+    container_workspace="/__w/Semilayered-Slicer/Semilayered-Slicer"
     build_args=()
     for item in "${FORWARDED_ARGS[@]}"; do
         if [[ "${item}" == "-u" ]] || [[ "${item}" == "-D" ]]; then
@@ -429,8 +429,8 @@ function create_builder_user() {
         useradd -m -u "${HOST_UID}" -g "${HOST_GROUP}" -s /bin/bash "${HOST_USER}"
     fi
 
-    echo "${HOST_USER} ALL=(ALL) NOPASSWD:ALL" >/etc/sudoers.d/unlayered-slicer-builder
-    chmod 0440 /etc/sudoers.d/unlayered-slicer-builder
+    echo "${HOST_USER} ALL=(ALL) NOPASSWD:ALL" >/etc/sudoers.d/semilayered-slicer-builder
+    chmod 0440 /etc/sudoers.d/semilayered-slicer-builder
 }
 
 create_builder_user
@@ -601,7 +601,7 @@ if [[ -n "${BUILD_DEPS}" ]]; then
 fi
 
 if [[ -n "${BUILD_ORCA}" ]] || [[ -n "${BUILD_TESTS}" ]]; then
-    echo "Configuring Unlayered Slicer..."
+    echo "Configuring Semilayered Slicer..."
     if [[ -n "${CLEAN_BUILD}" ]]; then
         print_and_run rm -fr $BUILD_DIR
     fi
@@ -621,10 +621,10 @@ if [[ -n "${BUILD_ORCA}" ]] || [[ -n "${BUILD_TESTS}" ]]; then
         "${EXTRA_CMAKE_ARGS[@]}"
     echo "done"
     if [[ -n "${BUILD_ORCA}" ]]; then
-	echo "Building Unlayered Slicer ..."
-	print_and_run cmake --build $BUILD_DIR --config "${BUILD_CONFIG}" --target UnlayeredSlicer
-	echo "Building UnlayeredSlicer_profile_validator .."
-	print_and_run cmake --build $BUILD_DIR --config "${BUILD_CONFIG}" --target UnlayeredSlicer_profile_validator
+	echo "Building Semilayered Slicer ..."
+	print_and_run cmake --build $BUILD_DIR --config "${BUILD_CONFIG}" --target SemilayeredSlicer
+	echo "Building SemilayeredSlicer_profile_validator .."
+	print_and_run cmake --build $BUILD_DIR --config "${BUILD_CONFIG}" --target SemilayeredSlicer_profile_validator
 	echo "Building generate_system_cache ..."
 	print_and_run cmake --build $BUILD_DIR --config "${BUILD_CONFIG}" --target generate_system_cache
 	./scripts/run_gettext.sh

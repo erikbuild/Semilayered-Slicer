@@ -39,7 +39,7 @@ namespace {
 
 // Identifies this build to the update host. Kept identical to the token FirmwareBundle uses so
 // both outbound Unlayered requests can be filtered out of an access log the same way.
-std::string updater_user_agent() { return std::string("UnlayeredSlicer/") + UNLAYERED_VERSION; }
+std::string updater_user_agent() { return std::string("SemilayeredSlicer/") + UNLAYERED_VERSION; }
 
 std::string detect_updater_arch()
 {
@@ -120,7 +120,7 @@ bool same_path(const fs::path &a, const fs::path &b)
 }
 
 // Must match CPACK_PACKAGE_INSTALL_REGISTRY_KEY and CPACK_NSIS_UNINSTALL_NAME in CMakeLists.txt.
-constexpr const wchar_t *UNINSTALL_KEY  = L"Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Unlayered Slicer";
+constexpr const wchar_t *UNINSTALL_KEY  = L"Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Semilayered Slicer";
 constexpr const char    *UNINSTALL_NAME = "Uninstall.exe";
 
 std::wstring read_reg_string(HKEY root, const wchar_t *key, const wchar_t *value)
@@ -450,7 +450,7 @@ bool download_installer(const AppUpdateAsset &asset, fs::path &dest_out, AppUpda
     // Never trust the manifest for a path component.
     std::string leaf = fs::path(asset.name).filename().string();
     if (leaf.empty() || leaf == "." || leaf == "..")
-        leaf = "UnlayeredSlicerSetup.exe";
+        leaf = "SemilayeredSlicerSetup.exe";
     const fs::path target = dir / leaf;
     const fs::path tmp    = fs::path(target.string() + ".part");
 

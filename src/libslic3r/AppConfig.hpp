@@ -455,7 +455,7 @@ public:
 	bool 				legacy_datadir() const { return m_legacy_datadir; }
 	void 				set_legacy_datadir(bool value) { m_legacy_datadir = value; }
 
-	// Get the Unlayered Slicer update manifest url.
+	// Get the Semilayered Slicer update manifest url.
 	// This returns a hardcoded string unless it is overriden by "version_check_url" in the ini file.
 	std::string 		version_check_url() const;
 

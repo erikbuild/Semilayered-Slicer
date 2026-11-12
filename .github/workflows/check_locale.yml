@@ -28,15 +28,15 @@ jobs:
       - name: Check translation format
         run: |
           echo $PWD
-          pot_file="./localization/i18n/UnlayeredSlicer.pot"
+          pot_file="./localization/i18n/SemilayeredSlicer.pot"
           for dir in ./localization/i18n/*/
           do
               dir=${dir%*/}      # remove the trailing "/"
               lang=${dir##*/}    # extract the language identifier
           
-              if [ -f "$dir/UnlayeredSlicer_${lang}.po" ]; then
+              if [ -f "$dir/SemilayeredSlicer_${lang}.po" ]; then
                   mkdir -p ./resources/i18n/${lang}/
-                  msgfmt --check-format --check-header -o ./resources/i18n/${lang}/UnlayeredSlicer.mo $dir/UnlayeredSlicer_${lang}.po
+                  msgfmt --check-format --check-header -o ./resources/i18n/${lang}/SemilayeredSlicer.mo $dir/SemilayeredSlicer_${lang}.po
                   # Check the exit status of the msgfmt command
                   if [ $? -ne 0 ]; then
                       echo "Error encountered with msgfmt command for language ${lang}."

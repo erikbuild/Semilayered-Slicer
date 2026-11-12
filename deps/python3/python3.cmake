@@ -295,7 +295,7 @@ elseif(APPLE)
             ac_cv_func_pipe2=no
             ac_cv_func_dup3=no
             # Tcl/Tk 9.0 (e.g. from Homebrew) is incompatible with CPython 3.12's
-            # _tkinter; Unlayered Slicer's embedded Python does not need tkinter anyway.
+            # _tkinter; Semilayered Slicer's embedded Python does not need tkinter anyway.
             py_cv_module__tkinter=n/a
         )
     endif()

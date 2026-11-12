@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Run the skeleton pipeline over the generated corpus and check it behaves.
 
-    python tools/skeleton_check.py --exe build/src/Release/unlayered-slicer.exe \
+    python tools/skeleton_check.py --exe build/src/Release/semilayered-slicer.exe \
                                   --dir sandboxes/skeleton_tests
 
-Drives `unlayered-slicer.exe --export-skeleton`, reads each `<name>_skeleton.json`, and
+Drives `semilayered-slicer.exe --export-skeleton`, reads each `<name>_skeleton.json`, and
 checks the properties that matter for automated multiplanar:
 
   * a bore is traced and the skeleton follows the axis, not the wall  (pipes, bores)
@@ -371,10 +371,10 @@ def run_one(exe, datadir, stl, outdir, params, log_dir, timeout):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--exe", default="build/src/Release/unlayered-slicer.exe")
+    ap.add_argument("--exe", default="build/src/Release/semilayered-slicer.exe")
     ap.add_argument("--dir", default="sandboxes/skeleton_tests")
     ap.add_argument("--out", default=None, help="dump directory (default <dir>/out)")
-    ap.add_argument("--datadir", default=os.path.expandvars(r"%APPDATA%\Unlayered Slicer"))
+    ap.add_argument("--datadir", default=os.path.expandvars(r"%APPDATA%\Semilayered Slicer"))
     ap.add_argument("--params", default="", help="passed through as --skeleton-params")
     ap.add_argument("--only", default="", help="comma-separated subset of mesh names")
     ap.add_argument("--timeout", type=int, default=300)

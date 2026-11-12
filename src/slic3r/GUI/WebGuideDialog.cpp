@@ -100,8 +100,8 @@ static json guide_strings()
         {"loading", _u8L("Loading…")},
         // TRN Sidebar entry of the printer selection page for the group of custom (user-defined) printers.
         {"custom_vendor", _u8L_CONTEXT("Custom", "Printer vendor")},
-        {"welcome", _u8L("Welcome to Unlayered Slicer")},
-        {"setup_intro", _u8L("Unlayered Slicer will be set up in several steps. Let's start!")},
+        {"welcome", _u8L("Welcome to Semilayered Slicer")},
+        {"setup_intro", _u8L("Semilayered Slicer will be set up in several steps. Let's start!")},
         {"get_started", _u8L("Get Started")},
         // Unlayered 0.1.6: the region page (guide/11) asks where the person lives; the places come
         // from the slicer (PrivacyConsent). The privacy page (guide/13) shows the approved consent
@@ -149,7 +149,7 @@ static json guide_strings()
         {"use_default_filament", _u8L("Do you want to use the default filament?")},
         {"proprietary_plugins", _u8L("Proprietary Plugins")},
         {"proprietary_plugins_desc", _u8L("Some printer vendors require proprietary plugins for communication with their printers. Please select the corresponding plugin if you use such printers.")},
-        {"proprietary_plugins_risk", _u8L("Please be aware that these plugins are not developed or maintained by Unlayered Slicer. They should be used at your own discretion and risk.")},
+        {"proprietary_plugins_risk", _u8L("Please be aware that these plugins are not developed or maintained by Semilayered Slicer. They should be used at your own discretion and risk.")},
         {"install_bambu_plugin", _u8L("Install Bambu Network plug-in")},
         // Unlayered: the multiplanar tutorial step (guide/25), the Bambu Lab network plug-in step
         // (guide/4unlayered), and the Skip of "Settings from other slicers" (guide/5import, whose
@@ -169,7 +169,7 @@ static json guide_strings()
         {"printer_update_desc", _u8L("Get the latest firmware and printer settings for your Unlayered printer. Connect it to your network, then press Check for updates. We install the firmware first, then the settings; you confirm each one. Your calibration, name and network settings are never replaced.")},
         {"check_for_updates", _u8L("Check for updates")},
         {"do_it_later", _u8L("Do it later")},
-        {"printer_update_later_where", _u8L("Later, you find this in the Prepare tab: press Connection (the signal icon next to Printer), then Firmware or Config. When an update is published, Unlayered Slicer also shows a \"Printer update available\" notification.")},
+        {"printer_update_later_where", _u8L("Later, you find this in the Prepare tab: press Connection (the signal icon next to Printer), then Firmware or Config. When an update is published, Semilayered Slicer also shows a \"Printer update available\" notification.")},
         {"printer_update_account", _u8L("Downloading the printer settings needs your free Unlayered account.")},
         {"sign_in", _u8L("Sign in")},
     };
@@ -384,12 +384,12 @@ wxString describe_printer_check(const PrinterUpdateOffer::CheckResult &r, const 
     switch (r.outcome) {
     case PrinterUpdateCheckOutcome::Unreachable:
         return wxString::Format(_L("Could not reach %s at %s (%s). Check that the printer is switched on and on the same network "
-                                   "as this computer, then press Check for updates again. Or go on: Unlayered Slicer checks "
+                                   "as this computer, then press Check for updates again. Or go on: Semilayered Slicer checks "
                                    "again once the printer answers."),
                                 who, from_u8(host), from_u8(r.error));
     case PrinterUpdateCheckOutcome::NoFeed:
         return wxString::Format(_L("%s answered, but the update server could not be reached. Check this computer's internet "
-                                   "connection and try again, or go on: Unlayered Slicer checks again when it starts."),
+                                   "connection and try again, or go on: Semilayered Slicer checks again when it starts."),
                                 who);
     case PrinterUpdateCheckOutcome::UpToDate:
         text = wxString::Format(_L("%s is up to date: firmware %s."), who, from_u8(f.running_firmware));
@@ -483,9 +483,9 @@ void GuideFrame::CheckPrinterUpdate()
         BOOST_LOG_TRIVIAL(info) << "GuideFrame: printer update step: no Unlayered printer with an address; checking after setup";
         m_printer_checked       = true;
         m_printer_check_printer.clear();
-        m_printer_check_result  = into_u8(_L("Unlayered Slicer does not know your printer's network address yet. When setup is "
+        m_printer_check_result  = into_u8(_L("Semilayered Slicer does not know your printer's network address yet. When setup is "
                                              "done, press Connection (the signal icon next to Printer in the Prepare tab) and "
-                                             "enter the printer's address. Unlayered Slicer then checks for updates and offers them."));
+                                             "enter the printer's address. Semilayered Slicer then checks for updates and offers them."));
         send("printer_update_result", m_printer_check_result);
         return;
     }
@@ -819,7 +819,7 @@ void GuideFrame::OnScriptMessage(wxWebViewEvent &evt)
             // (MainFrame.cpp, GLGizmoCutPlanes.cpp). Launched in the real browser rather than in
             // this WebView so it survives the wizard closing, and so the user keeps it open
             // alongside the slicer afterwards.
-            // FileNameToURL escapes spaces ("Unlayered Slicer.app", "Program Files") and writes file:///;
+            // FileNameToURL escapes spaces ("Semilayered Slicer.app", "Program Files") and writes file:///;
             // a raw "file://" + path did not open on macOS.
             wxLaunchDefaultBrowser(wxFileSystem::FileNameToURL(wxFileName(from_u8(Slic3r::resources_dir() + "/web/tutorial/multiplanar.html"))), wxBROWSER_NEW_WINDOW);
         }
@@ -1045,8 +1045,8 @@ void GuideFrame::OnScriptMessage(wxWebViewEvent &evt)
             res["command"]     = "signin_state";
             res["sequence_id"] = "10002";
             res["title"]       = into_u8(_L("Sign in to Unlayered"));
-            res["text"]        = into_u8(_L("Sign in with your Unlayered account. Unlayered Slicer then keeps itself up to date "
-                                            "and offers configuration updates for your printers."));
+            res["text"]        = into_u8(_L("Sign in with your Unlayered account. Semilayered Slicer then "
+                                            "offers configuration updates for your printers."));
             res["button"]      = into_u8(_L("Sign in"));
             res["skip"]        = into_u8(_L("Skip for now"));
             res["signed_in"]   = in;

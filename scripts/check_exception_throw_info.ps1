@@ -18,7 +18,7 @@
 
 .PARAMETER BuildDir
     The slicer build directory. Its CMakeCache.txt names the compiler, and its src\<Config>
-    holds the PDBs to check, which must include OrcaSlicer.pdb.
+    holds the PDBs to check, which must include SemilayeredSlicer.pdb.
 
 .PARAMETER Config
     The configuration whose PDBs to check (default: Release).
@@ -76,10 +76,10 @@ if (-not $Dump) {
 
     $Pdb = Split-PathList $Pdb
     if (-not $Pdb) {
-        # OrcaSlicer.dll holds the slicer itself, so a check without it proves nothing.
+        # SemilayeredSlicer.dll holds the slicer itself, so a check without it proves nothing.
         $pdbDir = Join-Path $BuildDir "src\$Config"
-        if (-not (Test-Path (Join-Path $pdbDir 'OrcaSlicer.pdb'))) {
-            throw "No OrcaSlicer.pdb in $pdbDir."
+        if (-not (Test-Path (Join-Path $pdbDir 'SemilayeredSlicer.pdb'))) {
+            throw "No SemilayeredSlicer.pdb in $pdbDir."
         }
         $Pdb = @(Get-ChildItem $pdbDir -Filter *.pdb | ForEach-Object FullName)
     }

@@ -429,7 +429,7 @@ const WebAppSlot& WebAppSlot::universe()
         // history to respect -- it has never shipped switched on.
         s.visibility_once        = FORWARD_EDITION_TAG;
         s.visibility_once_enable = true;
-        s.default_url            = "https://unlayered3d.com/universe?host=unlayered-slicer";
+        s.default_url            = "https://unlayered3d.com/universe?host=semilayered-slicer";
         s.default_title          = "Universe";
         // Universe browses and imports models; it has no business reading or writing print
         // settings. Export is the publish direction -- the page asks for what is on the plate and

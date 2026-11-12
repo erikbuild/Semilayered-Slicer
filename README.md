@@ -1,20 +1,28 @@
+> **Semilayered Slicer is an unofficial build of Unlayered Slicer.** It is not affiliated with
+> or endorsed by Unlayered 3D. This tree is Unlayered Slicer's source with the application
+> renamed by the tool in `semilayered/` (first applied 2026-11-12). Two things differ besides
+> the name: the application does not update itself, and a few lines are edited where the rename
+> alone would be wrong. `semilayered/rebrand/table.py` lists every one. It is provided as is,
+> without support. Please do not report problems with it to Unlayered 3D. Everything below is
+> Unlayered Slicer's own README with the name replaced.
+
 <div align="center">
 
 <picture>
-  <img alt="Unlayered Slicer logo" src="resources/images/UnlayeredSlicer.png" width="15%" height="15%">
+  <img alt="Semilayered Slicer logo" src="resources/images/SemilayeredSlicer.png" width="15%" height="15%">
 </picture>
 
-**Unlayered Slicer**: the slicer for Unlayered 3D printers, with multiplanar printing built in.
+**Semilayered Slicer**: the slicer for Unlayered 3D printers, with multiplanar printing built in.
 
 </div>
 
-Unlayered Slicer is Unlayered 3D's fork of [OrcaSlicer](https://github.com/OrcaSlicer/OrcaSlicer). It is built on OrcaSlicer 2.5.0-dev and keeps its feature set: calibration tools, wall and seam control, adaptive layer heights, tree supports, multi-material printing, and network printing through Klipper, PrusaLink, OctoPrint, Duet and others.
+Semilayered Slicer is an unofficial build of Unlayered Slicer, which is Unlayered 3D's fork of [OrcaSlicer](https://github.com/OrcaSlicer/OrcaSlicer). It is built on OrcaSlicer 2.5.0-dev and keeps its feature set: calibration tools, wall and seam control, adaptive layer heights, tree supports, multi-material printing, and network printing through Klipper, PrusaLink, OctoPrint, Duet and others.
 
-This README describes **Unlayered Slicer 0.1.7**.
+This README describes **Semilayered Slicer 0.1.7**.
 
 - **Website:** <https://unlayered3d.com>
 - **What's new:** [CHANGELOG.md](CHANGELOG.md) lists the changes in each release.
-- **Source:** this repository. Each release is tagged; [`v0.1.7`](https://github.com/Unlayered3D/Unlayered-Slicer/tree/v0.1.7) is the source of the 0.1.7 installers.
+- **Source:** this repository. Each release is tagged; [`v0.1.7`](https://github.com/erikbuild/Semilayered-Slicer/tree/v0.1.7) is the source of the 0.1.7 installers.
 
 # What it adds
 
@@ -46,7 +54,7 @@ These features are switched on per printer: **Printer settings ▸ Motion abilit
 
 ## Web apps and services
 
-The slicer can show web pages (a web-app tab and a side panel beside the tabs) and send a plate to an external slicing service. You choose the addresses in **Preferences ▸ Advanced ▸ Web apps & services**. A blank address turns that feature off, and none is set by default. The **Universe** tab, Unlayered 3D's model library, is the one page set up by default. It fetches nothing until you open it. To remove it, set `universe_app_enabled` to `false` in `Unlayered Slicer.conf` while the app is closed.
+The slicer can show web pages (a web-app tab and a side panel beside the tabs) and send a plate to an external slicing service. You choose the addresses in **Preferences ▸ Advanced ▸ Web apps & services**. A blank address turns that feature off, and none is set by default. The **Universe** tab, Unlayered 3D's model library, is the one page set up by default. It fetches nothing until you open it. To remove it, set `universe_app_enabled` to `false` in `Semilayered Slicer.conf` while the app is closed.
 
 These features talk to other programs only over documented, product-neutral interfaces, and each has an MIT-licensed reference implementation:
 
@@ -123,7 +131,7 @@ When the script finishes, it prints where the executable is. `build_win.bat -h` 
 ./build_linux.sh -dsi    # dependencies, slicer and AppImage
 ```
 
-A Flatpak manifest is at `scripts/flatpak/com.unlayered3d.UnlayeredSlicer.yml`; build it with `build_flatpak.sh`.
+A Flatpak manifest is at `scripts/flatpak/io.github.erikbuild.SemilayeredSlicer.yml`; build it with `build_flatpak.sh`.
 
 ## macOS
 
@@ -152,11 +160,11 @@ resolution: 0.1
 
 # Background
 
-Unlayered Slicer is a fork of [OrcaSlicer](https://github.com/OrcaSlicer/OrcaSlicer) by SoftFever and the OrcaSlicer contributors. OrcaSlicer is itself based on [Bambu Studio](https://github.com/bambulab/BambuStudio), which originated from [PrusaSlicer](https://github.com/prusa3d/PrusaSlicer) by Prusa Research, itself a fork of [Slic3r](https://github.com/Slic3r/Slic3r) by Alessandro Ranellucci and the RepRap community. Thanks to all of them.
+Semilayered Slicer is a fork of [OrcaSlicer](https://github.com/OrcaSlicer/OrcaSlicer) by SoftFever and the OrcaSlicer contributors. OrcaSlicer is itself based on [Bambu Studio](https://github.com/bambulab/BambuStudio), which originated from [PrusaSlicer](https://github.com/prusa3d/PrusaSlicer) by Prusa Research, itself a fork of [Slic3r](https://github.com/Slic3r/Slic3r) by Alessandro Ranellucci and the RepRap community. Thanks to all of them.
 
 # License
 
-Unlayered Slicer is licensed under the GNU Affero General Public License, version 3, the same license as OrcaSlicer, Bambu Studio and PrusaSlicer. See [LICENSE.txt](LICENSE.txt).
+Semilayered Slicer is licensed under the GNU Affero General Public License, version 3, the same license as OrcaSlicer, Bambu Studio and PrusaSlicer. See [LICENSE.txt](LICENSE.txt).
 
 - The example page in `resources/web/webapp-example/` and the reference slicing service in `tools/reference-slice-service/` are MIT licensed, so that other programs can start from them freely.
 - Firmware images bundled with an installer are separate programs under their own licenses. RepRapFirmware is GPLv3, and its source is at [Unlayered3D/RepRapFirmware](https://github.com/Unlayered3D/RepRapFirmware).

@@ -964,7 +964,7 @@ bool GitHubSysFileSource::fetch_release(Release &out, std::string &error_out)
         .timeout_max(30)
         .header("Accept", "application/vnd.github+json")
         .header("X-GitHub-Api-Version", "2022-11-28")
-        .header("User-Agent", "UnlayeredSlicer");
+        .header("User-Agent", "SemilayeredSlicer");
     const bool sent_credential = apply_feed_credential(http, url, m_opts.credential);
     http.on_error([&](std::string b, std::string error, unsigned status) {
             m_last_status = status;
@@ -1087,7 +1087,7 @@ bool GitHubSysFileSource::fetch(SysFilePackage &pkg_out, SysProgressFn progress,
     dl.timeout_connect(10)
       .timeout_max(120)
       .header("Accept", "application/octet-stream");
-    dl.header("User-Agent", "UnlayeredSlicer");
+    dl.header("User-Agent", "SemilayeredSlicer");
     apply_feed_credential(dl, asset_url, m_opts.credential);
     dl.on_error([&](std::string b, std::string error, unsigned status) {
             if (!cancelled)

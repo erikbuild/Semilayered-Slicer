@@ -440,10 +440,10 @@ private:
 };
 
 #ifdef __APPLE__
-class UnlayeredSlicerTaskBarIcon : public wxTaskBarIcon
+class SemilayeredSlicerTaskBarIcon : public wxTaskBarIcon
 {
 public:
-    UnlayeredSlicerTaskBarIcon(wxTaskBarIconType iconType = wxTBI_DEFAULT_TYPE) : wxTaskBarIcon(iconType) {}
+    SemilayeredSlicerTaskBarIcon(wxTaskBarIconType iconType = wxTBI_DEFAULT_TYPE) : wxTaskBarIcon(iconType) {}
     wxMenu *CreatePopupMenu() override {
         wxMenu *menu = new wxMenu;
         if (wxGetApp().app_config->get("single_instance") == "false") {
@@ -494,7 +494,7 @@ static wxIcon main_frame_icon(GUI_App::EAppMode app_mode)
     }
     return wxIcon(path, wxBITMAP_TYPE_ICO);
 #else // _WIN32
-    return wxIcon(Slic3r::var("UnlayeredSlicer_128px.png"), wxBITMAP_TYPE_PNG);
+    return wxIcon(Slic3r::var("SemilayeredSlicer_128px.png"), wxBITMAP_TYPE_PNG);
 #endif // _WIN32
 }
 
@@ -612,8 +612,8 @@ DPIFrame(NULL, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, BORDERLESS_FRAME_
     switch (wxGetApp().get_app_mode()) {
     default:
     case GUI_App::EAppMode::Editor:
-        m_taskbar_icon = std::make_unique<UnlayeredSlicerTaskBarIcon>(wxTBI_DOCK);
-        m_taskbar_icon->SetIcon(wxIcon(Slic3r::var("UnlayeredSlicer-mac_256px.ico"), wxBITMAP_TYPE_ICO), SLIC3R_APP_NAME);
+        m_taskbar_icon = std::make_unique<SemilayeredSlicerTaskBarIcon>(wxTBI_DOCK);
+        m_taskbar_icon->SetIcon(wxIcon(Slic3r::var("SemilayeredSlicer-mac_256px.ico"), wxBITMAP_TYPE_ICO), SLIC3R_APP_NAME);
         break;
     case GUI_App::EAppMode::GCodeViewer:
         break;
@@ -3689,7 +3689,7 @@ wxMenu* MainFrame::generate_help_menu()
     // items this replaces had enable conditions that were never connected (append_menu_item binds
     // cb_condition only when given a parent window), so both always showed and both were clickable.
     wxMenuItem *account_item = append_menu_item(helpMenu, wxID_ANY, _L("Sign in to Unlayered..."),
-        _L("Sign in so the slicer can update itself"),
+        _L("Sign in to get configuration updates for your printers"),
         [](wxCommandEvent&) {
             auto *u = wxGetApp().auto_updater();
             if (u == nullptr)
@@ -3703,7 +3703,7 @@ wxMenu* MainFrame::generate_help_menu()
         auto      *u  = wxGetApp().auto_updater();
         const bool in = u && u->account().signed_in();
         account_item->SetItemLabel(in ? _L("Sign out of Unlayered") : _L("Sign in to Unlayered..."));
-        account_item->SetHelp(in ? _L("Sign out of your Unlayered account") : _L("Sign in so the slicer can update itself"));
+        account_item->SetHelp(in ? _L("Sign out of your Unlayered account") : _L("Sign in to get configuration updates for your printers"));
         account_item->Enable(u != nullptr);
     };
     // Relabelled whenever the Help menu opens, which covers a sign-in or sign-out from anywhere.
@@ -4413,7 +4413,7 @@ void MainFrame::init_menubar_as_editor()
 #ifdef __APPLE__
     wxWindowID bambu_studio_id_base = wxWindow::NewControlId(int(2));
     wxMenu* parent_menu = m_menubar->OSXGetAppleMenu();
-    //auto preference_item = new wxMenuItem(parent_menu, UnlayeredSlicerMenuPreferences + bambu_studio_id_base, _L("Preferences") + "\t" + ctrl + ",", "");
+    //auto preference_item = new wxMenuItem(parent_menu, SemilayeredSlicerMenuPreferences + bambu_studio_id_base, _L("Preferences") + "\t" + ctrl + ",", "");
 #else
     wxMenu* parent_menu = m_topbar->GetTopMenu();
 #endif
@@ -5958,7 +5958,7 @@ SettingsDialog::SettingsDialog(MainFrame* mainframe)
         SetIcon(wxIcon(szExeFileName, wxBITMAP_TYPE_ICO));
     }
 #else
-    SetIcon(wxIcon(var("UnlayeredSlicer_128px.png"), wxBITMAP_TYPE_PNG));
+    SetIcon(wxIcon(var("SemilayeredSlicer_128px.png"), wxBITMAP_TYPE_PNG));
 #endif // _WIN32
 
     //just hide the Frame on closing

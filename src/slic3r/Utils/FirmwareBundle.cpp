@@ -718,7 +718,7 @@ bool GitHubReleaseFirmwareSource::fetch_metadata(FirmwarePackage &pkg_out, std::
         .header("Accept", "application/vnd.github+json")
         .header("X-GitHub-Api-Version", "2022-11-28")
         // GitHub rejects API requests that do not identify themselves.
-        .header("User-Agent", "UnlayeredSlicer");
+        .header("User-Agent", "SemilayeredSlicer");
     apply_feed_credential(http, url, m_opts.credential);
 
     http.on_error([&](std::string b, std::string error, unsigned status) {
@@ -827,7 +827,7 @@ bool GitHubReleaseFirmwareSource::download_asset(const std::string &url, const s
     auto http      = Http::get(url);
     http.timeout_connect(10)
         .timeout_max(300)
-        .header("User-Agent", "UnlayeredSlicer")
+        .header("User-Agent", "SemilayeredSlicer")
         // Release assets are served as a redirect to a signed object URL; curl follows it.
         .header("Accept", "application/octet-stream");
     // Per URL, not per feed: an asset can live on a different host from the release list.

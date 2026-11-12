@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Unlayered Slicer Flatpak Build Script
-# This script builds and packages Unlayered Slicer as a Flatpak package locally
+# Semilayered Slicer Flatpak Build Script
+# This script builds and packages Semilayered Slicer as a Flatpak package locally
 # Based on the GitHub Actions workflow in .github/workflows/build_all.yml
 
 set -e
@@ -30,7 +30,7 @@ CACHE_DIR=".flatpak-builder"
 show_help() {
     echo "Usage: $0 [OPTIONS]"
     echo ""
-    echo "Build Unlayered Slicer as a Flatpak package"
+    echo "Build Semilayered Slicer as a Flatpak package"
     echo ""
     echo "Options:"
     echo "  -a, --arch ARCH        Target architecture (x86_64, aarch64) [default: $ARCH]"
@@ -120,7 +120,7 @@ if ! [[ "$JOBS" =~ ^[1-9][0-9]*$ ]]; then
     exit 1
 fi
 
-echo -e "${BLUE}Unlayered Slicer Flatpak Build Script${NC}"
+echo -e "${BLUE}Semilayered Slicer Flatpak Build Script${NC}"
 echo -e "${BLUE}================================${NC}"
 echo -e "Architecture: ${GREEN}$ARCH${NC}"
 echo -e "Build directory: ${GREEN}$BUILD_DIR${NC}"
@@ -255,8 +255,8 @@ mkdir -p "$BUILD_DIR"
 rm -rf "$BUILD_DIR/build-dir"
 
 # Check if flatpak manifest exists
-if [[ ! -f "./scripts/flatpak/com.unlayered3d.UnlayeredSlicer.yml" ]]; then
-    echo -e "${RED}Error: Flatpak manifest not found at scripts/flatpak/com.unlayered3d.UnlayeredSlicer.yml${NC}"
+if [[ ! -f "./scripts/flatpak/io.github.erikbuild.SemilayeredSlicer.yml" ]]; then
+    echo -e "${RED}Error: Flatpak manifest not found at scripts/flatpak/io.github.erikbuild.SemilayeredSlicer.yml${NC}"
     exit 1
 fi
 
@@ -268,7 +268,7 @@ echo -e "${YELLOW}Building Flatpak package...${NC}"
 echo -e "This may take a while (30+ minutes depending on your system)..."
 echo ""
 
-BUNDLE_NAME="Unlayered_Slicer_Linux_flatpak_${VER}_${ARCH}.flatpak"
+BUNDLE_NAME="Semilayered_Slicer_Linux_flatpak_${VER}_${ARCH}.flatpak"
 
 # Remove any existing bundle
 rm -f "$BUNDLE_NAME"
@@ -319,11 +319,11 @@ if [[ "$DISABLE_ROFILES_FUSE" == true ]]; then
 fi
 
 # Use a temp manifest with no-debuginfo if requested
-MANIFEST="scripts/flatpak/com.unlayered3d.UnlayeredSlicer.yml"
+MANIFEST="scripts/flatpak/io.github.erikbuild.SemilayeredSlicer.yml"
 if [[ "$NO_DEBUGINFO" == true ]]; then
-    MANIFEST="scripts/flatpak/com.unlayered3d.UnlayeredSlicer.no-debug.yml"
+    MANIFEST="scripts/flatpak/io.github.erikbuild.SemilayeredSlicer.no-debug.yml"
     sed '/^build-options:/a\  no-debuginfo: true\n  strip: true' \
-        scripts/flatpak/com.unlayered3d.UnlayeredSlicer.yml > "$MANIFEST"
+        scripts/flatpak/io.github.erikbuild.SemilayeredSlicer.yml > "$MANIFEST"
     echo -e "${YELLOW}Debug info disabled (using temp manifest)${NC}"
 fi
 
@@ -333,19 +333,19 @@ if ! flatpak-builder \
     "$MANIFEST"; then
     echo -e "${RED}Error: flatpak-builder failed${NC}"
     echo -e "${YELLOW}Check the build log above for details${NC}"
-    rm -f "scripts/flatpak/com.unlayered3d.UnlayeredSlicer.no-debug.yml"
+    rm -f "scripts/flatpak/io.github.erikbuild.SemilayeredSlicer.no-debug.yml"
     exit 1
 fi
 
 # Clean up temp manifest
-rm -f "scripts/flatpak/com.unlayered3d.UnlayeredSlicer.no-debug.yml"
+rm -f "scripts/flatpak/io.github.erikbuild.SemilayeredSlicer.no-debug.yml"
 
 # Create bundle
 echo -e "${YELLOW}Creating Flatpak bundle...${NC}"
 if ! flatpak build-bundle \
     "$BUILD_DIR/repo" \
     "$BUNDLE_NAME" \
-    com.unlayered3d.UnlayeredSlicer \
+    io.github.erikbuild.SemilayeredSlicer \
     --arch="$ARCH"; then
     echo -e "${RED}Error: Failed to create Flatpak bundle${NC}"
     exit 1
@@ -363,11 +363,11 @@ echo ""
 echo -e "${BLUE}To install the Flatpak:${NC}"
 echo -e "flatpak install --user $BUNDLE_NAME"
 echo ""
-echo -e "${BLUE}To run Unlayered Slicer:${NC}"
-echo -e "flatpak run com.unlayered3d.UnlayeredSlicer"
+echo -e "${BLUE}To run Semilayered Slicer:${NC}"
+echo -e "flatpak run io.github.erikbuild.SemilayeredSlicer"
 echo ""
 echo -e "${BLUE}To uninstall:${NC}"
-echo -e "flatpak uninstall --user com.unlayered3d.UnlayeredSlicer"
+echo -e "flatpak uninstall --user io.github.erikbuild.SemilayeredSlicer"
 echo ""
 if [[ "$FORCE_CLEAN" != true ]]; then
     echo -e "${BLUE}Cache Management:${NC}"

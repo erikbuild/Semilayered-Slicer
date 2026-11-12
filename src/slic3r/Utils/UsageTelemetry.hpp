@@ -41,9 +41,9 @@ class PresetCollection;
 // its process id, deleted on a clean exit; a marker whose process is gone means that session died.
 // The marker also holds what the app was doing (set_phase) and what ended it:
 //  - Windows, an unhandled exception: its code and the module and offset it happened at
-//    ("UnlayeredSlicer.dll+0x1a2b3c": a file name, never a path);
+//    ("SemilayeredSlicer.dll+0x1a2b3c": a file name, never a path);
 //  - macOS / Linux, a fatal signal: its name ("SIGSEGV"); on macOS also where, as offsets into the
-//    executable ("UnlayeredSlicer.arm64+0x2f1a3c>+0x2e1b00": the fault, then the slicer's own
+//    executable ("SemilayeredSlicer.arm64+0x2f1a3c>+0x2e1b00": the fault, then the slicer's own
 //    frames below it);
 //  - anywhere, an uncaught C++ exception: "terminate";
 //  - anywhere, "hang": the main thread had stopped responding (heartbeat()) when the process

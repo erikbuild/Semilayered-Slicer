@@ -202,9 +202,9 @@ void Mouse3DController::init()
       // Registration is done either by 4letter constant (CFBundleSignature - obsolete
       //and we dont have that) or Executable name in pascal string(first byte is string lenght).
       //If no packets are recieved the name might be different - check cmake. If debugging try commenting
-      // set_target_properties(UnlayeredSlicer PROPERTIES OUTPUT_NAME "unlayered-slicer")
+      // set_target_properties(SemilayeredSlicer PROPERTIES OUTPUT_NAME "semilayered-slicer")
       clientID = RegisterConnexionClient(
-          0, "\017UnlayeredSlicer", kConnexionClientModeTakeOver, kConnexionMaskAxis);
+          0, "\017SemilayeredSlicer", kConnexionClientModeTakeOver, kConnexionMaskAxis);
         BOOST_LOG_TRIVIAL(info) << "3dx mac handler registered";
     }
   }

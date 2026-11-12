@@ -34,7 +34,7 @@ drift from the image it describes.
 
 The updater prefers a GitHub release, so a populated bundle is normally never read. To force it,
 set the undocumented `github_api_base` key in the `app` section of
-`%APPDATA%\Unlayered Slicer\Unlayered Slicer.conf` **while the application is closed** (it
+`%APPDATA%\Semilayered Slicer\Semilayered Slicer.conf` **while the application is closed** (it
 rewrites the file on exit):
 
 ```json

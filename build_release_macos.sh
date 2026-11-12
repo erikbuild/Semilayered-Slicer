@@ -296,7 +296,7 @@ function verify_python_runtime() {
     fi
     echo "  Verifying bundled Python runtime in $(basename "$app")..."
     local bad
-    bad=$(otool -arch all -L "$pybin" "$app/Contents/MacOS/UnlayeredSlicer" | grep "libpython" | grep -v "@rpath/" || true)
+    bad=$(otool -arch all -L "$pybin" "$app/Contents/MacOS/SemilayeredSlicer" | grep "libpython" | grep -v "@rpath/" || true)
     if [ -n "$bad" ]; then
         echo "ERROR: a bundled binary references libpython by absolute path (relocation regression):" >&2
         echo "$bad" >&2
@@ -310,9 +310,9 @@ function verify_python_runtime() {
     # only bites once the output outgrows the pipe buffer, which is the universal binary
     # (two architectures of load commands), i.e. exactly the build that ships.
     local loadcmds
-    loadcmds=$(otool -arch all -l "$app/Contents/MacOS/UnlayeredSlicer")
+    loadcmds=$(otool -arch all -l "$app/Contents/MacOS/SemilayeredSlicer")
     if ! printf '%s\n' "$loadcmds" | grep -q "path @executable_path/python/lib "; then
-        echo "ERROR: UnlayeredSlicer lacks the @executable_path/python/lib rpath (relocation regression)" >&2
+        echo "ERROR: SemilayeredSlicer lacks the @executable_path/python/lib rpath (relocation regression)" >&2
         exit 1
     fi
     if ! "$pybin" -c "import ssl"; then
@@ -368,34 +368,34 @@ function build_slicer() {
         echo "Fix macOS app package..."
         (
             cd "$PROJECT_BUILD_DIR"
-            mkdir -p UnlayeredSlicer
-            cd UnlayeredSlicer
+            mkdir -p SemilayeredSlicer
+            cd SemilayeredSlicer
             # remove previously built app
-            rm -rf ./UnlayeredSlicer.app
+            rm -rf ./SemilayeredSlicer.app
             # fully copy newly built app
-            cp -pR "../src$BUILD_DIR_CONFIG_SUBDIR/UnlayeredSlicer.app" ./UnlayeredSlicer.app
+            cp -pR "../src$BUILD_DIR_CONFIG_SUBDIR/SemilayeredSlicer.app" ./SemilayeredSlicer.app
             # fix resources
-            resources_path=$(readlink ./UnlayeredSlicer.app/Contents/Resources)
-            rm ./UnlayeredSlicer.app/Contents/Resources
-            cp -R "$resources_path" ./UnlayeredSlicer.app/Contents/Resources
+            resources_path=$(readlink ./SemilayeredSlicer.app/Contents/Resources)
+            rm ./SemilayeredSlicer.app/Contents/Resources
+            cp -R "$resources_path" ./SemilayeredSlicer.app/Contents/Resources
             # "What's new" after an update reads its version's sections from here (AutoUpdater). It lives
             # at the repository root, not in resources/, so it has to be copied in; until 0.1.6 no macOS
             # build carried it and the dialog was empty on Mac.
-            cp "$PROJECT_DIR/CHANGELOG.md" ./UnlayeredSlicer.app/Contents/Resources/CHANGELOG.md
-            relocate_python_runtime ./UnlayeredSlicer.app
+            cp "$PROJECT_DIR/CHANGELOG.md" ./SemilayeredSlicer.app/Contents/Resources/CHANGELOG.md
+            relocate_python_runtime ./SemilayeredSlicer.app
             # delete .DS_Store file
-            find ./UnlayeredSlicer.app/ -name '.DS_Store' -delete
+            find ./SemilayeredSlicer.app/ -name '.DS_Store' -delete
 
-            verify_python_runtime ./UnlayeredSlicer.app
+            verify_python_runtime ./SemilayeredSlicer.app
             
-            # Copy UnlayeredSlicer_profile_validator.app if it exists
-            if [ -f "../src$BUILD_DIR_CONFIG_SUBDIR/UnlayeredSlicer_profile_validator.app/Contents/MacOS/UnlayeredSlicer_profile_validator" ]; then
-                echo "Copying UnlayeredSlicer_profile_validator.app..."
-                rm -rf ./UnlayeredSlicer_profile_validator.app
-                cp -pR "../src$BUILD_DIR_CONFIG_SUBDIR/UnlayeredSlicer_profile_validator.app" ./UnlayeredSlicer_profile_validator.app
+            # Copy SemilayeredSlicer_profile_validator.app if it exists
+            if [ -f "../src$BUILD_DIR_CONFIG_SUBDIR/SemilayeredSlicer_profile_validator.app/Contents/MacOS/SemilayeredSlicer_profile_validator" ]; then
+                echo "Copying SemilayeredSlicer_profile_validator.app..."
+                rm -rf ./SemilayeredSlicer_profile_validator.app
+                cp -pR "../src$BUILD_DIR_CONFIG_SUBDIR/SemilayeredSlicer_profile_validator.app" ./SemilayeredSlicer_profile_validator.app
                 # delete .DS_Store file
-                find ./UnlayeredSlicer_profile_validator.app/ -name '.DS_Store' -delete
-                verify_python_runtime ./UnlayeredSlicer_profile_validator.app
+                find ./SemilayeredSlicer_profile_validator.app/ -name '.DS_Store' -delete
+                verify_python_runtime ./SemilayeredSlicer_profile_validator.app
             fi
         )
 
@@ -408,7 +408,7 @@ function build_slicer() {
         #     ver=${ver}_dev
         # fi
 
-        # zip -FSr UnlayeredSlicer${ver}_Mac_${_ARCH}.zip UnlayeredSlicer.app
+        # zip -FSr SemilayeredSlicer${ver}_Mac_${_ARCH}.zip SemilayeredSlicer.app
 
     fi
     done
@@ -440,29 +440,29 @@ function build_universal() {
     echo "Building universal binary..."
 
     PROJECT_BUILD_DIR="$PROJECT_DIR/build/$ARCH"
-    ARM64_APP="$PROJECT_DIR/build/arm64/UnlayeredSlicer/UnlayeredSlicer.app"
-    X86_64_APP="$PROJECT_DIR/build/x86_64/UnlayeredSlicer/UnlayeredSlicer.app"
+    ARM64_APP="$PROJECT_DIR/build/arm64/SemilayeredSlicer/SemilayeredSlicer.app"
+    X86_64_APP="$PROJECT_DIR/build/x86_64/SemilayeredSlicer/SemilayeredSlicer.app"
 
-    mkdir -p "$PROJECT_BUILD_DIR/UnlayeredSlicer"
-    UNIVERSAL_APP="$PROJECT_BUILD_DIR/UnlayeredSlicer/UnlayeredSlicer.app"
+    mkdir -p "$PROJECT_BUILD_DIR/SemilayeredSlicer"
+    UNIVERSAL_APP="$PROJECT_BUILD_DIR/SemilayeredSlicer/SemilayeredSlicer.app"
     rm -rf "$UNIVERSAL_APP"
     cp -R "$ARM64_APP" "$UNIVERSAL_APP"
 
-    echo "Creating universal binaries for UnlayeredSlicer.app..."
+    echo "Creating universal binaries for SemilayeredSlicer.app..."
     lipo_dir "$UNIVERSAL_APP" "$X86_64_APP"
-    echo "Universal UnlayeredSlicer.app created at $UNIVERSAL_APP"
+    echo "Universal SemilayeredSlicer.app created at $UNIVERSAL_APP"
     verify_python_runtime "$UNIVERSAL_APP"
 
     # Create universal binary for profile validator if it exists
-    ARM64_VALIDATOR="$PROJECT_DIR/build/arm64/UnlayeredSlicer/UnlayeredSlicer_profile_validator.app"
-    X86_64_VALIDATOR="$PROJECT_DIR/build/x86_64/UnlayeredSlicer/UnlayeredSlicer_profile_validator.app"
+    ARM64_VALIDATOR="$PROJECT_DIR/build/arm64/SemilayeredSlicer/SemilayeredSlicer_profile_validator.app"
+    X86_64_VALIDATOR="$PROJECT_DIR/build/x86_64/SemilayeredSlicer/SemilayeredSlicer_profile_validator.app"
     if [ -d "$ARM64_VALIDATOR" ] && [ -d "$X86_64_VALIDATOR" ]; then
-        echo "Creating universal binaries for UnlayeredSlicer_profile_validator.app..."
-        UNIVERSAL_VALIDATOR_APP="$PROJECT_BUILD_DIR/UnlayeredSlicer/UnlayeredSlicer_profile_validator.app"
+        echo "Creating universal binaries for SemilayeredSlicer_profile_validator.app..."
+        UNIVERSAL_VALIDATOR_APP="$PROJECT_BUILD_DIR/SemilayeredSlicer/SemilayeredSlicer_profile_validator.app"
         rm -rf "$UNIVERSAL_VALIDATOR_APP"
         cp -R "$ARM64_VALIDATOR" "$UNIVERSAL_VALIDATOR_APP"
         lipo_dir "$UNIVERSAL_VALIDATOR_APP" "$X86_64_VALIDATOR"
-        echo "Universal UnlayeredSlicer_profile_validator.app created at $UNIVERSAL_VALIDATOR_APP"
+        echo "Universal SemilayeredSlicer_profile_validator.app created at $UNIVERSAL_VALIDATOR_APP"
     fi
 }
 

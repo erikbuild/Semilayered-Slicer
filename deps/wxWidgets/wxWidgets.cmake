@@ -67,7 +67,7 @@ orcaslicer_add_cmake_project(
 )
 
 # wxWidgets 3.3 cmake install doesn't include private headers.
-# Unlayered Slicer uses some of the private headers (for accessibility support).
+# Semilayered Slicer uses some of the private headers (for accessibility support).
 # Copy the private headers directory after install.
 if(MSVC)
     set(_wx_inc_dest ${DESTDIR}/include/wx)

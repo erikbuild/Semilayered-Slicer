@@ -410,7 +410,7 @@ function ShowRecentFileList( pList )
 		let sBadge=sPublished? '<span class="FilePublishedBadge">'+T("published_badge", "PUB")+'</span>':'';
 		if( OneFile['other']=='1' )
 			sBadge+='<span class="FileSourceBadge">'+EscapeHtml(OneFile['source'])+'</span>';
-		let sLogoBadge=sPublished? '<img class="FileLogoBadge" src="../../images/UnlayeredSlicer_gradient_circle.svg" alt="" />':'';
+		let sLogoBadge=sPublished? '<img class="FileLogoBadge" src="../../images/SemilayeredSlicer_gradient_circle.svg" alt="" />':'';
 
 		let TmpHtml='<div class="FileItem"  fpath="'+sPath+'"  >'+
 						'<a class="FileTip" title="'+sPath+'"></a>'+

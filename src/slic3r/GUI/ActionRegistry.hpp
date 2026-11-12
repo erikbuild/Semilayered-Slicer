@@ -133,7 +133,7 @@ private:
 // command catalog and the dynamically materialised setting/plate/recent actions so every built-in
 // action re-keys together.
 inline constexpr const char* kOrcaSourceKey  = "orca";
-inline constexpr const char* kOrcaSourceName = "Unlayered Slicer";
+inline constexpr const char* kOrcaSourceName = "Semilayered Slicer";
 
 // True when a setting at `setting_mode` cannot be edited in `current_mode` and the UI must switch
 // first. Developer settings are handled as a separate prompt by the Speed Dial.

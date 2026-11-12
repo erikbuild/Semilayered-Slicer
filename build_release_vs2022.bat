@@ -1,4 +1,4 @@
-@REM Unlayered Slicer build script for Windows
+@REM Semilayered Slicer build script for Windows
 @echo off
 set WP=%CD%
 
@@ -62,7 +62,7 @@ cmake --build . --config %build_type% --target deps -- -m
 if "%1"=="deps" exit /b 0
 
 :slicer
-echo "building Unlayered Slicer..."
+echo "building Semilayered Slicer..."
 cd %WP%
 mkdir %build_dir%
 cd %build_dir%

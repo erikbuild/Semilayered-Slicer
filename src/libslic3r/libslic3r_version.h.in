@@ -3,6 +3,9 @@
 
 #define SLIC3R_APP_NAME "@SLIC3R_APP_NAME@"
 #define SLIC3R_APP_KEY "@SLIC3R_APP_KEY@"
+// The application name recorded as the generator of G-code and settings files. It matches
+// Unlayered Slicer's, so both applications read each other's output.
+#define GENERATOR_APP_NAME "Unlayered Slicer"
 #define SLIC3R_VERSION "@SLIC3R_VERSION@"
 #define UNLAYERED_VERSION "@UNLAYERED_VERSION@"
 #define ORCA_BASE_VERSION "@ORCA_BASE_VERSION@"

@@ -97,7 +97,7 @@ add_subdirectory(filament_group)
 
 # End-to-end checks of the orca-slicer binary. Linux only: they read result.json, which the CLI
 # writes on Linux only. src/ is added before tests/, so the target is known here.
-if (UNIX AND NOT APPLE AND TARGET UnlayeredSlicer)
+if (UNIX AND NOT APPLE AND TARGET SemilayeredSlicer)
     add_subdirectory(cli)
 endif ()
 

@@ -3,7 +3,7 @@
 
 # rule=brand -- Unlayered / Orca / Bambu identity. Branding is deliberately out of
 # scope for the grayscale pass; these carry the #009789 whale teal, not the accent.
-UnlayeredSlicer*.svg
+SemilayeredSlicer*.svg
 BambuStudio*.svg
 studio_logo*.svg
 splash_logo*.svg

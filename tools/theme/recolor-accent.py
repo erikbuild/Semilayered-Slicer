@@ -96,7 +96,7 @@ PNG_TARGETS = {
 # upstream wholesale would silently restore it; re-copying here keeps that reversible.
 BRAND_COPIES = {
     # dest, relative to resources/web        source, relative to resources/images
-    'image/logo.png': 'UnlayeredSlicer_154.png',  # both 154x154
+    'image/logo.png': 'SemilayeredSlicer_154.png',  # both 154x154
 }
 
 

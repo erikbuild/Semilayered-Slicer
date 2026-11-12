@@ -10,7 +10,7 @@ sites in PartPlate.cpp guard for that while others historically did not.
 This harness drives the real binary and asserts it does not die. Each case builds its
 mesh parametrically, so there are no binary fixtures to keep in sync.
 
-    python tools/cli_smoke.py --exe build/src/Release/unlayered-slicer.exe
+    python tools/cli_smoke.py --exe build/src/Release/semilayered-slicer.exe
 
 Add a case whenever a headless crash is fixed, so it cannot come back silently.
 """
@@ -76,15 +76,15 @@ CASES = [
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--exe", required=True, help="path to unlayered-slicer.exe")
-    ap.add_argument("--datadir", default=None, help="slicer datadir (default: %APPDATA%/Unlayered Slicer)")
+    ap.add_argument("--exe", required=True, help="path to semilayered-slicer.exe")
+    ap.add_argument("--datadir", default=None, help="slicer datadir (default: %APPDATA%/Semilayered Slicer)")
     ap.add_argument("-v", "--verbose", action="store_true")
     args = ap.parse_args()
 
     datadir = args.datadir
     if datadir is None:
         appdata = os.environ.get("APPDATA", "")
-        datadir = os.path.join(appdata, "Unlayered Slicer")
+        datadir = os.path.join(appdata, "Semilayered Slicer")
 
     # Absolute, or CreateProcess fails on Windows even when the relative path resolves for us.
     exe = os.path.abspath(args.exe)

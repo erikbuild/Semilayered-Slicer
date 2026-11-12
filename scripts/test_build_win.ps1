@@ -108,7 +108,7 @@ New-Item -ItemType Directory -Force -Path $noVs | Out-Null
 # what is on disk disagrees with what the generator would write.
 $slnDir = Join-Path $fixtures 'sln'
 New-Item -ItemType Directory -Force -Path $slnDir | Out-Null
-Set-Content -Path (Join-Path $slnDir 'UnlayeredSlicer.sln') -Value '' -Encoding ascii
+Set-Content -Path (Join-Path $slnDir 'SemilayeredSlicer.sln') -Value '' -Encoding ascii
 
 $cases = @(
     'argument handling'
@@ -398,7 +398,7 @@ $cases = @(
        NotContains = @('--target install') }
     @{ Name = '-i adds the install step'; Args = @('-s', '-i')
        Contains = @('--target install') }
-    # install(TARGETS UnlayeredSlicer) has no OPTIONAL, so this would fail partway
+    # install(TARGETS SemilayeredSlicer) has no OPTIONAL, so this would fail partway
     # through a build instead of before it.
     @{ Name = 'installing a tree with no executable is refused'; Args = @('-s', '-i', '--slicer-target', 'glad'); ExpectExit = 1
        Contains = @('--install needs the executable')
@@ -407,7 +407,7 @@ $cases = @(
     @{ Name = 'the same flags without a slicer build are left alone'; Args = @('-d', '-i', '--slicer-target', 'glad')
        Contains = @('cmake -S deps')
        NotContains = @('--install needs the executable') }
-    @{ Name = 'naming the executable target is allowed'; Args = @('-s', '-i', '--slicer-target', 'UnlayeredSlicer')
+    @{ Name = 'naming the executable target is allowed'; Args = @('-s', '-i', '--slicer-target', 'SemilayeredSlicer')
        Contains = @('--target install') }
     # Ninja counts compilers, so -j goes on the command line. MSBuild's -j
     # counts projects while /MP still runs one cl per core inside each, so the
@@ -739,7 +739,7 @@ $cases = @(
        Contains = @('Rebuild after edits   build_win.bat -s -l -x --no-configure', 'Rebuild one target')
        NotContains = @('Solution', 'Open in Visual Studio') }
     @{ Name = 'a visual studio build names the solution instead'; Args = @('-s')
-       Contains = @('Solution      ', 'Open in Visual Studio build\UnlayeredSlicer.sln',
+       Contains = @('Solution      ', 'Open in Visual Studio build\SemilayeredSlicer.sln',
                     'Rebuild after edits   build_win.bat -s --no-configure')
        NotContains = @('Rebuild one target') }
     @{ Name = 'the configuration and architecture come back'; Args = @('-s', '-l', '-x', '--config', 'debug', '--arch', 'arm64')
@@ -753,9 +753,9 @@ $cases = @(
     @{ Name = 'a detected release does not'; Args = @('-s')
        NotContains = @('--vs') }
     @{ Name = 'the binary is named in the build tree it was built in'; Args = @('-s', '-l', '-x')
-       Contains = @('build-clang\src\Release\unlayered-slicer.exe') }
+       Contains = @('build-clang\src\Release\semilayered-slicer.exe') }
     @{ Name = 'installing names the installed copy instead'; Args = @('-s', '-l', '-x', '-i')
-       Contains = @('build-clang\UnlayeredSlicer\unlayered-slicer.exe') }
+       Contains = @('build-clang\SemilayeredSlicer\semilayered-slicer.exe') }
     # -i changes where the binary lands, so a rebuild that dropped it would
     # leave the path above pointing at a stale copy.
     @{ Name = 'the rebuild suggestion keeps -i'; Args = @('-s', '-l', '-x', '-i')
@@ -769,11 +769,11 @@ $cases = @(
     # the binary on disk is whatever the last full build left there.
     @{ Name = 'a single-target build does not claim the whole binary'; Args = @('-s', '-l', '-x', '--slicer-target', 'glad')
        Contains = @('Target        glad', 'Relink the binary     build_win.bat -s -l -x --no-configure')
-       NotContains = @('Run it', 'unlayered-slicer.exe', 'Rebuild after edits') }
+       NotContains = @('Run it', 'semilayered-slicer.exe', 'Rebuild after edits') }
     # The executable has a target of its own, and naming that one does relink.
-    @{ Name = 'naming the executable target still claims the binary'; Args = @('-s', '-l', '-x', '--slicer-target', 'UnlayeredSlicer')
-       Contains = @('Run it', 'unlayered-slicer.exe', 'Rebuild after edits')
-       NotContains = @('Target        UnlayeredSlicer', 'Relink the binary') }
+    @{ Name = 'naming the executable target still claims the binary'; Args = @('-s', '-l', '-x', '--slicer-target', 'SemilayeredSlicer')
+       Contains = @('Run it', 'semilayered-slicer.exe', 'Rebuild after edits')
+       NotContains = @('Target        SemilayeredSlicer', 'Relink the binary') }
     @{ Name = '--run-tests offers the ctest line'; Args = @('-s', '-l', '-x', '--run-tests')
        Contains = @('Re-run the tests      ctest --test-dir build-clang/tests -C Release') }
     @{ Name = 'packing names the bundle and how to use it'; Args = @('-p', '-l')
@@ -800,25 +800,25 @@ $cases = @(
     # The extension follows the generator, so these two pin the release and a
     # build directory that cannot already hold a solution of either kind.
     @{ Name = 'the 2026 generator gets the XML solution'; Args = @('-s', '--vs', '2026', '--build-dir', 'D:\tree')
-       Contains = @('Solution      D:\tree\UnlayeredSlicer.slnx', 'Open in Visual Studio D:\tree\UnlayeredSlicer.slnx') }
+       Contains = @('Solution      D:\tree\SemilayeredSlicer.slnx', 'Open in Visual Studio D:\tree\SemilayeredSlicer.slnx') }
     @{ Name = 'the releases before it get the classic one'; Args = @('-s', '--vs', '2022', '--build-dir', 'D:\tree')
-       Contains = @('Solution      D:\tree\UnlayeredSlicer.sln', 'Open in Visual Studio D:\tree\UnlayeredSlicer.sln') }
+       Contains = @('Solution      D:\tree\SemilayeredSlicer.sln', 'Open in Visual Studio D:\tree\SemilayeredSlicer.sln') }
     @{ Name = 'a solution already on disk wins over the generator'; Args = @('-s', '--vs', '2026', '--build-dir', $slnDir)
-       Match = @('^  Solution      .*\\UnlayeredSlicer\.sln$') }
+       Match = @('^  Solution      .*\\SemilayeredSlicer\.sln$') }
     # Extension-agnostic from here: these cases are about the directory, and
     # the release is whatever is installed.
     @{ Name = 'the VS generator says where the solution is'; Args = @('-s')
-       Match = @('^  Solution      .*\\build\\UnlayeredSlicer\.slnx?$') }
+       Match = @('^  Solution      .*\\build\\SemilayeredSlicer\.slnx?$') }
     @{ Name = 'the solution path follows the configuration'; Args = @('-s', '--config', 'debug')
-       Match = @('^  Solution      .*\\build-dbg\\UnlayeredSlicer\.slnx?$') }
+       Match = @('^  Solution      .*\\build-dbg\\SemilayeredSlicer\.slnx?$') }
     @{ Name = 'the solution line survives an install'; Args = @('-s', '-i')
        Contains = @('  Solution      ') }
     # The path is resolved, not pasted onto the repository root, so it is
     # right whether --build-dir came absolute or with forward slashes.
     @{ Name = 'a moved build still prints one real path'; Args = @('-s', '--build-dir', 'out/build/x64-clang')
-       Match = @('^  Solution      [A-Za-z]:\\[^/]+\\UnlayeredSlicer\.slnx?$') }
+       Match = @('^  Solution      [A-Za-z]:\\[^/]+\\SemilayeredSlicer\.slnx?$') }
     @{ Name = 'an absolute --build-dir is not glued onto the repo root'; Args = @('-s', '--build-dir', 'D:\tree')
-       Match = @('^  Solution      D:\\tree\\UnlayeredSlicer\.slnx?$') }
+       Match = @('^  Solution      D:\\tree\\SemilayeredSlicer\.slnx?$') }
 )
 
 function Invoke-BuildScript {

@@ -162,7 +162,7 @@ TEST_CASE("Usage diagnostics report a crash's phase, exception and location, and
         out << body.dump();
     };
     write_marker("session-crashed.json", {{"pid", 0x7ffffff0}, {"version", "0.1.4"}, {"started", 1000}, {"alive", 31000},
-                                          {"phase", "slicing"}, {"exception", "0xC0000005"}, {"at", "UnlayeredSlicer.dll+0x1a2b3c"},
+                                          {"phase", "slicing"}, {"exception", "0xC0000005"}, {"at", "SemilayeredSlicer.dll+0x1a2b3c"},
                                           {"consented", true}});
     write_marker("session-logoff.json", {{"pid", 0x7ffffff1}, {"version", "0.1.4"}, {"started", 1000}, {"alive", 31000},
                                          {"phase", "os_session_end"}, {"consented", true}});
@@ -212,7 +212,7 @@ TEST_CASE("Usage diagnostics report a crash's phase, exception and location, and
     CHECK(crashes == 1);
     CHECK(crash["phase"] == "slicing");
     CHECK(crash["exception"] == "0xC0000005");
-    CHECK(crash["at"] == "UnlayeredSlicer.dll+0x1a2b3c");
+    CHECK(crash["at"] == "SemilayeredSlicer.dll+0x1a2b3c");
     CHECK(crash["uptime_s"] == 30);
     CHECK(!fs::exists(dir / "usage" / "session-logoff.json"));
 
@@ -535,19 +535,19 @@ TEST_CASE("Usage diagnostics read how a process ended from the Windows event log
 {
     const std::string crash_xml =
         "<Event xmlns='http://schemas.microsoft.com/win/2004/08/events/event'><System><Provider Name='Application Error'/>"
-        "<EventID>1000</EventID></System><EventData><Data Name='AppName'>unlayered-slicer.exe</Data>"
+        "<EventID>1000</EventID></System><EventData><Data Name='AppName'>semilayered-slicer.exe</Data>"
         "<Data Name='AppVersion'>2.0.0.0</Data><Data Name='AppTimeStamp'>6ab0bc35</Data>"
         "<Data Name='ModuleName'>MSVCP140.dll</Data><Data Name='ModuleVersion'>14.50.35719.0</Data>"
         "<Data Name='ModuleTimeStamp'>a3a3015d</Data><Data Name='ExceptionCode'>c0000005</Data>"
         "<Data Name='FaultingOffset'>000000000004bce1</Data><Data Name='ProcessId'>0x670c</Data>"
-        "<Data Name='ProcessCreationTime'>0x1dd59ef17b4e6e1</Data><Data Name='AppPath'>C:\\app\\unlayered-slicer.exe</Data>"
+        "<Data Name='ProcessCreationTime'>0x1dd59ef17b4e6e1</Data><Data Name='AppPath'>C:\\app\\semilayered-slicer.exe</Data>"
         "<Data Name='ModulePath'>C:\\WINDOWS\\SYSTEM32\\MSVCP140.dll</Data><Data Name='IntegratorReportId'>x</Data>"
         "<Data Name='PackageFullName'></Data><Data Name='PackageRelativeAppId'></Data></EventData></Event>";
     const std::string hang_xml =
         "<Event xmlns='http://schemas.microsoft.com/win/2004/08/events/event'><System><Provider Name='Application Hang'/>"
-        "<EventID Qualifiers='0'>1002</EventID></System><EventData><Data Name='AppName'>unlayered-slicer.exe</Data>"
+        "<EventID Qualifiers='0'>1002</EventID></System><EventData><Data Name='AppName'>semilayered-slicer.exe</Data>"
         "<Data Name='AppVersion'>2.0.0.0</Data><Data Name='ProcessId'>0x48e0</Data><Data Name='StartTime'>0x1dd4d247101f42c</Data>"
-        "<Data Name='TerminationTime'>309</Data><Data Name='ExeFileName'>C:\\app\\unlayered-slicer.exe</Data>"
+        "<Data Name='TerminationTime'>309</Data><Data Name='ExeFileName'>C:\\app\\semilayered-slicer.exe</Data>"
         "<Data Name='ReportId'>y</Data><Data Name='PackageFullName'></Data><Data Name='PackageRelativeAppId'></Data>"
         "<Data Name='HangType'>Unknown</Data></EventData></Event>";
     const int64_t crash_started = 1791771132077LL; // 0x1dd59ef17b4e6e1 as Unix ms
@@ -556,26 +556,26 @@ TEST_CASE("Usage diagnostics read how a process ended from the Windows event log
     std::string exception, at;
     SECTION("a crash: code and module+offset, for the same process")
     {
-        REQUIRE(UsageTelemetry::match_crash_event(crash_xml, 0x670c, crash_started + 800, "unlayered-slicer.exe", exception, at));
+        REQUIRE(UsageTelemetry::match_crash_event(crash_xml, 0x670c, crash_started + 800, "semilayered-slicer.exe", exception, at));
         CHECK(exception == "0xC0000005");
         CHECK(at == "MSVCP140.dll+0x4bce1");
         // The app name is compared without case; no start time known = id only.
-        CHECK(UsageTelemetry::match_crash_event(crash_xml, 0x670c, 0, "Unlayered-Slicer.EXE", exception, at));
+        CHECK(UsageTelemetry::match_crash_event(crash_xml, 0x670c, 0, "Semilayered-Slicer.EXE", exception, at));
     }
     SECTION("a hang the person closed")
     {
-        REQUIRE(UsageTelemetry::match_crash_event(hang_xml, 0x48e0, hang_started, "unlayered-slicer.exe", exception, at));
+        REQUIRE(UsageTelemetry::match_crash_event(hang_xml, 0x48e0, hang_started, "semilayered-slicer.exe", exception, at));
         CHECK(exception == "hang_closed");
         CHECK(at.empty());
     }
     SECTION("never another process")
     {
         // Same id, but a process started an hour later reused it.
-        CHECK_FALSE(UsageTelemetry::match_crash_event(crash_xml, 0x670c, crash_started + 3600 * 1000, "unlayered-slicer.exe", exception, at));
-        CHECK_FALSE(UsageTelemetry::match_crash_event(crash_xml, 0x670d, crash_started, "unlayered-slicer.exe", exception, at));
+        CHECK_FALSE(UsageTelemetry::match_crash_event(crash_xml, 0x670c, crash_started + 3600 * 1000, "semilayered-slicer.exe", exception, at));
+        CHECK_FALSE(UsageTelemetry::match_crash_event(crash_xml, 0x670d, crash_started, "semilayered-slicer.exe", exception, at));
         CHECK_FALSE(UsageTelemetry::match_crash_event(crash_xml, 0x670c, crash_started, "other.exe", exception, at));
         CHECK_FALSE(UsageTelemetry::match_crash_event("<Event><System><EventID>1001</EventID></System></Event>", 1, 0,
-                                                      "unlayered-slicer.exe", exception, at));
+                                                      "semilayered-slicer.exe", exception, at));
     }
 }
 // 0.1.6: nothing is collected, queued or kept before a privacy choice, and a withdrawal discards

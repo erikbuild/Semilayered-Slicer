@@ -23,9 +23,9 @@ docker run \
   -e DISPLAY="$DISPLAY" \
   `# It seems that libGL and dbus things need privileged mode` \
   --privileged=true \
-  `# Attach tty for running Unlayered Slicer with command line things` \
+  `# Attach tty for running Semilayered Slicer with command line things` \
   -ti \
   `# Clean up after yourself` \
   --rm \
-  `# Pass all parameters from this script to the Unlayered Slicer ENTRYPOINT binary` \
-  unlayered-slicer "$@"
+  `# Pass all parameters from this script to the Semilayered Slicer ENTRYPOINT binary` \
+  semilayered-slicer "$@"

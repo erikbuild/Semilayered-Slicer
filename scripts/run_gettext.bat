@@ -1,5 +1,5 @@
 @echo off
-REM Unlayered Slicer gettext
+REM Semilayered Slicer gettext
 REM Created by SoftFever on 27/5/23.
 setlocal EnableExtensions EnableDelayedExpansion
 
@@ -10,12 +10,12 @@ for %%a in (%*) do (
 )
 
 set "list_file=./localization/i18n/list.txt"
-set "pot_file=./localization/i18n/UnlayeredSlicer.pot"
+set "pot_file=./localization/i18n/SemilayeredSlicer.pot"
 set "filtered_list=%TEMP%\orca_gettext_filtered_%RANDOM%_%RANDOM%.txt"
 set "missing_list=%TEMP%\orca_gettext_missing_%RANDOM%_%RANDOM%.txt"
 set "generated_root=%TEMP%\orca_gettext_generated_%RANDOM%_%RANDOM%"
 set "generated_i18n=%generated_root%\i18n"
-set "generated_pot=%generated_i18n%\UnlayeredSlicer.pot"
+set "generated_pot=%generated_i18n%\SemilayeredSlicer.pot"
 set "has_sources=0"
 set "script_exit_code=0"
 
@@ -119,7 +119,7 @@ exit /b %errorlevel%
 :processFile
     set "file=%~1"
     set "name=%~n1"
-    set "lang=%name:UnlayeredSlicer_=%"
+    set "lang=%name:SemilayeredSlicer_=%"
     if %FULL_MODE%==1 if exist "%pot_file%" (
         set "merged_file=%TEMP%\orca_gettext_merged_%RANDOM%_%RANDOM%.po"
         .\tools\msgmerge.exe -N --no-wrap -o "!merged_file!" "%file%" "%pot_file%"
@@ -132,7 +132,7 @@ exit /b %errorlevel%
         if errorlevel 1 exit /b 1
     )
     if not exist "./resources/i18n/!lang!" mkdir "./resources/i18n/!lang!"
-    .\tools\msgfmt.exe --check-format --check-header -o "./resources/i18n/!lang!/UnlayeredSlicer.mo" "%file%"
+    .\tools\msgfmt.exe --check-format --check-header -o "./resources/i18n/!lang!/SemilayeredSlicer.mo" "%file%"
     if errorlevel 1 (
         echo Error encountered with msgfmt command for language !lang!.
         exit /b 1

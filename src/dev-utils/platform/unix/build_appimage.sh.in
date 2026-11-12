@@ -2,7 +2,7 @@
 APPIMAGETOOLURL="https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-$(uname -m).AppImage"
 REPO_ROOT="@CMAKE_SOURCE_DIR@"
 
-# APP_KEY is the display name and may contain a space ("Unlayered Slicer"), so every
+# APP_KEY is the display name and may contain a space ("Semilayered Slicer"), so every
 # use of it has to be quoted; APP_CMD never contains one, which is why it -- not the
 # key -- names the files inside the AppDir. The icon and metainfo assets are named
 # after the one-word app id.
@@ -10,14 +10,14 @@ APP_KEY="@SLIC3R_APP_KEY@"
 APP_CMD="@SLIC3R_APP_CMD@"
 APP_IMAGE="${APP_KEY// /_}_Linux_V@UNLAYERED_VERSION@.AppImage"
 
-ICON_SRC="${REPO_ROOT}/resources/images/UnlayeredSlicer_192px.png"
-METAINFO_SRC="${REPO_ROOT}/scripts/flatpak/com.unlayered3d.UnlayeredSlicer.metainfo.xml"
+ICON_SRC="${REPO_ROOT}/resources/images/SemilayeredSlicer_192px.png"
+METAINFO_SRC="${REPO_ROOT}/scripts/flatpak/io.github.erikbuild.SemilayeredSlicer.metainfo.xml"
 
 # AppStream refuses to validate unless the metainfo filename and the desktop file it
 # declares as launchable both match the <id> inside the metainfo, so take the id from
 # the file being shipped instead of assuming it follows the app name.
 APP_ID="$(sed -n 's:.*<id>\(.*\)</id>.*:\1:p' "${METAINFO_SRC}" | head -n1)"
-[ -n "${APP_ID}" ] || APP_ID="com.unlayered3d.UnlayeredSlicer"
+[ -n "${APP_ID}" ] || APP_ID="io.github.erikbuild.SemilayeredSlicer"
 
 wget ${APPIMAGETOOLURL} -O ../appimagetool.AppImage
 chmod +x ../appimagetool.AppImage

@@ -113,7 +113,7 @@ constexpr size_t WAB_MAX_PRESET_BYTES   = 4u * 1024u * 1024u;
 // The public home of this program's Corresponding Source. Reported by slicer.getInfo so that an
 // embedded application -- including one hosted on a server that runs this slicer for remote
 // users -- can render the offer required by AGPL-3.0 sections 6 and 13 without hard-coding it.
-const char* const WAB_SOURCE_URL = "https://github.com/Unlayered3D/Unlayered-Slicer";
+const char* const WAB_SOURCE_URL = "https://github.com/erikbuild/Semilayered-Slicer";
 
 // "gco"/"g" used to be listed too, but Slic3r::is_gcode_file() (libslic3r/utils.cpp) accepts only
 // ".gcode", so Plater::load_gcode() silently refused them: advertising a type that can never open

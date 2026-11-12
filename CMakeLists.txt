@@ -73,7 +73,7 @@ endif ()
 # project() reads this, so set it first.
 set(CMAKE_USER_MAKE_RULES_OVERRIDE "${CMAKE_CURRENT_LIST_DIR}/cmake/modules/ClangClShowIncludes.cmake")
 
-project(UnlayeredSlicer)
+project(SemilayeredSlicer)
 
 # Backward compatibility for old CMake versions
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux" AND CMAKE_VERSION VERSION_LESS "3.25")
@@ -108,13 +108,13 @@ else()
     set(SLIC3R_STATIC_INITIAL 1)
 endif()
 
-option(SLIC3R_STATIC            "Compile Unlayered Slicer with static libraries (Boost, TBB)" ${SLIC3R_STATIC_INITIAL})
-option(SLIC3R_GUI               "Compile Unlayered Slicer with GUI components (OpenGL, wxWidgets)" 1)
-option(SLIC3R_CAD               "Compile Unlayered Slicer with the parametric Design/CAD tab (needs OCCT ModelingAlgorithms)" 1)
-option(SLIC3R_FHS               "Assume Unlayered Slicer is to be installed in a FHS directory structure" 0)
-option(SLIC3R_PROFILE           "Compile Unlayered Slicer with an invasive Shiny profiler" 0)
+option(SLIC3R_STATIC            "Compile Semilayered Slicer with static libraries (Boost, TBB)" ${SLIC3R_STATIC_INITIAL})
+option(SLIC3R_GUI               "Compile Semilayered Slicer with GUI components (OpenGL, wxWidgets)" 1)
+option(SLIC3R_CAD               "Compile Semilayered Slicer with the parametric Design/CAD tab (needs OCCT ModelingAlgorithms)" 1)
+option(SLIC3R_FHS               "Assume Semilayered Slicer is to be installed in a FHS directory structure" 0)
+option(SLIC3R_PROFILE           "Compile Semilayered Slicer with an invasive Shiny profiler" 0)
 option(SLIC3R_PCH               "Use precompiled headers" 1)
-option(SLIC3R_WARNINGS          "Emit compiler warnings for Unlayered Slicer sources" 1)
+option(SLIC3R_WARNINGS          "Emit compiler warnings for Semilayered Slicer sources" 1)
 option(SLIC3R_BUNDLED_WARNINGS  "Emit compiler warnings for bundled third-party sources" 0)
 option(SLIC3R_MSVC_COMPILE_PARALLEL "Compile on Visual Studio in parallel" 1)
 option(SLIC3R_MSVC_PDB          "Generate PDB files on MSVC in Release mode" 1)
@@ -283,7 +283,7 @@ endif ()
 if (APPLE)
     list(LENGTH CMAKE_OSX_ARCHITECTURES _arch_len)
     if (_arch_len GREATER 1)
-        message(FATAL_ERROR "Unlayered Slicer only supports building for one architecture at a time. Please make sure only one architecture is specified in CMAKE_OSX_ARCHITECTURES")
+        message(FATAL_ERROR "Semilayered Slicer only supports building for one architecture at a time. Please make sure only one architecture is specified in CMAKE_OSX_ARCHITECTURES")
     endif ()
     set(CMAKE_FIND_FRAMEWORK LAST)
     set(CMAKE_FIND_APPBUNDLE LAST)
@@ -294,7 +294,7 @@ if (APPLE)
     if (CMAKE_MACOSX_BUNDLE)
         set(CMAKE_INSTALL_RPATH @executable_path/../Frameworks)
     endif()
-    SET(CMAKE_XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER "com.unlayered3d.UnlayeredSlicer")
+    SET(CMAKE_XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER "io.github.erikbuild.SemilayeredSlicer")
 
     # The macOS CI jobs build with Ninja (build_release_macos.sh -x), so the Xcode generator
     # is not covered. Xcode adds -Wshorten-64-to-32 by default ("Implicit Conversion to 32 Bit
@@ -365,7 +365,7 @@ endif ()
 
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     message(STATUS "Automatically setting CMAKE_INSTALL_PREFIX")
-    set_property(CACHE CMAKE_INSTALL_PREFIX PROPERTY VALUE "${CMAKE_BINARY_DIR}/UnlayeredSlicer")
+    set_property(CACHE CMAKE_INSTALL_PREFIX PROPERTY VALUE "${CMAKE_BINARY_DIR}/SemilayeredSlicer")
 endif()
 
 message(STATUS "CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
@@ -452,7 +452,7 @@ if (MINGW)
 endif ()
 
 if (NOT MSVC)
-    # ARMs (Raspberry PI) use an unsigned char by default. Let's make it consistent for Unlayered Slicer on all platforms.
+    # ARMs (Raspberry PI) use an unsigned char by default. Let's make it consistent for Semilayered Slicer on all platforms.
     add_compile_options(-fsigned-char)
 endif ()
 
@@ -724,7 +724,7 @@ add_definitions(-DwxUSE_UNICODE -D_UNICODE -DUNICODE -DWXINTL_NO_GETTEXT_MACRO)
 add_definitions(-DwxNO_UNSAFE_WXSTRING_CONV)
 
 if (SLIC3R_PROFILE)
-    message("Unlayered Slicer will be built with a Shiny invasive profiler")
+    message("Semilayered Slicer will be built with a Shiny invasive profiler")
     add_definitions(-DSLIC3R_PROFILE)
 endif ()
 
@@ -942,7 +942,7 @@ set(BBL_L18N_DIR "${CMAKE_CURRENT_SOURCE_DIR}/localization/i18n")
 add_custom_target(gettext_make_pot
     COMMAND xgettext --keyword=L --keyword=_L --keyword=_u8L --keyword=L_CONTEXT:1,2c --keyword=_L_CONTEXT:1,2c --keyword=_u8L_CONTEXT:1,2c --keyword=_L_PLURAL:1,2 --add-comments=TRN --from-code=UTF-8 --no-location --debug --boost
         -f "${BBL_L18N_DIR}/list.txt"
-        -o "${BBL_L18N_DIR}/UnlayeredSlicer.pot"
+        -o "${BBL_L18N_DIR}/SemilayeredSlicer.pot"
     COMMAND hintsToPot ${SLIC3R_RESOURCES_DIR} ${BBL_L18N_DIR}
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
     COMMENT "Generate pot file from strings in the source tree"
@@ -951,24 +951,24 @@ add_custom_target(gettext_merge_po_with_pot
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
     COMMENT "Merge localization po with new generated pot file"
 )
-file(GLOB BBL_L10N_PO_FILES "${BBL_L18N_DIR}/*/UnlayeredSlicer*.po")
+file(GLOB BBL_L10N_PO_FILES "${BBL_L18N_DIR}/*/SemilayeredSlicer*.po")
 foreach(po_file ${BBL_L10N_PO_FILES})
     GET_FILENAME_COMPONENT(po_dir "${po_file}" DIRECTORY)
-    SET(po_new_file "${po_dir}/UnlayeredSlicer_.po")
+    SET(po_new_file "${po_dir}/SemilayeredSlicer_.po")
     add_custom_command(
         TARGET gettext_merge_po_with_pot PRE_BUILD
-        COMMAND msgmerge -N -o ${po_file} ${po_file} "${BBL_L18N_DIR}/UnlayeredSlicer.pot"
+        COMMAND msgmerge -N -o ${po_file} ${po_file} "${BBL_L18N_DIR}/SemilayeredSlicer.pot"
     )
 endforeach()
 add_custom_target(gettext_po_to_mo
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
     COMMENT "Generate localization po files (binary) from mo files (texts)"
 )
-file(GLOB L10N_PO_FILES "${BBL_L18N_DIR}/*/UnlayeredSlicer*.po")
+file(GLOB L10N_PO_FILES "${BBL_L18N_DIR}/*/SemilayeredSlicer*.po")
 foreach(po_file ${BBL_L10N_PO_FILES})
     GET_FILENAME_COMPONENT(SECOND_FOLDER_ABSOLUTE ${po_file} DIRECTORY)
     string(REGEX REPLACE ".*/(.*)" "\\1" po_dir "${SECOND_FOLDER_ABSOLUTE}" )
-    SET(mo_file "${L10N_DIR}/${po_dir}/UnlayeredSlicer.mo")
+    SET(mo_file "${L10N_DIR}/${po_dir}/SemilayeredSlicer.mo")
     add_custom_command(
         TARGET gettext_po_to_mo PRE_BUILD
         COMMAND msgfmt ARGS --check-format -o ${mo_file} ${po_file}
@@ -1119,7 +1119,7 @@ function(unlayered_copy_dlls target config postfix output_dlls)
         DESTINATION ${_out_dir})
 
     # When find_package(OpenSSL) picks up a shared system OpenSSL 3 (only on the dev PATH), its runtime
-    # DLLs are statically imported by UnlayeredSlicer.dll, so they must be copied and shipped or the app
+    # DLLs are statically imported by SemilayeredSlicer.dll, so they must be copied and shipped or the app
     # fails to load on a clean machine. The deps build (CI, release) links OpenSSL statically and has
     # no such DLLs. Derive the bin dir from the found include dir.
     get_filename_component(_openssl_bin_dir "${OPENSSL_INCLUDE_DIR}/../bin" ABSOLUTE)
@@ -1263,7 +1263,7 @@ function(unlayered_silence_third_party_warnings _dir)
 endfunction()
 
 
-# libslic3r, the Unlayered Slicer GUI and the Unlayered Slicer executable.
+# libslic3r, the Semilayered Slicer GUI and the Semilayered Slicer executable.
 add_subdirectory(deps_src)
 
 if (NOT SLIC3R_BUNDLED_WARNINGS)
@@ -1303,7 +1303,7 @@ file(CONFIGURE OUTPUT "${CMAKE_BINARY_DIR}/src/libslic3r/unlayered_edition.h"
      CONTENT "#pragma once\n// Generated by CMakeLists.txt from UNLAYERED_SIDE_PANEL_EDITION / UNLAYERED_SLICE_SERVICE.\n#define UNLAYERED_SIDE_PANEL @UNLAYERED_SIDE_PANEL@\n#define UNLAYERED_SIDE_PANEL_DEFAULT_URL \"@UNLAYERED_SIDE_PANEL_DEFAULT_URL@\"\n#define UNLAYERED_SLICE_SERVICE @UNLAYERED_SLICE_SERVICE_ON@\n#define UNLAYERED_SLICE_SERVICE_DEFAULT_URL \"@UNLAYERED_SLICE_SERVICE_DEFAULT_URL@\"\n"
      @ONLY)
 add_subdirectory(src)
-set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT UnlayeredSlicer_app_gui)
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT SemilayeredSlicer_app_gui)
 
 add_dependencies(gettext_make_pot hintsToPot)
 
@@ -1320,7 +1320,7 @@ if(BUILD_TESTS)
 endif()
 
 if (NOT WIN32 AND NOT APPLE)
-    set(SLIC3R_APP_CMD "unlayered-slicer")
+    set(SLIC3R_APP_CMD "semilayered-slicer")
     configure_file(${LIBDIR}/dev-utils/platform/unix/build_appimage.sh.in ${CMAKE_CURRENT_BINARY_DIR}/build_appimage.sh USE_SOURCE_PERMISSIONS @ONLY)
 endif()
 
@@ -1360,7 +1360,7 @@ if (WIN32)
     install (PROGRAMS ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION ".")
 elseif (SLIC3R_FHS)
     # CMAKE_INSTALL_FULL_DATAROOTDIR: read-only architecture-independent data root (share)
-    set(SLIC3R_FHS_RESOURCES "${CMAKE_INSTALL_FULL_DATAROOTDIR}/UnlayeredSlicer")
+    set(SLIC3R_FHS_RESOURCES "${CMAKE_INSTALL_FULL_DATAROOTDIR}/SemilayeredSlicer")
     install(DIRECTORY ${SLIC3R_RESOURCES_DIR}/ DESTINATION ${SLIC3R_FHS_RESOURCES}
         PATTERN "*/udev" EXCLUDE
     )
@@ -1368,22 +1368,22 @@ elseif (SLIC3R_FHS)
     if(ORCA_BUNDLED_UV_EXECUTABLE)
         install(PROGRAMS "${ORCA_BUNDLED_UV_EXECUTABLE}" DESTINATION "${SLIC3R_FHS_RESOURCES}/tools/uv" RENAME "${ORCA_BUNDLED_UV_FILENAME}")
     endif()
-    install(FILES src/dev-utils/platform/unix/com.unlayered3d.UnlayeredSlicer.desktop DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications)
+    install(FILES src/dev-utils/platform/unix/io.github.erikbuild.SemilayeredSlicer.desktop DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications)
     foreach(SIZE 32 128 192)
-        install(FILES ${SLIC3R_RESOURCES_DIR}/images/UnlayeredSlicer_${SIZE}px.png
-            DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/${SIZE}x${SIZE}/apps RENAME UnlayeredSlicer.png
+        install(FILES ${SLIC3R_RESOURCES_DIR}/images/SemilayeredSlicer_${SIZE}px.png
+            DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/${SIZE}x${SIZE}/apps RENAME SemilayeredSlicer.png
         )
     endforeach()
 elseif (CMAKE_MACOSX_BUNDLE)
-    # install(DIRECTORY "${SLIC3R_RESOURCES_DIR}/" DESTINATION "${CMAKE_INSTALL_PREFIX}/UnlayeredSlicer.app/Contents/resources")
+    # install(DIRECTORY "${SLIC3R_RESOURCES_DIR}/" DESTINATION "${CMAKE_INSTALL_PREFIX}/SemilayeredSlicer.app/Contents/resources")
     # The "What's new" dialog reads CHANGELOG.md from the resources directory, as on Windows and Linux.
     # build_release_macos.sh (which the release builds and CI use) copies it into the bundle too.
-    install(FILES "${CMAKE_SOURCE_DIR}/CHANGELOG.md" DESTINATION "${CMAKE_INSTALL_PREFIX}/UnlayeredSlicer.app/Contents/Resources")
+    install(FILES "${CMAKE_SOURCE_DIR}/CHANGELOG.md" DESTINATION "${CMAKE_INSTALL_PREFIX}/SemilayeredSlicer.app/Contents/Resources")
     if(ORCA_BUNDLED_UV_EXECUTABLE)
-        install(PROGRAMS "${ORCA_BUNDLED_UV_EXECUTABLE}" DESTINATION "${CMAKE_INSTALL_PREFIX}/UnlayeredSlicer.app/Contents/Resources/tools/uv" RENAME "${ORCA_BUNDLED_UV_FILENAME}")
+        install(PROGRAMS "${ORCA_BUNDLED_UV_EXECUTABLE}" DESTINATION "${CMAKE_INSTALL_PREFIX}/SemilayeredSlicer.app/Contents/Resources/tools/uv" RENAME "${ORCA_BUNDLED_UV_FILENAME}")
     endif()
 else ()
-    install(FILES src/dev-utils/platform/unix/com.unlayered3d.UnlayeredSlicer.desktop DESTINATION ${CMAKE_INSTALL_PREFIX}/resources/applications)
+    install(FILES src/dev-utils/platform/unix/io.github.erikbuild.SemilayeredSlicer.desktop DESTINATION ${CMAKE_INSTALL_PREFIX}/resources/applications)
     install(DIRECTORY "${SLIC3R_RESOURCES_DIR}/" DESTINATION "${CMAKE_INSTALL_PREFIX}/resources" ${SLIC3R_RESOURCES_EXCLUDE})
     install(FILES "${CMAKE_SOURCE_DIR}/CHANGELOG.md" DESTINATION "${CMAKE_INSTALL_PREFIX}/resources")
     if(ORCA_BUNDLED_UV_EXECUTABLE)
@@ -1410,12 +1410,12 @@ endif ()
 install(FILES ${CMAKE_SOURCE_DIR}/LICENSE.txt DESTINATION ".")
 configure_file(${LIBDIR}/dev-utils/platform/unix/fhs.hpp.in ${LIBDIR_BIN}/dev-utils/platform/unix/fhs.hpp)
 
-set (CPACK_PACKAGE_NAME "Unlayered Slicer")
-set (CPACK_PACKAGE_VENDOR "Unlayered 3D")
+set (CPACK_PACKAGE_NAME "Semilayered Slicer")
+set (CPACK_PACKAGE_VENDOR "Semilayered Slicer contributors")
 set (CPACK_PACKAGE_VERSION_MAJOR "${ORCA_VERSION_MAJOR}")
 set (CPACK_PACKAGE_VERSION_MINOR "${ORCA_VERSION_MINOR}")
 set (CPACK_PACKAGE_VERSION_PATCH "${ORCA_VERSION_PATCH}")
-set (CPACK_PACKAGE_FILE_NAME "Unlayered_Slicer_Windows_Installer_V${UNLAYERED_VERSION}")
+set (CPACK_PACKAGE_FILE_NAME "Semilayered_Slicer_Windows_Installer_V${UNLAYERED_VERSION}")
 # Suffix the Windows installer with its target arch so the x64 and arm64 builds
 # produce distinct filenames (matches ARCH_SUFFIX in build_slicer.yml). Same
 # CMAKE_SYSTEM_PROCESSOR mapping used by unlayered_copy_dlls() above.
@@ -1426,28 +1426,28 @@ if (WIN32)
         string (APPEND CPACK_PACKAGE_FILE_NAME "_x64")
     endif ()
 endif ()
-set (CPACK_PACKAGE_DESCRIPTION_SUMMARY "Unlayered Slicer is an open source slicer for FDM printers")
-set (CPACK_PACKAGE_HOMEPAGE_URL "https://github.com/Unlayered3D/Unlayered-Slicer")
+set (CPACK_PACKAGE_DESCRIPTION_SUMMARY "Semilayered Slicer is an open source slicer for FDM printers")
+set (CPACK_PACKAGE_HOMEPAGE_URL "https://github.com/erikbuild/Semilayered-Slicer")
 set (CPACK_PACKAGE_INSTALL_DIRECTORY ${CPACK_PACKAGE_NAME})
-set (CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/resources/images\\\\UnlayeredSlicer.ico")
+set (CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/resources/images\\\\SemilayeredSlicer.ico")
 set (CPACK_NSIS_MUI_ICON "${CPACK_PACKAGE_ICON}")
 set (CPACK_NSIS_MUI_UNIICON "${CPACK_PACKAGE_ICON}")
 # Relative to the install dir: CPack's NSIS template prefixes $INSTDIR itself.
-set (CPACK_NSIS_INSTALLED_ICON_NAME "unlayered-slicer.exe")
+set (CPACK_NSIS_INSTALLED_ICON_NAME "semilayered-slicer.exe")
 # A self-update (/UPDATE, see NSIS.template.in) only recreates the shortcut if it was still there.
 set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
     \\\${If} $UPDATE_MODE != \\\"1\\\"
     \\\${OrIf} $DESKTOP_LINK_EXISTED == \\\"1\\\"
-      CreateShortCut \\\"$DESKTOP\\\\UnlayeredSlicer.lnk\\\" \\\"$INSTDIR\\\\unlayered-slicer.exe\\\"
+      CreateShortCut \\\"$DESKTOP\\\\SemilayeredSlicer.lnk\\\" \\\"$INSTDIR\\\\semilayered-slicer.exe\\\"
     \\\${EndIf}
 ")
 set (CPACK_PACKAGE_CHECKSUM SHA256)
-set (CPACK_PACKAGE_INSTALL_REGISTRY_KEY "Unlayered Slicer")
+set (CPACK_PACKAGE_INSTALL_REGISTRY_KEY "Semilayered Slicer")
 set (CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL ON)
 set (CPACK_NSIS_EXECUTABLES_DIRECTORY ".")
 # set (CPACK_NSIS_MODIFY_PATH "ON")
-set(CPACK_PACKAGE_EXECUTABLES "unlayered-slicer;Unlayered Slicer")
-set(CPACK_CREATE_DESKTOP_LINKS "unlayered-slicer")
+set(CPACK_PACKAGE_EXECUTABLES "semilayered-slicer;Semilayered Slicer")
+set(CPACK_CREATE_DESKTOP_LINKS "semilayered-slicer")
 set (CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/LICENSE.txt) # must also include in install command
 
 # --- Install scope: per-machine and per-user installers ----------------------

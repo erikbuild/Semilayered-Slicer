@@ -79,7 +79,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--exe", required=True)
     ap.add_argument("--dir", default="sandboxes/skeleton_tests")
-    ap.add_argument("--datadir", default=os.path.join(os.environ.get("APPDATA", ""), "Unlayered Slicer"))
+    ap.add_argument("--datadir", default=os.path.join(os.environ.get("APPDATA", ""), "Semilayered Slicer"))
     ap.add_argument("--meshes", default="pipe_vertical,tee_solid,torus")
     args = ap.parse_args()
 

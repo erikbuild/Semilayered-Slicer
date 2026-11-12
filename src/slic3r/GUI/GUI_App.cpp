@@ -446,7 +446,7 @@ bool is_associate_files(std::wstring extend)
     wchar_t app_path[MAX_PATH];
     ::GetModuleFileNameW(nullptr, app_path, sizeof(app_path));
 
-    std::wstring prog_id             = L" Unlayered.Slicer.1";
+    std::wstring prog_id             = L" Semilayered.Slicer.1";
     std::wstring reg_base            = L"Software\\Classes";
     std::wstring reg_extension       = reg_base + L"\\." + extend;
 
@@ -634,7 +634,7 @@ static void migrate_flatpak_legacy_datadir(const boost::filesystem::path &data_d
     std::cerr << "Migrating Flatpak data dir: " << data_dir_path << std::endl;
 
     std::string legacy_data_dir_str = data_dir_path.string();
-    boost::replace_first(legacy_data_dir_str, "com.unlayered3d.UnlayeredSlicer", "io.github.softfever.OrcaSlicer");
+    boost::replace_first(legacy_data_dir_str, "io.github.erikbuild.SemilayeredSlicer", "io.github.softfever.OrcaSlicer");
     const fs::path legacy_data_dir(legacy_data_dir_str);
 
     std::cerr << "Legacy Flatpak data dir: " << legacy_data_dir << std::endl;
@@ -917,7 +917,7 @@ static bool generic_exception_handle()
         // and terminate the app so it is at least certain to happen now.
         BOOST_LOG_TRIVIAL(error) << boost::format("std::bad_alloc exception: %1%") % ex.what();
         flush_logs();
-        wxString errmsg = wxString::Format(_L("Unlayered Slicer will terminate because of running out of memory. "
+        wxString errmsg = wxString::Format(_L("Semilayered Slicer will terminate because of running out of memory. "
                                               "It may be a bug. It will be appreciated if you report the issue to our team."));
         wxMessageBox(errmsg + "\n\n" + wxString(ex.what()), _L("Fatal error"), wxOK | wxICON_ERROR);
 
@@ -926,7 +926,7 @@ static bool generic_exception_handle()
      } catch (const boost::io::bad_format_string& ex) {
      	BOOST_LOG_TRIVIAL(error) << boost::format("Uncaught exception: %1%") % ex.what();
         	flush_logs();
-        wxString errmsg = _L("Unlayered Slicer will terminate because of a localization error. "
+        wxString errmsg = _L("Semilayered Slicer will terminate because of a localization error. "
                              "It will be appreciated if you report the specific scenario this issue happened.");
         wxMessageBox(errmsg + "\n\n" + wxString(ex.what()), _L("Critical error"), wxOK | wxICON_ERROR);
         std::terminate();
@@ -937,7 +937,7 @@ static bool generic_exception_handle()
             UsageTelemetry::note_exception(info.type, info.what);
             BOOST_LOG_TRIVIAL(error) << boost::format("Uncaught exception (%1%): %2%") % info.type % ex.what();
             flush_logs();
-            wxLogError(format_wxstr(_L("Unlayered Slicer got an unhandled exception: %1%"), ex.what()));
+            wxLogError(format_wxstr(_L("Semilayered Slicer got an unhandled exception: %1%"), ex.what()));
         });
     }
     return false;
@@ -978,7 +978,7 @@ std::vector<std::string> GUI_App::split_str(std::string src, std::string separat
 // same download Preferences > Online uses. Returns true at most once per installer opt-in.
 static bool take_installer_network_plugin_request(AppConfig* app_config)
 {
-    static const wchar_t* key   = L"Software\\Unlayered 3D\\Unlayered Slicer";
+    static const wchar_t* key   = L"Software\\Semilayered Slicer contributors\\Semilayered Slicer";
     static const wchar_t* value = L"InstallBambuNetworkPlugin";
     DWORD data = 0;
     DWORD size = sizeof(data);
@@ -1643,7 +1643,7 @@ GUI_App::GUI_App()
     , m_http_server(std::make_unique<HttpServer>())
     , m_action_registry(std::make_unique<ActionRegistry>())
 {
-	//app config initializes early becasuse it is used in instance checking in UnlayeredSlicer.cpp
+	//app config initializes early becasuse it is used in instance checking in SemilayeredSlicer.cpp
     this->init_app_config();
     m_shortcuts = std::make_unique<ShortcutRegistry>();
     m_shortcuts->load(*app_config);
@@ -1694,7 +1694,7 @@ void GUI_App::shutdown()
     // -[NSApplication terminate:] calls exit() directly, so wxEntryCleanup -- and with it the
     // wxApp destructor -- is skipped. The dylib therefore stayed loaded until exit() ran the
     // dynamic loader's static destructors, one of which throws; an exception escaping
-    // __cxa_finalize_ranges is fatal, and the user saw "Unlayered Slicer quit unexpectedly"
+    // __cxa_finalize_ranges is fatal, and the user saw "Semilayered Slicer quit unexpectedly"
     // on every Cmd-Q:
     //
     //   _handleAEQuit -> -[NSApplication terminate:] -> exit -> __cxa_finalize_ranges
@@ -1734,7 +1734,7 @@ void GUI_App::start_exit_watchdog()
             }
 #ifdef _WIN32
             // 0.1.10: not std::_Exit. On Windows it goes through ExitProcess, which still detaches
-            // UnlayeredSlicer.dll and runs its static destructors (~PluginManager -> Python finalize)
+            // SemilayeredSlicer.dll and runs its static destructors (~PluginManager -> Python finalize)
             // on this thread under the loader lock: the very code that may be stuck. A 0.1.9 close
             // hung 30 s, reached that path, and then died with 0xC0000005 on the main thread.
             ::TerminateProcess(::GetCurrentProcess(), EXIT_FAILURE);
@@ -3125,7 +3125,7 @@ void GUI_App::init_webview_runtime()
     }
 
     BOOST_LOG_TRIVIAL(warning) << "WebView2 runtime not found; prompting user to install.";
-    int nRet = wxMessageBox(_L("Unlayered Slicer requires the Microsoft WebView2 Runtime to operate certain features.\nClick Yes to install it now."),
+    int nRet = wxMessageBox(_L("Semilayered Slicer requires the Microsoft WebView2 Runtime to operate certain features.\nClick Yes to install it now."),
                             _L("WebView2 Runtime"), wxYES_NO);
     if (nRet != wxYES) {
         BOOST_LOG_TRIVIAL(warning) << "User declined WebView2 runtime installation.";
@@ -3147,7 +3147,7 @@ void GUI_App::init_webview_runtime()
         BOOST_LOG_TRIVIAL(error) << "WebView2 runtime installation failed or still not detected.";
         wxMessageBox(format_wxstr(_L("The Microsoft WebView2 Runtime could not be installed.\n"
                                      "Some features, including the setup wizard, may appear blank until it is installed.\n"
-                                     "Please install it manually from %1% and restart Unlayered Slicer."),
+                                     "Please install it manually from %1% and restart Semilayered Slicer."),
                                   "https://developer.microsoft.com/microsoft-edge/webview2/"),
                      _L("WebView2 Runtime"), wxOK | wxICON_WARNING);
     }
@@ -3227,7 +3227,7 @@ void GUI_App::init_app_config()
     set_log_path_and_level(log_filename, 3);
 #endif
 
-    BOOST_LOG_TRIVIAL(info) << boost::format("gui mode, Current Unlayered Slicer Version %1% build %2%") % UNLAYERED_VERSION % build_commit_label;
+    BOOST_LOG_TRIVIAL(info) << boost::format("gui mode, Current Semilayered Slicer Version %1% build %2%") % UNLAYERED_VERSION % build_commit_label;
 
     //BBS: remove GCodeViewer as seperate APP logic
 	if (!app_config)
@@ -3631,11 +3631,11 @@ void GUI_App::init_plugin_gui_wiring()
 namespace {
 #ifdef _WIN32
 // WebView2 keeps its browser state in a user-data folder; wxWidgets gives every process the same
-// one (wxStandardPaths::GetUserLocalDataDir(), i.e. %LOCALAPPDATA%\Unlayered Slicer, with WebView2's
+// one (wxStandardPaths::GetUserLocalDataDir(), i.e. %LOCALAPPDATA%\Semilayered Slicer, with WebView2's
 // own EBWebView inside it). A second window sharing that folder with the first came up with dead
 // web panels. The first window keeps the default folder, so its sign-ins and storage stay where
 // they always were. Every later window takes the first free slot k and points WebView2 at
-// %LOCALAPPDATA%\Unlayered Slicer\EBWebView-instances\<k> through WEBVIEW2_USER_DATA_FOLDER, which
+// %LOCALAPPDATA%\Semilayered Slicer\EBWebView-instances\<k> through WEBVIEW2_USER_DATA_FOLDER, which
 // CreateCoreWebView2EnvironmentWithOptions reads in place of the folder wxWidgets passes. A slot
 // keeps its folder (and its sign-ins) for the next window that gets the same slot.
 //
@@ -3673,7 +3673,7 @@ void clear_webview2_cache_after_update(const boost::filesystem::path& user_data_
 // init_webview_runtime() runs, comes after MainFrame).
 void choose_webview2_user_data_folder()
 {
-    static const wchar_t* PRIMARY = L"Local\\UnlayeredSlicer.WebView2.Primary";
+    static const wchar_t* PRIMARY = L"Local\\SemilayeredSlicer.WebView2.Primary";
     constexpr int         MAX_SLOTS = 32;
     const wxString        instances = wxStandardPaths::Get().GetUserLocalDataDir() + wxS("\\EBWebView-instances\\");
 
@@ -3705,7 +3705,7 @@ void choose_webview2_user_data_folder()
     }
 
     for (int slot = 1; slot <= MAX_SLOTS; ++slot) {
-        const std::wstring name   = L"Local\\UnlayeredSlicer.WebView2.Slot." + std::to_wstring(slot);
+        const std::wstring name   = L"Local\\SemilayeredSlicer.WebView2.Slot." + std::to_wstring(slot);
         HANDLE             handle = ::CreateMutexW(nullptr, FALSE, name.c_str());
         if (handle == nullptr)
             continue; // ACCESS_DENIED: held by a window with other rights
@@ -3751,7 +3751,7 @@ public:
             hash ^= c;
             hash *= 1099511628211ull;
         }
-        const std::wstring name = L"Local\\UnlayeredSlicer.ProfileSync." + std::to_wstring(hash);
+        const std::wstring name = L"Local\\SemilayeredSlicer.ProfileSync." + std::to_wstring(hash);
         m_handle                = ::CreateMutexW(nullptr, FALSE, name.c_str());
         if (m_handle == nullptr) {
             BOOST_LOG_TRIVIAL(warning) << "profile lock: CreateMutex failed (" << ::GetLastError() << "); " << what << " without it";
@@ -3812,7 +3812,7 @@ bool GUI_App::on_init_inner()
 #endif
 
 #ifdef __APPLE__
-    // Override wxWidgets' kAEGetURL handler so unlayeredslicer:// deep links keep
+    // Override wxWidgets' kAEGetURL handler so semilayeredslicer:// deep links keep
     // working after the wxWidgets 3.3.2 upgrade on macOS (#13119).
     register_mac_deep_link_handler();
     // Same regression for the Quit Apple event (Dock > Quit, logout): without this, a Quit while the
@@ -4120,7 +4120,7 @@ bool GUI_App::on_init_inner()
             associate_files(L"step");
             associate_files(L"stp");
         }
-        associate_url(L"unlayeredslicer");
+        associate_url(L"semilayeredslicer");
 
         if (app_config->get("associate_gcode") == "true")
             associate_files(L"gcode");
@@ -4134,7 +4134,7 @@ bool GUI_App::on_init_inner()
                /* wxString tips = wxString::Format(_L("Click to download new version in default browser: %s"), version_info.version_str);
                 DownloadDialog dialog(this->mainframe,
                     tips,
-                    _L("New version of Unlayered Slicer"),
+                    _L("New version of Semilayered Slicer"),
                     false,
                     wxCENTER | wxICON_INFORMATION);
 
@@ -4207,7 +4207,7 @@ bool GUI_App::on_init_inner()
                 wxString tips = wxString::Format(_L("Click to download new version in default browser: %s"), version_str);
                 DownloadDialog dialog(this->mainframe,
                     tips,
-                    _L("Unlayered Slicer needs an update"),
+                    _L("Semilayered Slicer needs an update"),
                     false,
                     wxCENTER | wxICON_INFORMATION);
                 dialog.SetExtendedMessage(description_text);
@@ -4558,7 +4558,7 @@ bool GUI_App::on_init_inner()
         m_config_corrupted = false;
         show_error(nullptr,
                    _u8L(
-                       "The Unlayered Slicer configuration file may be corrupted and cannot be parsed.\nUnlayered Slicer has attempted to recreate the "
+                       "The Semilayered Slicer configuration file may be corrupted and cannot be parsed.\nSemilayered Slicer has attempted to recreate the "
                        "configuration file.\nPlease note, application settings will be lost, but printer profiles will not be affected."));
     }
     return true;
@@ -6818,7 +6818,7 @@ void GUI_App::on_http_error(wxCommandEvent &evt)
 
     // Version limit
     if (code == HttpErrorVersionLimited) {
-        MessageDialog msg_dlg(nullptr, _L("The version of Unlayered Slicer is too low and needs to be updated to the latest version before it can be used normally."), "", wxAPPLY | wxOK);
+        MessageDialog msg_dlg(nullptr, _L("The version of Semilayered Slicer is too low and needs to be updated to the latest version before it can be used normally."), "", wxAPPLY | wxOK);
         if (msg_dlg.ShowModal() == wxOK) {
         }
     }
@@ -7218,7 +7218,7 @@ namespace
 
 // Identifies the build to the update host, so its access log can be filtered. Matches the token
 // used by FirmwareBundle and AppUpdater.
-std::string updater_user_agent() { return std::string("UnlayeredSlicer/") + UNLAYERED_VERSION; }
+std::string updater_user_agent() { return std::string("SemilayeredSlicer/") + UNLAYERED_VERSION; }
 
 // The version grammar accepted in a manifest tag_name. Matched in full, not searched: the tag has
 // to be a version and nothing else, so "release-0.0.4-final" is rejected rather than silently read
@@ -7247,6 +7247,11 @@ struct Candidate
 
 void GUI_App::check_new_version_sf(int by_user)
 {
+    // Semilayered Slicer does not update itself. A check the user asks for opens the releases page.
+    BOOST_LOG_TRIVIAL(info) << "updater: update checks are off in this build";
+    if (by_user != 0)
+        wxLaunchDefaultBrowser("https://github.com/erikbuild/Semilayered-Slicer/releases");
+    return;
     AppConfig*        app_config        = wxGetApp().app_config;
     const bool        check_stable_only = app_config->get_bool("check_stable_update_only");
     // Platform and architecture, so the site answers with this platform's release: a Mac must not
@@ -7610,7 +7615,7 @@ bool GUI_App::process_network_msg(std::string dev_id, std::string msg)
         else if (msg == "update_studio") {
             BOOST_LOG_TRIVIAL(info) << "process_network_msg, update_studio";
             if (!m_show_error_msgdlg) {
-                MessageDialog msg_dlg(nullptr, _L("Please try updating Unlayered Slicer and then try again."), "", wxAPPLY | wxOK);
+                MessageDialog msg_dlg(nullptr, _L("Please try updating Semilayered Slicer and then try again."), "", wxAPPLY | wxOK);
                 m_show_error_msgdlg = true;
                 msg_dlg.ShowModal();
                 m_show_error_msgdlg = false;
@@ -7620,7 +7625,7 @@ bool GUI_App::process_network_msg(std::string dev_id, std::string msg)
         else if (msg == "update_fixed_studio") {
             BOOST_LOG_TRIVIAL(info) << "process_network_msg, update_fixed_studio";
             if (!m_show_error_msgdlg) {
-                MessageDialog msg_dlg(nullptr, _L("Please try updating Unlayered Slicer and then try again."), "", wxAPPLY | wxOK);
+                MessageDialog msg_dlg(nullptr, _L("Please try updating Semilayered Slicer and then try again."), "", wxAPPLY | wxOK);
                 m_show_error_msgdlg = true;
                 msg_dlg.ShowModal();
                 m_show_error_msgdlg = false;
@@ -7630,7 +7635,7 @@ bool GUI_App::process_network_msg(std::string dev_id, std::string msg)
         else if (msg == "cert_expired") {
             BOOST_LOG_TRIVIAL(info) << "process_network_msg, cert_expired";
             if (!m_show_error_msgdlg) {
-                MessageDialog msg_dlg(nullptr, _L("The certificate has expired. Please check the time settings or update Unlayered Slicer and try again."), "", wxAPPLY | wxOK);
+                MessageDialog msg_dlg(nullptr, _L("The certificate has expired. Please check the time settings or update Semilayered Slicer and try again."), "", wxAPPLY | wxOK);
                 m_show_error_msgdlg = true;
                 msg_dlg.ShowModal();
                 m_show_error_msgdlg = false;
@@ -7650,7 +7655,7 @@ bool GUI_App::process_network_msg(std::string dev_id, std::string msg)
         else if (msg == "update_firmware_studio") {
             BOOST_LOG_TRIVIAL(info) << "process_network_msg, firmware internal error";
             if (!m_show_error_msgdlg) {
-                MessageDialog msg_dlg(nullptr, _L("Internal error. Please try upgrading the firmware and Unlayered Slicer version. If the issue persists, contact support."), "", wxAPPLY | wxOK);
+                MessageDialog msg_dlg(nullptr, _L("Internal error. Please try upgrading the firmware and Semilayered Slicer version. If the issue persists, contact support."), "", wxAPPLY | wxOK);
                 m_show_error_msgdlg = true;
                 msg_dlg.ShowModal();
                 m_show_error_msgdlg = false;
@@ -7665,12 +7670,12 @@ bool GUI_App::process_network_msg(std::string dev_id, std::string msg)
                 m_unsigned_plugin_warning_shown = true;
                 MessageDialog
                     msg_dlg(nullptr,
-                            _L("To use Unlayered Slicer with Bambu Lab printers, you need to enable LAN mode and Developer mode on your printer.\n\n"
+                            _L("To use Semilayered Slicer with Bambu Lab printers, you need to enable LAN mode and Developer mode on your printer.\n\n"
                                "Please go to your printer's settings and:\n"
                                "1. Turn on LAN mode\n"
                                "2. Enable Developer mode\n\n"
                                "Developer mode allows the printer to work exclusively through local network access, "
-                               "enabling full functionality with Unlayered Slicer."),
+                               "enabling full functionality with Semilayered Slicer."),
                             _L("Network Plug-in Restriction"), wxAPPLY | wxOK);
                 m_show_error_msgdlg = true;
                 msg_dlg.ShowModal();
@@ -7952,7 +7957,7 @@ void GUI_App::check_legacy_user_filament_presets(bool by_user)
     }
     if (!migration.locked) {
         // The lock is also refused for a while after a miss, and when the lock file itself cannot be opened.
-        show_error(mainframe, _L("The user presets folder could not be locked, so nothing was migrated. Another Unlayered Slicer "
+        show_error(mainframe, _L("The user presets folder could not be locked, so nothing was migrated. Another Semilayered Slicer "
                                  "instance may be saving presets; try again later from Help > Migrate Filament Presets."));
         return;
     }
@@ -9342,7 +9347,7 @@ bool GUI_App::load_language(wxString language, bool initial)
 	}
 
 	if (language_info != nullptr && language_info->LayoutDirection == wxLayout_RightToLeft) {
-    	BOOST_LOG_TRIVIAL(trace) << boost::format("The following language code requires right to left layout, which is not supported by Unlayered Slicer: %1%") % language_info->CanonicalName.ToUTF8().data();
+    	BOOST_LOG_TRIVIAL(trace) << boost::format("The following language code requires right to left layout, which is not supported by Semilayered Slicer: %1%") % language_info->CanonicalName.ToUTF8().data();
 		language_info = nullptr;
 	}
 
@@ -9461,14 +9466,14 @@ bool GUI_App::load_language(wxString language, bool initial)
 
     if (!wxLocale::IsAvailable(locale_language_info->Language)) {
     	// Loading the language dictionary failed.
-	    wxString message = wxString::Format(_L("Switching Unlayered Slicer to language %s failed."), requested_language_code);
+	    wxString message = wxString::Format(_L("Switching Semilayered Slicer to language %s failed."), requested_language_code);
 #if !defined(_WIN32) && !defined(__APPLE__)
         // likely some linux system
         message += _L("\nYou may need to reconfigure the missing locales, likely by running the \"locale-gen\" and \"dpkg-reconfigure locales\" commands.\n");
 #endif
         if (initial)
         	message += "\n\n" + _L("Application will close.");
-        wxMessageBox(message, _L("Unlayered Slicer - Switching language failed"), wxOK | wxICON_ERROR);
+        wxMessageBox(message, _L("Semilayered Slicer - Switching language failed"), wxOK | wxICON_ERROR);
         if (initial)
 			std::exit(EXIT_FAILURE);
 		else
@@ -9925,7 +9930,7 @@ void GUI_App::open_preferences(PreferencesTab tab, const std::string& highlight_
                     associate_files(L"step");
                     associate_files(L"stp");
                 }
-                associate_url(L"unlayeredslicer");
+                associate_url(L"semilayeredslicer");
             }
             else {
                 if (app_config->get("associate_gcode") == "true")
@@ -10512,7 +10517,7 @@ void GUI_App::OSXStoreOpenFiles(const wxArrayString &fileNames)
         if (is_gcode_file(into_u8(filename)))
             ++ num_gcodes;
     if (fileNames.size() == num_gcodes) {
-        // Opening PrusaSlicer by drag & dropping a G-Code onto the Unlayered Slicer icon in Finder,
+        // Opening PrusaSlicer by drag & dropping a G-Code onto the Semilayered Slicer icon in Finder,
         // just G-codes were passed. Switch to G-code viewer mode.
         m_app_mode = EAppMode::GCodeViewer;
         unlock_lockfile(get_instance_hash_string() + ".lock", data_dir() + "/cache/");
@@ -11282,8 +11287,8 @@ void GUI_App::associate_files(std::wstring extend)
     ::GetModuleFileNameW(nullptr, app_path, sizeof(app_path));
 
     std::wstring prog_path = L"\"" + std::wstring(app_path) + L"\"";
-    std::wstring prog_id = L" Unlayered.Slicer.1";
-    std::wstring prog_desc = L"Unlayered Slicer";
+    std::wstring prog_id = L" Semilayered.Slicer.1";
+    std::wstring prog_desc = L"Semilayered Slicer";
     std::wstring prog_command = prog_path + L" \"%1\"";
     std::wstring reg_base = L"Software\\Classes";
     std::wstring reg_extension = reg_base + L"\\." + extend;
@@ -11309,8 +11314,8 @@ void GUI_App::disassociate_files(std::wstring extend)
     ::GetModuleFileNameW(nullptr, app_path, sizeof(app_path));
 
     std::wstring prog_path = L"\"" + std::wstring(app_path) + L"\"";
-    std::wstring prog_id = L" Unlayered.Slicer.1";
-    std::wstring prog_desc = L"Unlayered Slicer";
+    std::wstring prog_id = L" Semilayered.Slicer.1";
+    std::wstring prog_desc = L"Semilayered Slicer";
     std::wstring prog_command = prog_path + L" \"%1\"";
     std::wstring reg_base = L"Software\\Classes";
     std::wstring reg_extension = reg_base + L"\\." + extend;

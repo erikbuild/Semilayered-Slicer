@@ -1,6 +1,6 @@
 # Slicing service protocol, version 2
 
-Unlayered Slicer can send the current plate to an **external slicing service** over HTTP and use
+Semilayered Slicer can send the current plate to an **external slicing service** over HTTP and use
 the G-code that comes back as that plate's slice result. This document specifies the whole
 interface. A reference service is in
 [`tools/reference-slice-service/`](tools/reference-slice-service/). It is MIT-licensed, uses only
@@ -24,7 +24,7 @@ summarised in [BOUNDARY.md](BOUNDARY.md).
 
 ## 1. Relationship between the two programs
 
-Unlayered Slicer is licensed under the **GNU Affero General Public License, version 3**. A slicing
+Semilayered Slicer is licensed under the **GNU Affero General Public License, version 3**. A slicing
 service it talks to over this interface is a **separate program**. It runs in its own process,
 usually on its own machine, and can be written and licensed however its author likes. The only
 things the two programs exchange are a 3MF file and JSON over this documented protocol. The slicer

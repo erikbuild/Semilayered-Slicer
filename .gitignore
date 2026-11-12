@@ -33,7 +33,7 @@ deps/build*/*
 install_*
 build_*/
 SVG
-src/UnlayeredSlicer-doc/
+src/SemilayeredSlicer-doc/
 .idea/
 /.cache/
 *.mo

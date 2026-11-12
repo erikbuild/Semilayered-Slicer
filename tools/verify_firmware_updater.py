@@ -231,7 +231,7 @@ def probe(host, password):
     base = "http://%s/" % host
 
     def get(path, timeout=6):
-        req = urllib.request.Request(base + path, headers={"User-Agent": "UnlayeredSlicer-probe"})
+        req = urllib.request.Request(base + path, headers={"User-Agent": "SemilayeredSlicer-probe"})
         with urllib.request.urlopen(req, timeout=timeout) as r:
             return json.loads(r.read().decode("utf-8", "replace"))
 
@@ -345,7 +345,7 @@ def test_release(owner, repo, tag, allow_prerelease, board_short, download):
             "Accept": accept,
             "X-GitHub-Api-Version": "2022-11-28",
             # GitHub rejects API requests that do not identify themselves.
-            "User-Agent": "UnlayeredSlicer",
+            "User-Agent": "SemilayeredSlicer",
         })
         with urllib.request.urlopen(req, timeout=timeout) as r:
             return r.read()

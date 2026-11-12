@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.13)
-project(UnlayeredSlicer-native)
+project(SemilayeredSlicer-native)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -115,61 +115,61 @@ if (SLIC3R_GUI)
 endif()
 
 if(ORCA_TOOLS)
-    # UnlayeredSlicer_profile_validator
+    # SemilayeredSlicer_profile_validator
     if(APPLE)
-        add_executable(UnlayeredSlicer_profile_validator MACOSX_BUNDLE dev-utils/UnlayeredSlicer_profile_validator.cpp)
-        set_target_properties(UnlayeredSlicer_profile_validator PROPERTIES
+        add_executable(SemilayeredSlicer_profile_validator MACOSX_BUNDLE dev-utils/SemilayeredSlicer_profile_validator.cpp)
+        set_target_properties(SemilayeredSlicer_profile_validator PROPERTIES
             MACOSX_BUNDLE TRUE
-            MACOSX_BUNDLE_BUNDLE_NAME "Unlayered Slicer Profile Validator"
+            MACOSX_BUNDLE_BUNDLE_NAME "Semilayered Slicer Profile Validator"
             MACOSX_BUNDLE_BUNDLE_VERSION "${SLIC3R_VERSION}"
             MACOSX_BUNDLE_SHORT_VERSION_STRING "${SLIC3R_VERSION}"
-            MACOSX_BUNDLE_IDENTIFIER "com.unlayered3d.UnlayeredSlicer.profile-validator"
+            MACOSX_BUNDLE_IDENTIFIER "io.github.erikbuild.SemilayeredSlicer.profile-validator"
             MACOSX_BUNDLE_COPYRIGHT "© 2026 OrcaSlicer Pte Ltd All Rights Reserved; modifications © 2026 Unlayered 3D"
-            MACOSX_BUNDLE_GUI_IDENTIFIER "com.unlayered3d.UnlayeredSlicer.profile-validator"
+            MACOSX_BUNDLE_GUI_IDENTIFIER "io.github.erikbuild.SemilayeredSlicer.profile-validator"
         )
     else()
-        add_executable(UnlayeredSlicer_profile_validator dev-utils/UnlayeredSlicer_profile_validator.cpp)
+        add_executable(SemilayeredSlicer_profile_validator dev-utils/SemilayeredSlicer_profile_validator.cpp)
     endif()
-    target_link_libraries(UnlayeredSlicer_profile_validator libslic3r boost_headeronly libcurl OpenSSL::SSL OpenSSL::Crypto)
-    target_compile_definitions(UnlayeredSlicer_profile_validator PRIVATE -DBOOST_ALL_NO_LIB -DBOOST_USE_WINAPI_VERSION=0x602 -DBOOST_SYSTEM_USE_UTF8)
+    target_link_libraries(SemilayeredSlicer_profile_validator libslic3r boost_headeronly libcurl OpenSSL::SSL OpenSSL::Crypto)
+    target_compile_definitions(SemilayeredSlicer_profile_validator PRIVATE -DBOOST_ALL_NO_LIB -DBOOST_USE_WINAPI_VERSION=0x602 -DBOOST_SYSTEM_USE_UTF8)
 endif()
 
 # Create a slic3r executable
 # Process manifests for various platforms.
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dev-utils/platform/msw/UnlayeredSlicer.rc.in ${CMAKE_CURRENT_BINARY_DIR}/UnlayeredSlicer.rc @ONLY)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dev-utils/platform/msw/UnlayeredSlicer.manifest.in ${CMAKE_CURRENT_BINARY_DIR}/UnlayeredSlicer.manifest @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dev-utils/platform/msw/SemilayeredSlicer.rc.in ${CMAKE_CURRENT_BINARY_DIR}/SemilayeredSlicer.rc @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dev-utils/platform/msw/SemilayeredSlicer.manifest.in ${CMAKE_CURRENT_BINARY_DIR}/SemilayeredSlicer.manifest @ONLY)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dev-utils/platform/osx/Info.plist.in ${CMAKE_CURRENT_BINARY_DIR}/Info.plist @ONLY)
 if (WIN32)
-    add_library(UnlayeredSlicer SHARED UnlayeredSlicer.cpp UnlayeredSlicer.hpp)
+    add_library(SemilayeredSlicer SHARED SemilayeredSlicer.cpp SemilayeredSlicer.hpp)
 else ()
-    add_executable(UnlayeredSlicer UnlayeredSlicer.cpp UnlayeredSlicer.hpp)
+    add_executable(SemilayeredSlicer SemilayeredSlicer.cpp SemilayeredSlicer.hpp)
 endif ()
 
 if (MINGW)
-    target_link_options(UnlayeredSlicer PUBLIC "-Wl,-allow-multiple-definition")
-    set_target_properties(UnlayeredSlicer PROPERTIES PREFIX "")
+    target_link_options(SemilayeredSlicer PUBLIC "-Wl,-allow-multiple-definition")
+    set_target_properties(SemilayeredSlicer PROPERTIES PREFIX "")
 endif (MINGW)
 
 if (WIN32)
-    # Unlayered: the shared library the loader stub pulls in. Deliberately NOT "unlayered-slicer":
+    # Unlayered: the shared library the loader stub pulls in. Deliberately NOT "semilayered-slicer":
     # that is the stub executable's OUTPUT_NAME, and matching it would make both targets emit
-    # unlayered-slicer.lib/.exp/.pdb into the same directory and clobber each other. This keeps the
-    # upstream exe/dll split (unlayered-slicer.exe + UnlayeredSlicer.dll) with Unlayered names.
-    # UnlayeredSlicer_app_msvc.cpp loads this file BY NAME -- the two must always change together.
-    set_target_properties(UnlayeredSlicer PROPERTIES OUTPUT_NAME "UnlayeredSlicer")
+    # semilayered-slicer.lib/.exp/.pdb into the same directory and clobber each other. This keeps the
+    # upstream exe/dll split (semilayered-slicer.exe + SemilayeredSlicer.dll) with Unlayered names.
+    # SemilayeredSlicer_app_msvc.cpp loads this file BY NAME -- the two must always change together.
+    set_target_properties(SemilayeredSlicer PROPERTIES OUTPUT_NAME "SemilayeredSlicer")
 endif ()
 
 # The GUI embeds the bundled shared libpython (libslic3r_gui -> pybind11::embed);
 # the dep recipe stamps it with an @rpath id / plain SONAME, so the executable
 # needs an rpath entry for each layout in the "Bundled Python/uv layout" map
 # further down. Dead entries are skipped by the loader.
-# UnlayeredSlicer_profile_validator links libslic3r only (no Python).
+# SemilayeredSlicer_profile_validator links libslic3r only (no Python).
 if (APPLE)
     # A linker flag rather than the BUILD_RPATH property because the release
     # flow uses the Xcode generator, which does not honor BUILD_RPATH.
-    target_link_options(UnlayeredSlicer PRIVATE "LINKER:-rpath,@executable_path/python/lib")
+    target_link_options(SemilayeredSlicer PRIVATE "LINKER:-rpath,@executable_path/python/lib")
 elseif (UNIX AND NOT WIN32)
-    set_target_properties(UnlayeredSlicer PROPERTIES
+    set_target_properties(SemilayeredSlicer PROPERTIES
         # Build tree + AppImage, which packages the build-tree binary.
         BUILD_RPATH "$ORIGIN/python/lib;$ORIGIN/../lib/python/lib"
         # Flatpak (cmake --install).
@@ -178,43 +178,43 @@ endif ()
 
 if (NOT WIN32 AND NOT APPLE)
     # Binary name on unix like systems (Linux, Unix)
-    set_target_properties(UnlayeredSlicer PROPERTIES OUTPUT_NAME "unlayered-slicer")
-    set(SLIC3R_APP_CMD "unlayered-slicer")
+    set_target_properties(SemilayeredSlicer PROPERTIES OUTPUT_NAME "semilayered-slicer")
+    set(SLIC3R_APP_CMD "semilayered-slicer")
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dev-utils/platform/unix/build_linux_image.sh.in ${CMAKE_CURRENT_BINARY_DIR}/build_linux_image.sh USE_SOURCE_PERMISSIONS @ONLY)
 endif ()
 
-target_link_libraries(UnlayeredSlicer libslic3r cereal::cereal)
-# target_include_directories(UnlayeredSlicer PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/slic3r)
+target_link_libraries(SemilayeredSlicer libslic3r cereal::cereal)
+# target_include_directories(SemilayeredSlicer PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/slic3r)
 if (APPLE)
 #    add_compile_options(-stdlib=libc++)
 #    add_definitions(-DBOOST_THREAD_DONT_USE_CHRONO -DBOOST_NO_CXX11_RVALUE_REFERENCES -DBOOST_THREAD_USES_MOVE)
     # -liconv: boost links to libiconv by default
-    target_link_libraries(UnlayeredSlicer "-liconv -framework IOKit" "-framework CoreFoundation" "-framework AVFoundation" "-framework AVKit" "-framework CoreMedia" "-framework VideoToolbox" -lc++)
+    target_link_libraries(SemilayeredSlicer "-liconv -framework IOKit" "-framework CoreFoundation" "-framework AVFoundation" "-framework AVKit" "-framework CoreMedia" "-framework VideoToolbox" -lc++)
 elseif (MSVC)
-    # Manifest is provided through UnlayeredSlicer.rc, don't generate your own.
+    # Manifest is provided through SemilayeredSlicer.rc, don't generate your own.
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /MANIFEST:NO")
 else ()
     # Boost on Raspberry-Pi does not link to pthreads explicitly.
-    target_link_libraries(UnlayeredSlicer ${CMAKE_DL_LIBS} -lstdc++ Threads::Threads pangoft2-1.0)
+    target_link_libraries(SemilayeredSlicer ${CMAKE_DL_LIBS} -lstdc++ Threads::Threads pangoft2-1.0)
 endif ()
 
 if (SLIC3R_GUI)
-#    target_link_libraries(UnlayeredSlicer ws2_32 uxtheme setupapi libslic3r_gui ${wxWidgets_LIBRARIES})
-target_link_libraries(UnlayeredSlicer libslic3r_gui wxInspector::wxInspector)
+#    target_link_libraries(SemilayeredSlicer ws2_32 uxtheme setupapi libslic3r_gui ${wxWidgets_LIBRARIES})
+target_link_libraries(SemilayeredSlicer libslic3r_gui wxInspector::wxInspector)
     if (MSVC)
         # Generate debug symbols even in release mode.
-        target_link_options(UnlayeredSlicer PUBLIC "$<$<CONFIG:RELEASE>:/DEBUG>")
-        target_link_libraries(UnlayeredSlicer ws2_32.lib user32.lib Setupapi.lib)
+        target_link_options(SemilayeredSlicer PUBLIC "$<$<CONFIG:RELEASE>:/DEBUG>")
+        target_link_libraries(SemilayeredSlicer ws2_32.lib user32.lib Setupapi.lib)
     elseif (MINGW)
-        target_link_libraries(UnlayeredSlicer ws2_32 uxtheme setupapi)
+        target_link_libraries(SemilayeredSlicer ws2_32 uxtheme setupapi)
     elseif (APPLE)
-        target_link_libraries(UnlayeredSlicer "-framework OpenGL")
+        target_link_libraries(SemilayeredSlicer "-framework OpenGL")
     else ()
-        target_link_libraries(UnlayeredSlicer -ldl)
+        target_link_libraries(SemilayeredSlicer -ldl)
     endif ()
     #if (WIN32)
     #    find_library(PSAPI_LIB NAMES Psapi)
-    #    target_link_libraries(UnlayeredSlicer ${PSAPI_LIB})
+    #    target_link_libraries(SemilayeredSlicer ${PSAPI_LIB})
     #endif ()
 endif ()
 
@@ -225,18 +225,18 @@ if (WIN32)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -municode")
     endif()
 
-    add_executable(UnlayeredSlicer_app_gui WIN32 UnlayeredSlicer_app_msvc.cpp ${CMAKE_CURRENT_BINARY_DIR}/UnlayeredSlicer.rc)
+    add_executable(SemilayeredSlicer_app_gui WIN32 SemilayeredSlicer_app_msvc.cpp ${CMAKE_CURRENT_BINARY_DIR}/SemilayeredSlicer.rc)
     # Generate debug symbols even in release mode.
     if(MSVC)
-        target_link_options(UnlayeredSlicer_app_gui PUBLIC "$<$<CONFIG:RELEASE>:/DEBUG>")
+        target_link_options(SemilayeredSlicer_app_gui PUBLIC "$<$<CONFIG:RELEASE>:/DEBUG>")
     endif()
-    target_compile_definitions(UnlayeredSlicer_app_gui PRIVATE "$<$<NOT:$<CONFIG:RelWithDebInfo>>:SLIC3R_WRAPPER_NOCONSOLE>")
-    add_dependencies(UnlayeredSlicer_app_gui UnlayeredSlicer)
-    set_target_properties(UnlayeredSlicer_app_gui PROPERTIES
-        OUTPUT_NAME "unlayered-slicer"
+    target_compile_definitions(SemilayeredSlicer_app_gui PRIVATE "$<$<NOT:$<CONFIG:RelWithDebInfo>>:SLIC3R_WRAPPER_NOCONSOLE>")
+    add_dependencies(SemilayeredSlicer_app_gui SemilayeredSlicer)
+    set_target_properties(SemilayeredSlicer_app_gui PROPERTIES
+        OUTPUT_NAME "semilayered-slicer"
         WIN32_EXECUTABLE "$<NOT:$<CONFIG:RelWithDebInfo>>"
     )
-    target_link_libraries(UnlayeredSlicer_app_gui PRIVATE boost_headeronly)
+    target_link_libraries(SemilayeredSlicer_app_gui PRIVATE boost_headeronly)
 endif ()
 
 # Link the resources dir to where Slic3r GUI expects it
@@ -258,20 +258,20 @@ set(output_dlls_RelWithDebInfo "")
 #   Windows:  <exe dir>/python            <resources>/tools/uv
 #   macOS:    Contents/MacOS/python       Contents/MacOS/tools/uv
 #   AppImage: $APPDIR/lib/python          $APPDIR/resources/tools/uv
-#   Flatpak:  /app/libpython (dep prefix) /app/share/UnlayeredSlicer/tools/uv
+#   Flatpak:  /app/libpython (dep prefix) /app/share/SemilayeredSlicer/tools/uv
 # Runtime lookup: PythonInterpreter::initialize() / bundled_uv_path().
-# libpython resolution: rpath on the UnlayeredSlicer target (above); the dep
+# libpython resolution: rpath on the SemilayeredSlicer target (above); the dep
 # recipe gives the bundled interpreter a self-relative rpath.
 # --------------------------------------------------------------------------
 if (WIN32)
     # This has to be a separate target due to the windows command line length limits
-    add_custom_target(COPY_DLLS ALL DEPENDS UnlayeredSlicer)
+    add_custom_target(COPY_DLLS ALL DEPENDS SemilayeredSlicer)
 
     if (CMAKE_CONFIGURATION_TYPES)
         foreach (CONF ${CMAKE_CONFIGURATION_TYPES})
             file(TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CONF}" WIN_CONF_OUTPUT_DIR)
             file(TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CONF}/resources" WIN_RESOURCES_SYMLINK)
-            add_custom_command(TARGET UnlayeredSlicer POST_BUILD
+            add_custom_command(TARGET SemilayeredSlicer POST_BUILD
                 COMMAND if exist "${WIN_CONF_OUTPUT_DIR}" "("
                         if not exist "${WIN_RESOURCES_SYMLINK}" "("
                             mklink /J "${WIN_RESOURCES_SYMLINK}" "${SLIC3R_RESOURCES_DIR_WIN}"
@@ -283,16 +283,16 @@ if (WIN32)
         endforeach ()
     else ()
         file(TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/resources" WIN_RESOURCES_SYMLINK)
-        add_custom_command(TARGET UnlayeredSlicer POST_BUILD
+        add_custom_command(TARGET SemilayeredSlicer POST_BUILD
             COMMAND if not exist "${WIN_RESOURCES_SYMLINK}" "(" mklink /J "${WIN_RESOURCES_SYMLINK}" "${SLIC3R_RESOURCES_DIR_WIN}" ")"
             COMMENT "Symlinking the resources directory into the build tree"
             VERBATIM
         )
     endif ()
     # copy libpython to the bin folder for Windows
-    add_custom_command(TARGET UnlayeredSlicer POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E rm -rf "$<TARGET_FILE_DIR:UnlayeredSlicer>/python"
-        COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_PREFIX_PATH}/libpython" "$<TARGET_FILE_DIR:UnlayeredSlicer>/python"
+    add_custom_command(TARGET SemilayeredSlicer POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E rm -rf "$<TARGET_FILE_DIR:SemilayeredSlicer>/python"
+        COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_PREFIX_PATH}/libpython" "$<TARGET_FILE_DIR:SemilayeredSlicer>/python"
         COMMENT "Copying Python runtime into the build tree"
         VERBATIM)
 
@@ -322,11 +322,11 @@ else ()
     if (NOT APPLE)
         set(output_sos_Release "")
         set(output_sos_Debug "")
-        add_custom_target(UnlayeredSlicerSosCopy ALL DEPENDS UnlayeredSlicer)
+        add_custom_target(SemilayeredSlicerSosCopy ALL DEPENDS SemilayeredSlicer)
         if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-            unlayered_copy_sos(UnlayeredSlicerSosCopy "Debug" "d" output_sos_Debug)
+            unlayered_copy_sos(SemilayeredSlicerSosCopy "Debug" "d" output_sos_Debug)
         else()
-            unlayered_copy_sos(UnlayeredSlicerSosCopy "Release" "" output_sos_Release)
+            unlayered_copy_sos(SemilayeredSlicerSosCopy "Release" "" output_sos_Release)
         endif()
     endif()
     if (XCODE)
@@ -336,15 +336,15 @@ else ()
         set(BIN_CONF_DIR "Debug")
     else ()
         set(BIN_RESOURCES_DIR "${CMAKE_CURRENT_BINARY_DIR}/../resources")
-        set(BIN_DIR "$<TARGET_FILE_DIR:UnlayeredSlicer>")
+        set(BIN_DIR "$<TARGET_FILE_DIR:SemilayeredSlicer>")
     endif ()
     if (CMAKE_MACOSX_BUNDLE)
         if (CMAKE_CONFIGURATION_TYPES)
-            set(BIN_RESOURCES_DIR "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/UnlayeredSlicer.app/Contents/Resources")
-            set(BIN_DIR "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/UnlayeredSlicer.app/Contents/MacOS")
+            set(BIN_RESOURCES_DIR "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/SemilayeredSlicer.app/Contents/Resources")
+            set(BIN_DIR "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/SemilayeredSlicer.app/Contents/MacOS")
         else()
-            set(BIN_RESOURCES_DIR "${CMAKE_CURRENT_BINARY_DIR}/UnlayeredSlicer.app/Contents/Resources")
-            set(BIN_DIR "${CMAKE_CURRENT_BINARY_DIR}/UnlayeredSlicer.app/Contents/MacOS")
+            set(BIN_RESOURCES_DIR "${CMAKE_CURRENT_BINARY_DIR}/SemilayeredSlicer.app/Contents/Resources")
+            set(BIN_DIR "${CMAKE_CURRENT_BINARY_DIR}/SemilayeredSlicer.app/Contents/MacOS")
         endif()
         set(MACOSX_BUNDLE_ICON_FILE Icon.icns)
         set(MACOSX_BUNDLE_BUNDLE_NAME "${SLIC3R_APP_NAME}")
@@ -356,7 +356,7 @@ else ()
         # the variable, so the main app has to supply it -- leaving it unset would emit an
         # EMPTY CFBundleIdentifier and break the config dir, the deep-link handler and
         # signing all at once. The value is byte-identical to the old hardcode.
-        set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.unlayered3d.UnlayeredSlicer")
+        set(MACOSX_BUNDLE_GUI_IDENTIFIER "io.github.erikbuild.SemilayeredSlicer")
         # CFBundleVersion / CFBundleGetInfoString / CFBundleLongVersionString were never set
         # for this target, so every shipped .app had them as empty strings (Finder -> Get Info
         # showed a blank version). SLIC3R_VERSION matches what the profile validator uses.
@@ -368,14 +368,14 @@ else ()
             # dirs (python3.12) under Contents/MacOS. Skip it for local dev builds
             # and let the linker ad-hoc sign; the shipped bundle is signed by the
             # Ninja/CI packaging path (build_release_macos.sh, build_slicer.yml).
-            set_target_properties(UnlayeredSlicer PROPERTIES XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED NO)
+            set_target_properties(SemilayeredSlicer PROPERTIES XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED NO)
         endif()
     endif()
-    add_custom_command(TARGET UnlayeredSlicer POST_BUILD
+    add_custom_command(TARGET SemilayeredSlicer POST_BUILD
         COMMAND ln -sfn "${SLIC3R_RESOURCES_DIR}" "${BIN_RESOURCES_DIR}"
         COMMENT "Symlinking the resources directory into the build tree"
         VERBATIM)
-    add_custom_command(TARGET UnlayeredSlicer POST_BUILD
+    add_custom_command(TARGET SemilayeredSlicer POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E rm -rf "${BIN_DIR}/python"
         COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_PREFIX_PATH}/libpython" "${BIN_DIR}/python"
         COMMENT "Copying Python runtime into the build tree"
@@ -383,7 +383,7 @@ else ()
     # Stage uv next to the binary for the build-tree/.app flows, which never
     # run install() -- see the layout map above; lookup is bundled_uv_path().
     if(ORCA_BUNDLED_UV_EXECUTABLE AND EXISTS "${ORCA_BUNDLED_UV_EXECUTABLE}")
-        add_custom_command(TARGET UnlayeredSlicer POST_BUILD
+        add_custom_command(TARGET SemilayeredSlicer POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E make_directory "${BIN_DIR}/tools/uv"
             COMMAND ${CMAKE_COMMAND} -E copy_if_different "${ORCA_BUNDLED_UV_EXECUTABLE}" "${BIN_DIR}/tools/uv/${ORCA_BUNDLED_UV_FILENAME}"
             COMMAND chmod +x "${BIN_DIR}/tools/uv/${ORCA_BUNDLED_UV_FILENAME}"
@@ -406,9 +406,9 @@ endif()
 message(STATUS "libslic3r-CMAKE_BUILD_TYPE: ${build_type}")
 message(STATUS "CMAKE_CURRENT_BINARY_DIR: ${CMAKE_CURRENT_BINARY_DIR}")
 if (WIN32)
-    install(TARGETS UnlayeredSlicer RUNTIME DESTINATION ".")
+    install(TARGETS SemilayeredSlicer RUNTIME DESTINATION ".")
     if (MSVC)
-        install(TARGETS UnlayeredSlicer_app_gui RUNTIME DESTINATION ".")
+        install(TARGETS SemilayeredSlicer_app_gui RUNTIME DESTINATION ".")
     endif ()
     install(FILES ${output_dlls_${build_type}} DESTINATION ".")
     install(DIRECTORY "${CMAKE_PREFIX_PATH}/libpython/" DESTINATION "python")
@@ -417,5 +417,5 @@ else ()
     else()
         install(FILES ${output_sos_${build_type}} DESTINATION "${CMAKE_INSTALL_PREFIX}")
     endif()
-    install(TARGETS UnlayeredSlicer RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}" BUNDLE DESTINATION ${CMAKE_INSTALL_BINDIR})
+    install(TARGETS SemilayeredSlicer RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}" BUNDLE DESTINATION ${CMAKE_INSTALL_BINDIR})
 endif ()

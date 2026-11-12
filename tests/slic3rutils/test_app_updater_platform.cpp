@@ -30,18 +30,18 @@ AppUpdateAsset asset(const std::string &name)
 #if defined(_WIN32)
 const char *THIS_PLATFORM = "windows";
 const char *OTHER_PLATFORM = "mac";
-const char *THIS_FILE = "UnlayeredSlicer_Windows_Installer_v0.1.5.exe";
-const char *OTHER_FILE = "UnlayeredSlicer_Mac_universal_v0.1.5.dmg";
+const char *THIS_FILE = "SemilayeredSlicer_Windows_Installer_v0.1.5.exe";
+const char *OTHER_FILE = "SemilayeredSlicer_Mac_universal_v0.1.5.dmg";
 #elif defined(__APPLE__)
 const char *THIS_PLATFORM = "mac";
 const char *OTHER_PLATFORM = "windows";
-const char *THIS_FILE = "UnlayeredSlicer_Mac_universal_v0.1.5.dmg";
-const char *OTHER_FILE = "UnlayeredSlicer_Windows_Installer_v0.1.5.exe";
+const char *THIS_FILE = "SemilayeredSlicer_Mac_universal_v0.1.5.dmg";
+const char *OTHER_FILE = "SemilayeredSlicer_Windows_Installer_v0.1.5.exe";
 #else
 const char *THIS_PLATFORM = "linux";
 const char *OTHER_PLATFORM = "windows";
-const char *THIS_FILE = "UnlayeredSlicer_Linux_v0.1.5.AppImage";
-const char *OTHER_FILE = "UnlayeredSlicer_Windows_Installer_v0.1.5.exe";
+const char *THIS_FILE = "SemilayeredSlicer_Linux_v0.1.5.AppImage";
+const char *OTHER_FILE = "SemilayeredSlicer_Windows_Installer_v0.1.5.exe";
 #endif
 
 } // namespace
@@ -72,9 +72,9 @@ TEST_CASE("release_targets_platform: a page-only release is still an update", "[
 TEST_CASE("release_targets_platform: side files are not installers", "[AppUpdater]")
 {
 #if defined(__APPLE__)
-    CHECK_FALSE(release_targets_platform({asset("UnlayeredSlicer_profile_validator_Mac_v0.1.5.dmg")}, {download(OTHER_PLATFORM)}));
+    CHECK_FALSE(release_targets_platform({asset("SemilayeredSlicer_profile_validator_Mac_v0.1.5.dmg")}, {download(OTHER_PLATFORM)}));
 #elif defined(_WIN32)
-    CHECK_FALSE(release_targets_platform({asset("UnlayeredSlicer_profile_validator_v0.1.5.exe")}, {download(OTHER_PLATFORM)}));
+    CHECK_FALSE(release_targets_platform({asset("SemilayeredSlicer_profile_validator_v0.1.5.exe")}, {download(OTHER_PLATFORM)}));
 #endif
-    CHECK_FALSE(release_targets_platform({asset("UnlayeredSlicer_v0.1.5_pdb.zip")}, {download(OTHER_PLATFORM)}));
+    CHECK_FALSE(release_targets_platform({asset("SemilayeredSlicer_v0.1.5_pdb.zip")}, {download(OTHER_PLATFORM)}));
 }

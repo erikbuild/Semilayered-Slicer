@@ -1,6 +1,6 @@
 name: Release
 
-# Cuts an Unlayered Slicer release. Deliberately self-contained rather than wired into
+# Cuts an Semilayered Slicer release. Deliberately self-contained rather than wired into
 # build_all.yml -> build_check_cache.yml -> build_slicer.yml: that chain is shared with pull-request
 # CI, its artifacts are directory uploads rather than release-ready files, and editing it for the
 # release path risks the CI everything else depends on. It does reuse the same dependency cache, so
@@ -56,7 +56,7 @@ jobs:
 
     steps:
       - name: Guard against running on a fork of this fork
-        if: github.repository_owner != 'Unlayered3D' || github.repository == 'Unlayered3D/Unlayered-Slicer'
+        if: github.repository_owner != 'Unlayered3D' || github.repository == 'erikbuild/Semilayered-Slicer'
         run: |
           echo "::error::This workflow publishes releases from the private development repository only."
           exit 1
@@ -212,12 +212,12 @@ jobs:
       - name: Pack portable
         working-directory: ${{ github.workspace }}/build
         shell: cmd
-        run: '"C:/Program Files/7-Zip/7z.exe" a -tzip Unlayered_Slicer_Windows_V${{ steps.version.outputs.ver_pure }}_portable.zip ${{ github.workspace }}/build/UnlayeredSlicer'
+        run: '"C:/Program Files/7-Zip/7z.exe" a -tzip Semilayered_Slicer_Windows_V${{ steps.version.outputs.ver_pure }}_portable.zip ${{ github.workspace }}/build/SemilayeredSlicer'
 
       - name: Pack PDB
         working-directory: ${{ github.workspace }}/build/src/Release
         shell: cmd
-        run: '"C:/Program Files/7-Zip/7z.exe" a -m0=lzma2 -mx9 Unlayered_Slicer_PDB_V${{ steps.version.outputs.ver_pure }}_for_developers_only.7z *.pdb'
+        run: '"C:/Program Files/7-Zip/7z.exe" a -m0=lzma2 -mx9 Semilayered_Slicer_PDB_V${{ steps.version.outputs.ver_pure }}_for_developers_only.7z *.pdb'
 
       # The installer goes to unlayered3d.com, which also builds /slicer/latest.json -- the in-app
       # update check -- from it; nothing here makes a manifest any more.
@@ -230,14 +230,14 @@ jobs:
           # The exact name CPack produces, from CPACK_PACKAGE_FILE_NAME. Asserted rather than
           # globbed: a glob that matches nothing turns a broken build into a silently empty release.
           # The release job builds x64 only; CMakeLists.txt appends the arch (_x64 / _arm64).
-          $installer = "build/Unlayered_Slicer_Windows_Installer_V${ver}_x64.exe"
+          $installer = "build/Semilayered_Slicer_Windows_Installer_V${ver}_x64.exe"
           if (-not (Test-Path $installer)) {
               Write-Output "::error::CPack did not produce $installer. If CPACK_PACKAGE_FILE_NAME changed in CMakeLists.txt, update this step and the Publish step below together."
               exit 1
           }
 
           New-Item -ItemType Directory -Force release-assets | Out-Null
-          foreach ($f in @($installer, "build/Unlayered_Slicer_Windows_V${ver}_portable.zip")) {
+          foreach ($f in @($installer, "build/Semilayered_Slicer_Windows_V${ver}_portable.zip")) {
               if (Test-Path $f) { Copy-Item $f release-assets/ } else { Write-Output "::warning::missing $f" }
           }
           $hash = (Get-FileHash -Algorithm SHA256 $installer).Hash.ToLower()
@@ -247,7 +247,7 @@ jobs:
       - name: Upload release assets
         uses: actions/upload-artifact@v7
         with:
-          name: Unlayered_Slicer_Windows_V${{ steps.version.outputs.ver_pure }}
+          name: Semilayered_Slicer_Windows_V${{ steps.version.outputs.ver_pure }}
           path: release-assets/
           if-no-files-found: error
 
@@ -256,8 +256,8 @@ jobs:
       - name: Upload debug symbols
         uses: actions/upload-artifact@v7
         with:
-          name: Unlayered_Slicer_PDB_V${{ steps.version.outputs.ver_pure }}
-          path: build/src/Release/Unlayered_Slicer_PDB_V${{ steps.version.outputs.ver_pure }}_for_developers_only.7z
+          name: Semilayered_Slicer_PDB_V${{ steps.version.outputs.ver_pure }}
+          path: build/src/Release/Semilayered_Slicer_PDB_V${{ steps.version.outputs.ver_pure }}_for_developers_only.7z
           if-no-files-found: warn
 
       # A release is the site's stable build: /software's Windows download, and -- because the site
@@ -286,7 +286,7 @@ jobs:
                 --build-url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID")
           [ -f release-notes.md ] && args+=(--notes-file release-notes.md)
           [ "$PRERELEASE" = true ] && args+=(--prerelease)
-          node .github/publish/publish-software.mjs publish "${args[@]}" "build/Unlayered_Slicer_Windows_Installer_V$VERSION.exe"
+          node .github/publish/publish-software.mjs publish "${args[@]}" "build/Semilayered_Slicer_Windows_Installer_V$VERSION.exe"
           node .github/publish/publish-software.mjs list --expect-channel "$CHANNEL"
 
       # Downloads come from unlayered3d.com only, so the GitHub Release carries the tag and the
@@ -305,7 +305,7 @@ jobs:
           prerelease: ${{ steps.version.outputs.prerelease == 'true' }}
           generate_release_notes: true
           body: |
-            ${{ env.MODE == 'staging' && format('**Staging run, not a release.** Delete this draft once you have checked it. The build is in staging on unlayered3d.com/admin/software. [CI run]({0}/{1}/actions/runs/{2})', github.server_url, github.repository, github.run_id) || '**Download Unlayered Slicer from [unlayered3d.com/software](https://unlayered3d.com/software).** Installed copies are offered this update automatically.' }}
+            ${{ env.MODE == 'staging' && format('**Staging run, not a release.** Delete this draft once you have checked it. The build is in staging on unlayered3d.com/admin/software. [CI run]({0}/{1}/actions/runs/{2})', github.server_url, github.repository, github.run_id) || '**Download Semilayered Slicer from [unlayered3d.com/software](https://unlayered3d.com/software).** Installed copies are offered this update automatically.' }}
 
       # The installer is on the site now; the run's copies would be a second, public download.
       # A dry run keeps them, since that's how a dry run's build is inspected. The debug symbols stay.
@@ -318,7 +318,7 @@ jobs:
         run: |
           gh api --paginate "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts?per_page=100" \
             -q '.artifacts[] | "\(.id) \(.name)"' \
-            | { grep -v ' Unlayered_Slicer_PDB_' || true; } \
+            | { grep -v ' Semilayered_Slicer_PDB_' || true; } \
             | while read -r id name; do
                 echo "Deleting $name"
                 gh api -X DELETE "repos/$GITHUB_REPOSITORY/actions/artifacts/$id"

@@ -38,7 +38,7 @@ AboutDialogLogo::AboutDialogLogo(wxWindow* parent)
     : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize)
 {
     this->SetBackgroundColour(*wxWHITE);
-    this->logo = ScalableBitmap(this, Slic3r::var("UnlayeredSlicer_192px.png"), wxBITMAP_TYPE_PNG);
+    this->logo = ScalableBitmap(this, Slic3r::var("SemilayeredSlicer_192px.png"), wxBITMAP_TYPE_PNG);
     this->SetMinSize(this->logo.GetBmpSize());
 
     this->Bind(wxEVT_PAINT, &AboutDialogLogo::onRepaint, this);
@@ -167,9 +167,9 @@ wxString CopyrightsDialog::get_html_text()
                 "<font size=\"3\">",
          bgr_clr_str, text_clr_str, text_clr_str,
         _L("License"),
-        _L("Unlayered Slicer is licensed under "),
+        _L("Semilayered Slicer is licensed under "),
         "https://www.gnu.org/licenses/agpl-3.0.html",_L("GNU Affero General Public License, version 3"),
-        _L("Unlayered Slicer is developed by Unlayered 3D and builds on the open-source slicers before it"),
+        _L("Semilayered Slicer is an unofficial build of Unlayered Slicer, which is developed by Unlayered 3D and builds on the open-source slicers before it"),
         _L("Libraries"),
         _L("This software uses open source components whose copyright and other proprietary rights belong to their respective owners"));
 
@@ -250,7 +250,7 @@ AboutDialog::AboutDialog()
 	bool is_dark = wxGetApp().app_config->get("dark_color_mode") == "1";
 
     // logo
-    m_logo_bitmap = ScalableBitmap(this, is_dark ? "UnlayeredSlicer_about_dark" : "UnlayeredSlicer_about", 125);
+    m_logo_bitmap = ScalableBitmap(this, is_dark ? "SemilayeredSlicer_about_dark" : "SemilayeredSlicer_about", 125);
     m_logo = new wxStaticBitmap(this, wxID_ANY, m_logo_bitmap.bmp(), wxDefaultPosition,wxDefaultSize, 0);
     m_logo->SetSizer(vesizer);
 
@@ -263,7 +263,7 @@ AboutDialog::AboutDialog()
         // _build_string_font.SetStyle(wxFONTSTYLE_ITALIC);
 
         vesizer->Add(0, 0, 1, wxEXPAND, FromDIP(5));
-        auto          version_string = std::string(UNLAYERED_VERSION); // _L("Unlayered Slicer ") + " " + std::string(UNLAYERED_VERSION);
+        auto          version_string = std::string(UNLAYERED_VERSION); // _L("Semilayered Slicer ") + " " + std::string(UNLAYERED_VERSION);
         wxStaticText* version = new wxStaticText(this, wxID_ANY, version_string.c_str(), wxDefaultPosition, wxDefaultSize);
         // TRN %s is the commit the application was built from
         wxStaticText* credits_string = new wxStaticText(this, wxID_ANY, wxString::Format(_L("Build %s"), build_commit_label), wxDefaultPosition, wxDefaultSize);
@@ -287,7 +287,7 @@ AboutDialog::AboutDialog()
     text_sizer_horiz->Add( 0, 0, 0, wxLEFT, FromDIP(20));
 
     std::vector<wxString> text_list;
-    text_list.push_back(_L("Unlayered Slicer is developed by Unlayered 3D."));
+    text_list.push_back(_L("Semilayered Slicer is an unofficial build of Unlayered Slicer, which is developed by Unlayered 3D."));
     text_list.push_back(_L("It is derived from OrcaSlicer, which builds on BambuStudio, PrusaSlicer and SuperSlicer."));
     text_list.push_back(_L("PrusaSlicer is based on Slic3r, created by Alessandro Ranellucci with the help of many contributors."));
 

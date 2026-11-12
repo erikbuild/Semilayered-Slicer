@@ -198,7 +198,7 @@ const std::string BBL_APPLICATION_TAG               = "Application";
 // OrcaSlicer version tag
 const std::string ORCASLICER_TAG                    = "OrcaSlicer";
 // UNLAYERED_MOD: this fork's release; ORCASLICER_TAG holds the OrcaSlicer version it is based on
-const std::string UNLAYEREDSLICER_TAG               = "UnlayeredSlicer";
+const std::string SEMILAYEREDSLICER_TAG               = "UnlayeredSlicer";
 const std::string BBL_MAKERLAB_TAG                  = "MakerLab";
 const std::string BBL_MAKERLAB_VERSION_TAG          = "MakerLabVersion";
 
@@ -1175,7 +1175,7 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
         bool m_load_restore = false;
         std::string m_backup_path;
         std::string m_origin_file;
-        // Semantic version of Unlayered Slicer, that generated this 3MF.
+        // Semantic version of Semilayered Slicer, that generated this 3MF.
         boost::optional<Semver> m_bambuslicer_generator_version;
         // Semantic version from the OrcaSlicer metadata tag (if present).
         boost::optional<Semver> m_orca_slicer_version;
@@ -7367,7 +7367,7 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
                 // be written a second time, and the reader keeps the last one, so a re-saved project
                 // would go on reporting the release that first saved it.
                 metadata_item_map.erase(ORCASLICER_TAG);
-                metadata_item_map.erase(UNLAYEREDSLICER_TAG);
+                metadata_item_map.erase(SEMILAYEREDSLICER_TAG);
             }
             // The Bambu 3MF version marker is part of the slicer identity: omit it for a minimal
             // published file along with the tags erased above (skipping the overwrite alone would
@@ -7403,7 +7403,7 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
                     // depending on that erase happening to run first.
                     stream << " <" << METADATA_TAG << " name=\"" << ORCASLICER_TAG << "\">"
                            << xml_escape(ORCA_BASE_VERSION) << "</" << METADATA_TAG << ">\n";
-                    stream << " <" << METADATA_TAG << " name=\"" << UNLAYEREDSLICER_TAG << "\">"
+                    stream << " <" << METADATA_TAG << " name=\"" << SEMILAYEREDSLICER_TAG << "\">"
                            << xml_escape(UNLAYERED_VERSION) << "</" << METADATA_TAG << ">\n";
                 }
             }
@@ -8884,7 +8884,7 @@ bool _BBS_3MF_Exporter::_add_model_config_file_to_archive(mz_zip_archive& archiv
         stream << "    <" << SLICE_HEADER_ITEM_TAG << " " << KEY_ATTR << "=\"" << "X-BBL-Client-Type"    << "\" " << VALUE_ATTR << "=\"" << "slicer" << "\"/>\n";
         stream << "    <" << SLICE_HEADER_ITEM_TAG << " " << KEY_ATTR << "=\"" << "X-BBL-Client-Version" << "\" " << VALUE_ATTR << "=\"" << convert_to_full_version(SLIC3R_VERSION) << "\"/>\n";
         stream << "    <" << SLICE_HEADER_ITEM_TAG << " " << KEY_ATTR << "=\"" << "OrcaSlicer-Version" << "\" " << VALUE_ATTR << "=\"" << ORCA_BASE_VERSION << "\"/>\n";
-        stream << "    <" << SLICE_HEADER_ITEM_TAG << " " << KEY_ATTR << "=\"" << "UnlayeredSlicer-Version" << "\" " << VALUE_ATTR << "=\"" << UNLAYERED_VERSION << "\"/>\n";
+        stream << "    <" << SLICE_HEADER_ITEM_TAG << " " << KEY_ATTR << "=\"" << "SemilayeredSlicer-Version" << "\" " << VALUE_ATTR << "=\"" << UNLAYERED_VERSION << "\"/>\n";
         stream << "  </" << SLICE_HEADER_TAG << ">\n";
 
         for (unsigned int i = 0; i < (unsigned int)plate_data_list.size(); ++i)
@@ -9819,7 +9819,7 @@ std::optional<Semver> unlayered_3mf_version(const Model &model)
     if (!model.model_info)
         return std::nullopt;
     const std::map<std::string, std::string> &items = model.model_info->metadata_items;
-    if (const auto it = items.find(UNLAYEREDSLICER_TAG); it != items.end())
+    if (const auto it = items.find(SEMILAYEREDSLICER_TAG); it != items.end())
         if (const boost::optional<Semver> version = Semver::parse(it->second))
             return *version;
     if (const auto it = items.find(ORCASLICER_TAG); it != items.end())

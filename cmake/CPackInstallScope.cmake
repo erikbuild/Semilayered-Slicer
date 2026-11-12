@@ -50,7 +50,7 @@ if("${CPACK_INSTALL_SCOPE}" STREQUAL "machine")
   string(REPLACE "_Windows_Installer_" "_Windows_SystemSetup_"
          CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_FILE_NAME}")
 else()
-  # Default. The artifact keeps the existing Unlayered_Slicer_Windows_Installer_
+  # Default. The artifact keeps the existing Semilayered_Slicer_Windows_Installer_
   # name so release.yml and the update manifest's asset matching are unaffected.
   set(CPACK_NSIS_EXECUTION_LEVEL "user")
   set(CPACK_NSIS_REGISTRY_ROOT "HKCU")

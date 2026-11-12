@@ -24,12 +24,12 @@ namespace Slic3r {
 
 namespace {
 
-std::string user_agent() { return std::string("UnlayeredSlicer/") + UNLAYERED_VERSION; }
+std::string user_agent() { return std::string("SemilayeredSlicer/") + UNLAYERED_VERSION; }
 
 // Shown on the site next to the token, so a person can tell their machines apart.
 std::string device_label()
 {
-    return (boost::format("Unlayered Slicer %1% on %2%") % UNLAYERED_VERSION % wxGetHostName().ToUTF8().data()).str();
+    return (boost::format("Semilayered Slicer %1% on %2%") % UNLAYERED_VERSION % wxGetHostName().ToUTF8().data()).str();
 }
 
 std::string trim_slash(std::string url)
@@ -80,7 +80,7 @@ std::string UnlayeredAccount::secret_service() const
 {
     // Per host, so a token minted by a local test server never replaces (or is sent instead of) the
     // real one.
-    return "Unlayered Slicer account (" + host_of(m_site) + ")";
+    return "Semilayered Slicer account (" + host_of(m_site) + ")";
 }
 
 void UnlayeredAccount::load()

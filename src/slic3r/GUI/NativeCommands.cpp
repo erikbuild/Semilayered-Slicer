@@ -619,7 +619,7 @@ std::vector<NativeCommand> build_command_catalog()
         wxGetApp().check_new_version_sf(1);
         return AppActionRunResult{AppActionRunResult::Level::Success};
     });
-    add_with_icon("help_about", L("About Unlayered Slicer"), L("Help"), "UnlayeredSlicer_gradient_circle", [](const std::string&) {
+    add_with_icon("help_about", L("About Semilayered Slicer"), L("Help"), "SemilayeredSlicer_gradient_circle", [](const std::string&) {
         Slic3r::GUI::about();
         return AppActionRunResult{AppActionRunResult::Level::Success};
     });

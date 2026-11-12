@@ -1,4 +1,4 @@
-@REM Unlayered Slicer build script for Windows with VS auto-detect
+@REM Semilayered Slicer build script for Windows with VS auto-detect
 @echo off
 set WP=%CD%
 set _START_TIME=%TIME%
@@ -162,7 +162,7 @@ if "%USE_NINJA%"=="1" (
 if "%1"=="deps" goto :done
 
 :slicer
-echo "building Unlayered Slicer..."
+echo "building Semilayered Slicer..."
 cd %WP%
 mkdir %build_dir%
 cd %build_dir%
