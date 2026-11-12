@@ -15,7 +15,9 @@ job	Flatpak (x86_64, ubuntu-24.04)	Run flatpak/flatpak-github-actions/flatpak-bu
 # The check that reports the unit-test results; it fails whenever a test below does.
 job	Test Results	-
 
-# Two tests fail on every platform the baseline ran them on; the third fails on Linux only.
+# Two tests fail on every platform; the third fails on Linux only. The baseline could not run the
+# Windows tests (its Windows build jobs stopped at the safety check), so the two Windows entries come
+# from run 43255667327 on the rebranded tree, where they fail with the same values as on Linux.
 test	Linux x86_64 / Unit Tests	release_targets_platform: other platforms only is not an update here
 test	Linux x86_64 / Unit Tests	Nonplanar layers: hold back holds the safe part of a wall joined to a rim beside the top's highest point
 test	Linux x86_64 / Unit Tests	Each cube's raft is its support, centered below it
@@ -24,6 +26,10 @@ test	Linux aarch64 / Unit Tests	Nonplanar layers: hold back holds the safe part 
 test	Linux aarch64 / Unit Tests	Each cube's raft is its support, centered below it
 test	macOS arm64 / Unit Tests	Nonplanar layers: hold back holds the safe part of a wall joined to a rim beside the top's highest point
 test	macOS arm64 / Unit Tests	Each cube's raft is its support, centered below it
+test	Windows x64 / Unit Tests	Nonplanar layers: hold back holds the safe part of a wall joined to a rim beside the top's highest point
+test	Windows x64 / Unit Tests	Each cube's raft is its support, centered below it
+test	Windows arm64 / Unit Tests	Nonplanar layers: hold back holds the safe part of a wall joined to a rim beside the top's highest point
+test	Windows arm64 / Unit Tests	Each cube's raft is its support, centered below it
 
 # Unlayered's own printer profiles slice without a filament change, which the slice check requires.
 slice	Slice check (Linux aarch64)	Unlayered / Unlayered 5 Axis Printer 0.4 nozzle
