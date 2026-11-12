@@ -13,7 +13,7 @@ from typing import Dict, Iterator, List, Tuple
 from semilayered.rebrand import table as default_table
 from semilayered.rebrand.names import find_product_names
 from semilayered.rebrand.regenerate import scratch_regeneration
-from semilayered.rebrand.tree import git, is_own, read_text, tracked_files
+from semilayered.rebrand.tree import excluding_own_paths, git, is_own, read_text, tracked_files
 
 
 def leftover_product_names(root: Path, table=default_table) -> List[str]:
@@ -131,10 +131,8 @@ def _leftovers_in_binary(path: str, data: bytes, kept: List[str]) -> List[str]:
 
 def _occurrences(root: Path, text: str, table, commit: str = "") -> int:
     """Count occurrences of text in upstream files, in the working tree or in a commit."""
-    exclusions = [
-        f":(exclude){prefix}" if prefix.endswith("/") else f":(exclude,glob){prefix}*" for prefix in table.OWN_PATHS
-    ]
-    command = ["git", "grep", "-I", "-o", "-F", "-e", text] + ([commit] if commit else []) + ["--", "."] + exclusions
+    command = ["git", "grep", "-I", "-o", "-F", "-e", text] + ([commit] if commit else [])
+    command += ["--", ".", *excluding_own_paths(table)]
     result = subprocess.run(command, cwd=root, capture_output=True, text=True, errors="replace")
     if result.returncode not in (0, 1):
         raise RuntimeError(f"git grep failed: {result.stderr.strip()}")

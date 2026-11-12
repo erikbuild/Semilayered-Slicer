@@ -7,6 +7,7 @@ import unittest
 from semilayered.rebrand import table
 from semilayered.rebrand.checks import kept_identifier_drift, leftover_product_names, upstream_brand_images
 from semilayered.rebrand.regenerate import scratch_regeneration
+from semilayered.rebrand.tree import excluding_own_paths
 from semilayered.tests.real_tree import ROOT, upstream_commit, upstream_file
 
 # Text the design says must survive the rebrand exactly as upstream has it.
@@ -49,8 +50,8 @@ class RegeneratedUpstreamTreeTest(unittest.TestCase):
         self.assertGreater(self.text(path).count(needle), 0, f"{needle!r} is not in {path}")
 
     def files_mentioning(self, needle: str) -> list:
-        """Upstream files, other than the legal texts, that contain needle."""
-        exclusions = [f":(exclude){path}" for path in LEGAL_TEXTS + ("semilayered/", "plans/")]
+        """Upstream files, other than the legal texts and the fork's own files, that contain needle."""
+        exclusions = [f":(exclude){path}" for path in LEGAL_TEXTS] + excluding_own_paths(table)
         found = subprocess.run(
             ["git", "grep", "-l", "-I", "-F", "-e", needle, "--", ".", *exclusions],
             cwd=self.tree,

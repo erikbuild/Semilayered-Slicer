@@ -35,6 +35,11 @@ def is_own(path: str, table) -> bool:
     return any(path.startswith(prefix) for prefix in table.OWN_PATHS)
 
 
+def excluding_own_paths(table) -> List[str]:
+    """Return git pathspecs that leave the fork's own files out of a command run over the whole tree."""
+    return [f":(exclude){prefix}" if prefix.endswith("/") else f":(exclude,glob){prefix}*" for prefix in table.OWN_PATHS]
+
+
 def read_text(path: Path) -> Optional[str]:
     """Return the file's text, or None when it is a symlink or is not UTF-8 text."""
     if path.is_symlink():
