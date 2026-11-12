@@ -75,6 +75,7 @@ GENERATOR_STAYS = "G-code and settings files keep naming the generator upstream'
 NO_SELF_UPDATE = "the application does not update itself, so it must not tell people that signing in makes it do so"
 PDB_NAME = "the Windows safety check looks for a PDB name this build never produces"
 THE_APPLICATION = "here the word names the application, not the company"
+KEY_BY_NAME = "it names the 3MF key, which stays upstream's, so the comment or test agrees with the code"
 
 # Exact replacements in single files, applied last and written against the renamed text.
 EDITS: Tuple[Edit, ...] = (
@@ -215,6 +216,21 @@ EDITS: Tuple[Edit, ...] = (
         count=2,
         reason="the comments describe the tag the code above keeps",
     ),
+    Edit(
+        "src/SemilayeredSlicer.cpp",
+        "// SemilayeredSlicer tag (see unlayered_3mf_version)",
+        "// UnlayeredSlicer tag (see unlayered_3mf_version)",
+        reason=KEY_BY_NAME,
+    ),
+    Edit(
+        "src/slic3r/GUI/Plater.cpp",
+        "// SemilayeredSlicer tag record the OrcaSlicer version",
+        "// UnlayeredSlicer tag record the OrcaSlicer version",
+        reason=KEY_BY_NAME,
+    ),
+    # Upstream's tests of that key name it literally; every use of the name in these two files is the key.
+    Edit("tests/libslic3r/test_3mf.cpp", "SemilayeredSlicer", "UnlayeredSlicer", count=7, reason=KEY_BY_NAME),
+    Edit("tests/cli/test_cli_project_version.sh", "SemilayeredSlicer", "UnlayeredSlicer", count=9, reason=KEY_BY_NAME),
     # No self-updating.
     Edit(
         "src/slic3r/GUI/GUI_App.cpp",
@@ -289,6 +305,10 @@ KEPT_PRODUCT_NAMES: Tuple[Tuple[str, str, str], ...] = (
     ("src/libslic3r/libslic3r_version.h.in", GENERATOR_DEFINITION, GENERATOR_STAYS),
     ("src/libslic3r/Format/bbs_3mf.cpp", '= "UnlayeredSlicer";', "the 3MF key both applications read"),
     ("src/libslic3r/Format/bbs_3mf.hpp", 'the "UnlayeredSlicer" tag', "the 3MF key both applications read"),
+    ("src/SemilayeredSlicer.cpp", "// UnlayeredSlicer tag", KEY_BY_NAME),
+    ("src/slic3r/GUI/Plater.cpp", "// UnlayeredSlicer tag", KEY_BY_NAME),
+    ("tests/libslic3r/test_3mf.cpp", "UnlayeredSlicer", KEY_BY_NAME),
+    ("tests/cli/test_cli_project_version.sh", "UnlayeredSlicer", KEY_BY_NAME),
     ("src/slic3r/GUI/AboutDialog.cpp", ATTRIBUTION, "says whose work this is a build of"),
     ("README.md", README_NOTICE, "says whose work this is a build of"),
     ("README.md", "an unofficial build of Unlayered Slicer, which is", "says whose work this is a build of"),

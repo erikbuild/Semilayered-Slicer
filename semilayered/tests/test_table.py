@@ -137,6 +137,22 @@ class RegeneratedUpstreamTreeTest(unittest.TestCase):
             with self.subTest(upstream_wording=upstream_wording):
                 self.assertAbsent(upstream_wording, "src/slic3r/GUI/Plater.cpp")
 
+    def test_the_project_file_key_is_upstreams_wherever_it_is_named(self):
+        # The key that records this fork's release in a 3MF stays "UnlayeredSlicer". Upstream's tests
+        # and comments name it literally, so renaming it there would make them disagree with the code.
+        for renamed_key in (
+            'metadata name="SemilayeredSlicer"',
+            'metadata name=\\"SemilayeredSlicer\\"',
+            'version_tag("SemilayeredSlicer"',
+            "SemilayeredSlicer tag",
+            'SemilayeredSlicer" tag',
+            "|SemilayeredSlicer)",
+            "^SemilayeredSlicer=",
+            "[SemilayeredSlicer value]",
+        ):
+            with self.subTest(renamed_key=renamed_key):
+                self.assertEqual(self.files_mentioning(renamed_key), [])
+
     def test_consent_wording_is_left_as_upstream_wrote_it(self):
         self.assertPresent("Unlayered asks before uploading any model", "src/slic3r/GUI/ModelUploadConsentDialog.cpp")
         self.assertPresent("Unlayered asks you separately, for each model", "src/slic3r/GUI/Preferences.cpp")
