@@ -11,7 +11,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 from semilayered.rebrand.__main__ import main
-from semilayered.rebrand.edits import Edit
+from semilayered.rebrand.edits import Edit, EditMismatch
 from semilayered.rebrand.regenerate import DirtyTree, regenerate, scratch_regeneration
 from semilayered.tests.repo_fixture import FIXTURE_TABLE, OWN_FILES, advance_upstream, commit_all, git, make_repo, write
 
@@ -72,6 +72,22 @@ class RegenerateTest(unittest.TestCase):
         self.assertEqual(regenerate(self.root, None, changed), self.upstream)
         self.assertIn("built elsewhere", (self.root / "docs/notes.md").read_text())
         self.assertFalse((self.root / "src/extra.cpp").exists())
+
+    def test_failed_regeneration_leaves_the_checkout_as_it_was(self):
+        regenerate(self.root, "upstream", FIXTURE_TABLE)
+        commit_all(self.root, "regenerated from upstream source 1")
+        advance_upstream(self.root)
+        head_before = git(self.root, "rev-parse", "HEAD")
+        stale = SimpleNamespace(
+            **{**vars(FIXTURE_TABLE), "EDITS": (Edit("docs/notes.md", "text upstream has since removed", "anything"),)}
+        )
+        with self.assertRaises(EditMismatch):
+            regenerate(self.root, "upstream", stale)
+        self.assertEqual(git(self.root, "status", "--porcelain"), "")
+        self.assertEqual(git(self.root, "rev-parse", "HEAD"), head_before)
+        self.assertFalse((self.root / ".git" / "MERGE_HEAD").exists())
+        self.assertEqual(len(git(self.root, "worktree", "list").splitlines()), 1)
+        self.assertTrue((self.root / "src/SemilayeredSlicer.cpp").exists())
 
     def test_refuses_a_dirty_tree(self):
         write(self.root, "docs/notes.md", "work in progress\n")

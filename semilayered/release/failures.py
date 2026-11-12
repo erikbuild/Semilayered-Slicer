@@ -60,12 +60,18 @@ def failures_from(jobs: Iterable[dict], log_for: Callable[[int], str]) -> Set[Fa
 
     A failed unit-test or slice-check job becomes one failure per test or printer its log names.
     Any other failed job, and one of those whose log names nothing, is a failure of the job itself.
+    So is a job that ended any other way than passing or being skipped: cancelled, timed out,
+    or not finished. Its checks did not pass, whatever its log says.
     """
     found: Set[Failure] = set()
     for job in jobs:
-        if job.get("conclusion") != "failure":
+        conclusion = job.get("conclusion")
+        if conclusion in ("success", "skipped"):
             continue
         name = job["name"]
+        if conclusion != "failure":
+            found.add(Failure("job", name, conclusion or "not finished"))
+            continue
         kind, items = "job", []
         if name.endswith("/ Unit Tests"):
             kind, items = "test", parse_failed_tests(log_for(job["id"]))

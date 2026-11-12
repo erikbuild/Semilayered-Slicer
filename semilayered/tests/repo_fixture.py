@@ -3,12 +3,12 @@
 from __future__ import annotations
 
 import os
-import subprocess
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Dict, Union
 
 from semilayered.rebrand.edits import Edit, Substitution
+from semilayered.rebrand.tree import git
 
 FIXTURE_TABLE = SimpleNamespace(
     OWN_PATHS=("semilayered/", "plans/", ".github/workflows/semilayered_"),
@@ -51,11 +51,6 @@ OWN_FILES: Dict[str, str] = {
     "plans/plan.md": "A plan.\n",
     ".github/workflows/semilayered_checks.yml": "name: checks\n",
 }
-
-
-def git(root: Path, *args: str) -> str:
-    """Run git in root and return its standard output; raise if it fails."""
-    return subprocess.run(["git", *args], cwd=root, check=True, capture_output=True, text=True).stdout
 
 
 def write(root: Path, path: str, content: Union[str, bytes]) -> None:

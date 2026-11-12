@@ -132,6 +132,16 @@ class RegeneratedUpstreamTreeTest(unittest.TestCase):
         self.assertAbsent("so the slicer can update itself", "src/slic3r/GUI/MainFrame.cpp")
         self.assertAbsent("Check the Unlayered update site", "src/slic3r/GUI/Actions/PreferenceActions.cpp")
 
+    def test_nothing_can_download_or_install_an_update(self):
+        updater = self.text("src/slic3r/GUI/AutoUpdater.cpp")
+        for opening in (r"void AutoUpdater::start_download\(\)\n\{\n", r"void AutoUpdater::reuse_download\([^)]*\)\n\{\n"):
+            with self.subTest(opening=opening):
+                body = re.split(opening, updater, maxsplit=1)[1]
+                statements = [line.strip() for line in body.splitlines() if line.strip() and not line.strip().startswith("//")]
+                self.assertEqual(statements[0], "return;")
+        # At launch upstream deletes every update download in the temporary folder, the official app's included.
+        self.assertAbsent("    cleanup_stale_download_dirs();", "src/slic3r/GUI/AutoUpdater.cpp")
+
     def test_where_the_bare_name_meant_the_application_it_names_this_one(self):
         for upstream_wording in ("Unlayered prepares the print", "In Unlayered, slice", "Unlayered uses it to send"):
             with self.subTest(upstream_wording=upstream_wording):

@@ -99,6 +99,27 @@ class FailuresFromJobsTest(unittest.TestCase):
         self.assertEqual(len(self.found), 13)
 
 
+class UnfinishedJobsTest(unittest.TestCase):
+    """A run that was cancelled or timed out has not passed its checks, whatever its logs say."""
+
+    def found(self, conclusion):
+        jobs = [
+            {"id": 1, "name": "Linux x86_64 / Unit Tests", "conclusion": conclusion, "steps": []},
+            {"id": 2, "name": "Build macOS Universal", "conclusion": "success", "steps": []},
+            {"id": 3, "name": "Publish dev build", "conclusion": "skipped", "steps": []},
+        ]
+        return failures_from(jobs, lambda job_id: fixture("unit_tests_linux_log.txt"))
+
+    def test_cancelled_job_is_a_failure_of_the_job(self):
+        self.assertEqual(self.found("cancelled"), {Failure("job", "Linux x86_64 / Unit Tests", "cancelled")})
+
+    def test_timed_out_job_is_a_failure_of_the_job(self):
+        self.assertEqual(self.found("timed_out"), {Failure("job", "Linux x86_64 / Unit Tests", "timed_out")})
+
+    def test_job_that_has_not_finished_is_a_failure_of_the_job(self):
+        self.assertEqual(self.found(None), {Failure("job", "Linux x86_64 / Unit Tests", "not finished")})
+
+
 class KnownListTest(unittest.TestCase):
     def load(self, text: str):
         with tempfile.TemporaryDirectory() as holder:

@@ -15,8 +15,11 @@ _FIRST_WORD = {
 _RENAMEABLE = re.compile(r"(Unlayered|unlayered|UNLAYERED)(?=[ \-_.]?(?i:slicer))")
 
 # Any way of writing the two words close together, including ones the rename does not handle:
-# other casings, a line break between the words, an HTML or URL-encoded space.
-_ANY_FORM = re.compile(r"unlayered(?:&nbsp;|&#160;|%20|[^a-z0-9]){0,12}slicer", re.IGNORECASE)
+# other casings, a line break and its indentation between the words, an escaped line break,
+# an HTML line break, an HTML or URL-encoded space. A run of whitespace counts as one joiner.
+_ANY_FORM = re.compile(
+    r"unlayered(?:\s+|&nbsp;|&#160;|%20|\\[nrt]|<br\s*/?>|[^a-z0-9\s]){0,12}slicer", re.IGNORECASE
+)
 
 
 def rename_text(text: str) -> str:

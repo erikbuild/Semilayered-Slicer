@@ -58,7 +58,7 @@ def write_text(path: Path, text: str) -> None:
 
 
 def apply(root: Path, table=default_table) -> None:
-    """Rebrand the working tree at root in place. Applying it again changes nothing."""
+    """Rebrand the working tree at root in place. Meant for a tree as upstream wrote it, which is what regenerate gives it."""
     upstream_files = [
         path for path in tracked_files(root) if not is_own(path, table) and path not in table.VERBATIM_PATHS
     ]

@@ -70,6 +70,13 @@ UPDATE_CHECK_OFF = f"""\
 
 ATTRIBUTION = "an unofficial build of Unlayered Slicer, which is developed by Unlayered 3D"
 
+DOWNLOAD_OPENING = 'void AutoUpdater::start_download()\n{'
+REUSE_OPENING = (
+    "void AutoUpdater::reuse_download(const std::string &version, const fs::path &installer, const std::string &sha256,\n"
+    "                                 bool interrupted)\n"
+    "{"
+)
+
 NOT_THE_PUBLISHER = "Unlayered 3D did not publish this build, so it must not be named as its publisher"
 GENERATOR_STAYS = "G-code and settings files keep naming the generator upstream's builds name (Erik's decision)"
 NO_SELF_UPDATE = "the application does not update itself, so it must not tell people that signing in makes it do so"
@@ -237,6 +244,25 @@ EDITS: Tuple[Edit, ...] = (
         UPDATE_CHECK_OPENING,
         UPDATE_CHECK_OPENING + "\n" + UPDATE_CHECK_OFF,
         reason="upstream's updater would install Unlayered's build over this one (Erik's decision)",
+    ),
+    Edit(
+        "src/slic3r/GUI/AutoUpdater.cpp",
+        DOWNLOAD_OPENING,
+        DOWNLOAD_OPENING + "\n    // Semilayered Slicer downloads no update.\n    return;",
+        reason="no path may download Unlayered's installer, whatever state a copied settings folder holds",
+    ),
+    Edit(
+        "src/slic3r/GUI/AutoUpdater.cpp",
+        REUSE_OPENING,
+        REUSE_OPENING
+        + "\n    // Semilayered Slicer installs no update, including one that Unlayered's own slicer downloaded in an earlier session.\n    return;",
+        reason="a settings folder copied from Unlayered Slicer can name a downloaded installer, which upstream would install at exit",
+    ),
+    Edit(
+        "src/slic3r/GUI/AutoUpdater.cpp",
+        "    cleanup_stale_download_dirs();\n",
+        "    // The update downloads in the temporary folder belong to Unlayered's own slicer, so they are left alone.\n",
+        reason="upstream deletes every update download at launch; here that would delete the official app's",
     ),
     Edit(
         "src/slic3r/GUI/AutoUpdater.cpp",

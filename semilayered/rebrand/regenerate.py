@@ -27,22 +27,21 @@ def recorded_upstream_commit(root: Path) -> str:
 def regenerate(root: Path, upstream_ref: Optional[str] = None, table=default_table) -> str:
     """Replace the working tree with the rebranded upstream tree plus the own files; return the upstream commit.
 
-    Everything is staged and nothing is committed. When the upstream commit is not yet part of
-    this branch's history, a merge is left in progress so that the commit records it.
+    The new tree is built in a scratch worktree first, so a failure leaves this checkout as it was.
+    On success everything is staged and nothing is committed. When the upstream commit is not yet
+    part of this branch's history, a merge is left in progress so that the commit records it.
     """
     if git(root, "status", "--porcelain"):
         raise DirtyTree("the working tree has uncommitted changes; commit or stash them first")
     commit = git(root, "rev-parse", "--verify", (upstream_ref or recorded_upstream_commit(root)) + "^{commit}").strip()
+    with scratch_regeneration(root, commit, table) as scratch:
+        (scratch / UPSTREAM_COMMIT_FILE).parent.mkdir(parents=True, exist_ok=True)
+        (scratch / UPSTREAM_COMMIT_FILE).write_text(commit + "\n")
+        git(scratch, "add", "-A")
+        generated_tree = git(scratch, "write-tree").strip()
     if not _is_ancestor(root, commit, "HEAD"):
         git(root, "merge", "--quiet", "-s", "ours", "--no-commit", "--no-ff", commit)
-    own_files = [path for path in git(root, "ls-tree", "-r", "-z", "--name-only", "HEAD").split("\0") if path and is_own(path, table)]
-    git(root, "read-tree", "--reset", "-u", commit)
-    for start in range(0, len(own_files), 200):
-        git(root, "checkout", "HEAD", "--", *own_files[start : start + 200])
-    (root / UPSTREAM_COMMIT_FILE).parent.mkdir(parents=True, exist_ok=True)
-    (root / UPSTREAM_COMMIT_FILE).write_text(commit + "\n")
-    apply(root, table)
-    git(root, "add", "-A")
+    git(root, "read-tree", "--reset", "-u", generated_tree)
     return commit
 
 

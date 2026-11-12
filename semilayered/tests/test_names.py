@@ -44,6 +44,10 @@ UNHANDLED_FORMS = [
     "Unlayered&nbsp;Slicer",
     "Unlayered%20Slicer",
     "UnLayered Slicer",
+    'Unlayered "\n                    "Slicer',
+    "Unlayered\\nSlicer",
+    "Unlayered<br>Slicer",
+    "Unlayered<br />Slicer",
 ]
 
 

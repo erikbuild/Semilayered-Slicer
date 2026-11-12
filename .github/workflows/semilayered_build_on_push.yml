@@ -1,8 +1,9 @@
+# ABOUTME: On every push to main, proves the tree is a pure regeneration of its upstream commit, then starts "Build all".
+# ABOUTME: semilayered_publish_release.yml takes over when that build finishes.
 name: Semilayered build on push
 
 # Every push to main, and a run by hand, first proves that the tree is exactly what the rebrand
 # tool produces from its upstream commit, then starts upstream's "Build all" on main.
-# semilayered_publish_release.yml takes over when that run finishes.
 on:
   push:
     branches: [main]
@@ -44,7 +45,16 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
+      # "Build all" can only be started on a branch, not on a commit. If main has moved on since this
+      # run's commit was checked, the build is left to the newer push's own run, so that no commit is
+      # built on the strength of another commit's checks.
       - name: Start Build all on main
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh workflow run build_all.yml --repo "$GITHUB_REPOSITORY" --ref main
+        run: |
+          head=$(gh api "repos/$GITHUB_REPOSITORY/commits/main" --jq .sha)
+          if [ "$head" != "$GITHUB_SHA" ]; then
+            echo "main is at $head, not at the checked commit $GITHUB_SHA. That push's own run starts its build."
+            exit 0
+          fi
+          gh workflow run build_all.yml --repo "$GITHUB_REPOSITORY" --ref main

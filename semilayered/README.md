@@ -25,9 +25,9 @@ It never commits. When the upstream commit is new to this branch it leaves a mer
 the commit you make records which source drop the tree came from. The commit it used is written to
 `semilayered/upstream_commit`.
 
-If it stops with an error, nothing is lost: `git merge --abort` (when a merge was in progress) or
-`git reset --hard` returns to where you started. The error names what did not match, which is
-usually an explicit edit whose text upstream has changed.
+If it stops with an error, nothing has changed: the new tree is built in a temporary worktree first
+and replaces this one only when it is complete. The error names what did not match, which is usually
+an explicit edit whose text upstream has changed. Fix the table, commit, and run it again.
 
 `check` proves the tree is a pure regeneration. It fails if the product name is still somewhere it
 should not be, if text that must stay as upstream wrote it has changed, if one of upstream's brand
