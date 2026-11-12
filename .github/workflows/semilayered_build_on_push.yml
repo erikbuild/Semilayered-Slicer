@@ -1,0 +1,50 @@
+name: Semilayered build on push
+
+# Every push to main, and a run by hand, first proves that the tree is exactly what the rebrand
+# tool produces from its upstream commit, then starts upstream's "Build all" on main.
+# semilayered_publish_release.yml takes over when that run finishes.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: write # start "Build all"
+
+concurrency:
+  group: semilayered-build-on-push-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  checks:
+    name: Tree is a pure regeneration
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          lfs: 'false'
+
+      # The checks rebuild the tree from this commit and compare it with what is checked out.
+      - name: Fetch the upstream commit the tree was generated from
+        run: git fetch --depth 1 https://github.com/Unlayered3D/Unlayered-Slicer.git "$(cat semilayered/upstream_commit)"
+
+      - name: Test the tools
+        run: python3 -m unittest discover -s semilayered/tests -t .
+
+      - name: Check the tree
+        run: python3 -m semilayered.rebrand check
+
+  start_build:
+    name: Start Build all
+    needs: checks
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Start Build all on main
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run build_all.yml --repo "$GITHUB_REPOSITORY" --ref main
