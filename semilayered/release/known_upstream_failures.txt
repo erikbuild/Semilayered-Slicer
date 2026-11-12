@@ -31,6 +31,12 @@ test	Windows x64 / Unit Tests	Each cube's raft is its support, centered below it
 test	Windows arm64 / Unit Tests	Nonplanar layers: hold back holds the safe part of a wall joined to a rim beside the top's highest point
 test	Windows arm64 / Unit Tests	Each cube's raft is its support, centered below it
 
+# Windows on ARM only. The crash report's caller chain is built by code compiled for x64 alone
+# (src/slic3r/Utils/UsageTelemetry.cpp, #if defined(_M_X64)), so an ARM build records one frame where
+# the test wants three. Seen in run 43255667327; listed on Erik's decision of 2026-11-12, from the
+# source rather than from a baseline run, because the baseline could not run the Windows tests.
+test	Windows arm64 / Unit Tests	Usage diagnostics crash marker names the callers
+
 # Unlayered's own printer profiles slice without a filament change, which the slice check requires.
 slice	Slice check (Linux aarch64)	Unlayered / Unlayered 5 Axis Printer 0.4 nozzle
 slice	Slice check (Linux aarch64)	Unlayered / Unlayered 5 Axis Printer 0.6 nozzle
