@@ -1,9 +1,7 @@
-# ABOUTME: On every push to main, proves the tree is a pure regeneration of its upstream commit, then starts "Build all".
-# ABOUTME: semilayered_publish_release.yml takes over when that build finishes.
+# ABOUTME: On every push to main, proves the tree is a pure regeneration of its upstream commit, builds it, and has it published.
+# ABOUTME: Starts upstream's "Build all", waits for it, then hands the finished run to semilayered_publish_release.yml.
 name: Semilayered build on push
 
-# Every push to main, and a run by hand, first proves that the tree is exactly what the rebrand
-# tool produces from its upstream commit, then starts upstream's "Build all" on main.
 on:
   push:
     branches: [main]
@@ -11,7 +9,7 @@ on:
 
 permissions:
   contents: read
-  actions: write # start "Build all"
+  actions: write # start "Build all" and the publish workflow
 
 concurrency:
   group: semilayered-build-on-push-${{ github.ref }}
@@ -38,23 +36,68 @@ jobs:
       - name: Check the tree
         run: python3 -m semilayered.rebrand check
 
-  start_build:
-    name: Start Build all
+  build_and_publish:
+    name: Build all, then publish
     needs: checks
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-24.04
-    timeout-minutes: 5
+    # Most of this job is waiting for "Build all", which takes about three hours from a cold cache.
+    timeout-minutes: 350
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
     steps:
       # "Build all" can only be started on a branch, not on a commit. If main has moved on since this
       # run's commit was checked, the build is left to the newer push's own run, so that no commit is
       # built on the strength of another commit's checks.
       - name: Start Build all on main
-        env:
-          GH_TOKEN: ${{ github.token }}
+        id: start
         run: |
-          head=$(gh api "repos/$GITHUB_REPOSITORY/commits/main" --jq .sha)
+          head=$(gh api "repos/$GH_REPO/commits/main" --jq .sha)
           if [ "$head" != "$GITHUB_SHA" ]; then
             echo "main is at $head, not at the checked commit $GITHUB_SHA. That push's own run starts its build."
             exit 0
           fi
-          gh workflow run build_all.yml --repo "$GITHUB_REPOSITORY" --ref main
+          # A minute back, in case this runner's clock is ahead of GitHub's.
+          started=$(date -u -d '1 minute ago' +%Y-%m-%dT%H:%M:%SZ)
+          gh workflow run build_all.yml --ref main
+          echo "started=$started" >> "$GITHUB_OUTPUT"
+
+      # The dispatch does not say which run it created, so find the run of this commit that began after it.
+      - name: Find the run that was started
+        id: find
+        if: steps.start.outputs.started != ''
+        env:
+          STARTED: ${{ steps.start.outputs.started }}
+        run: |
+          for attempt in $(seq 1 30); do
+            run=$(gh run list --workflow build_all.yml --branch main --event workflow_dispatch --limit 20 \
+              --json databaseId,headSha,createdAt \
+              --jq 'map(select(.headSha == env.GITHUB_SHA and .createdAt >= env.STARTED)) | .[0].databaseId // empty')
+            if [ -n "$run" ]; then
+              echo "Build all is run $run."
+              echo "run=$run" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "::error::Build all was started but its run did not appear within five minutes."
+          exit 1
+
+      - name: Wait for Build all to finish
+        if: steps.find.outputs.run != ''
+        env:
+          RUN: ${{ steps.find.outputs.run }}
+        run: |
+          until [ "$(gh run view "$RUN" --json status --jq .status)" = "completed" ]; do
+            sleep 120
+          done
+          gh run view "$RUN" --json conclusion --jq '"Build all finished: \(.conclusion)"'
+
+      # A run the built-in token started does not trigger other workflows when it finishes, so the
+      # publish workflow is started here. It decides for itself whether the run may be published.
+      - name: Hand the finished run to the publish workflow
+        if: steps.find.outputs.run != ''
+        env:
+          RUN: ${{ steps.find.outputs.run }}
+        run: gh workflow run semilayered_publish_release.yml --ref main -f run_id="$RUN"

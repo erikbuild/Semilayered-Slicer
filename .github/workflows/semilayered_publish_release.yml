@@ -1,13 +1,17 @@
-# ABOUTME: When a "Build all" run on main finishes, publishes its installers as a GitHub Release.
+# ABOUTME: Publishes the installers of one finished "Build all" run on main as a GitHub Release.
 # ABOUTME: Publishes only if nothing failed beyond upstream's known failures and every installer was built.
 name: Semilayered publish release
 
-# The run is started by semilayered_build_on_push.yml. Runs on other branches, runs that were not
-# started as a workflow dispatch, and cancelled runs publish nothing.
+# Started by semilayered_build_on_push.yml when the build it started has finished. It can also be
+# started by hand for any finished "Build all" run on main, to publish that run without rebuilding:
+#   gh workflow run semilayered_publish_release.yml -f run_id=<run id>
 on:
-  workflow_run:
-    workflows: ["Build all"]
-    types: [completed]
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: 'Id of a finished "Build all" run on main (the number in its URL)'
+        required: true
+        type: string
 
 permissions:
   contents: write # create the release and its tag
@@ -16,35 +20,55 @@ permissions:
 jobs:
   publish:
     name: Publish release
-    if: >-
-      github.event.workflow_run.head_branch == 'main'
-      && github.event.workflow_run.event == 'workflow_dispatch'
-      && github.event.workflow_run.conclusion != 'cancelled'
     runs-on: ubuntu-24.04
     timeout-minutes: 60
     env:
       GH_TOKEN: ${{ github.token }}
-      RUN_ID: ${{ github.event.workflow_run.id }}
-      BUILD: ${{ github.event.workflow_run.run_number }}
-      BUILT_COMMIT: ${{ github.event.workflow_run.head_sha }}
+      GH_REPO: ${{ github.repository }}
+      RUN_ID: ${{ inputs.run_id }}
     steps:
+      # Only a finished "Build all" run on main that was started as a workflow dispatch is published.
+      - name: Check that the run may be published
+        id: run
+        run: |
+          if ! [[ "$RUN_ID" =~ ^[0-9]+$ ]]; then
+            echo "::error::'$RUN_ID' is not a run id."
+            exit 1
+          fi
+          facts=$(gh api "repos/$GH_REPO/actions/runs/$RUN_ID" \
+            --jq '[.path, .head_branch, .event, .status, (.conclusion // "none"), (.run_number | tostring), .head_sha] | join(" ")')
+          read -r run_file run_branch run_event run_status run_conclusion run_number run_commit <<< "$facts"
+          problem=""
+          [ "$run_file" = ".github/workflows/build_all.yml" ] || problem="it is not a Build all run"
+          [ "$run_branch" = "main" ] || problem="it ran on $run_branch, not on main"
+          [ "$run_event" = "workflow_dispatch" ] || problem="it was started by $run_event, not as a workflow dispatch"
+          [ "$run_status" = "completed" ] || problem="it has not finished"
+          [ "$run_conclusion" != "cancelled" ] || problem="it was cancelled"
+          if [ -n "$problem" ]; then
+            echo "::error::Run $RUN_ID is not published: $problem."
+            exit 1
+          fi
+          echo "commit=$run_commit" >> "$GITHUB_OUTPUT"
+          echo "BUILD=$run_number" >> "$GITHUB_ENV"
+          echo "BUILT_COMMIT=$run_commit" >> "$GITHUB_ENV"
+
       # Only the release tooling and the version are needed, from the commit that was built.
       - name: Checkout
         uses: actions/checkout@v7
         with:
-          ref: ${{ github.event.workflow_run.head_sha }}
+          ref: ${{ steps.run.outputs.commit }}
           lfs: 'false'
           sparse-checkout: |
             /semilayered/
             /version.inc
           sparse-checkout-cone-mode: false
 
-      # A re-run of a build that was already published must not publish it again.
+      # A build that was already published must not be published again.
       - name: Stop if this build was already released
         run: |
           tag=$(python3 -m semilayered.release tag --build "$BUILD")
           echo "TAG=$tag" >> "$GITHUB_ENV"
-          if gh release view "$tag" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+          if gh release view "$tag" > /dev/null 2>&1; then
             echo "::error::Release $tag already exists, so this build was already published."
             exit 1
           fi
@@ -56,7 +80,7 @@ jobs:
         run: |
           names=()
           while read -r artifact; do names+=(--name "$artifact"); done < <(python3 -m semilayered.release artifacts)
-          gh run download "$RUN_ID" --repo "$GITHUB_REPOSITORY" --dir artifacts "${names[@]}"
+          gh run download "$RUN_ID" --dir artifacts "${names[@]}"
 
       - name: Collect the release's files
         run: python3 -m semilayered.release collect --artifacts artifacts --out release
@@ -73,6 +97,6 @@ jobs:
 
       - name: Publish the release
         run: |
-          gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --target "$BUILT_COMMIT" \
+          gh release create "$TAG" --target "$BUILT_COMMIT" \
             --title "$(python3 -m semilayered.release title --build "$BUILD")" \
             --notes-file notes.md release/*
