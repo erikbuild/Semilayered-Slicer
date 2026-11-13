@@ -48,6 +48,15 @@ jobs:
             echo "::error::Run $RUN_ID is not published: $problem."
             exit 1
           fi
+          # This workflow's token may not write workflow files, and GitHub counts a tag at a commit
+          # whose workflow files differ from main's as writing them. Say so here, before any work.
+          workflows_at() {
+            gh api "repos/$GH_REPO/contents/.github/workflows?ref=$1" --jq 'map("\(.name) \(.sha)") | sort | join(",")'
+          }
+          if [ "$(workflows_at "$run_commit")" != "$(workflows_at main)" ]; then
+            echo "::error::Run $RUN_ID built $run_commit, and main's workflow files have changed since. This workflow cannot tag that commit. semilayered/README.md says how to publish it by hand."
+            exit 1
+          fi
           echo "commit=$run_commit" >> "$GITHUB_OUTPUT"
           echo "BUILD=$run_number" >> "$GITHUB_ENV"
           echo "BUILT_COMMIT=$run_commit" >> "$GITHUB_ENV"

@@ -46,6 +46,18 @@ To publish a finished run by hand, without rebuilding:
 
     gh workflow run semilayered_publish_release.yml -f run_id=<the number in the run's URL>
 
+That works while the built commit's workflow files are the ones on `main`. GitHub does not let a
+workflow's own token, or a `gh` login without the `workflow` scope, create a tag at a commit whose
+workflow files differ from `main`'s. For such a build, collect the files as the workflow does, then
+push the tag with git and create the release on it:
+
+    git tag semilayered-<version>-b<build> <built commit>
+    git push origin semilayered-<version>-b<build>
+    gh release create semilayered-<version>-b<build> --verify-tag --title ... --notes-file ... <files>
+
+Every push to `main` builds and publishes a release. A commit that changes nothing in the
+application can say `[skip ci]` in its message to skip that.
+
 ## After changing the tool or the table
 
     python3 -m semilayered.rebrand regenerate
